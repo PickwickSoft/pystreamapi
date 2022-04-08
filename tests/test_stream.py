@@ -14,8 +14,9 @@ class TestStream(unittest.TestCase):
         self.assertListEqual(result, [1, 2, 3, 9])
 
     def test_stream_for_each(self):
-        result = Stream([1, 2, 3, 9]).for_each(str).to_list()
-        self.assertListEqual(result, ["1", "2", "3", "9"])
+        out = []
+        Stream([1, 2, 3, 9]).for_each(out.append)
+        self.assertListEqual(out, [1, 2, 3, 9])
 
     def test_map_str_to_int(self):
         result = Stream(["1", "2", "3", "9"]).map(int).to_list()
