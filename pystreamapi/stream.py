@@ -25,6 +25,14 @@ class Stream:
     def __map(self, function: Callable[[Any], Any]):
         self.__source = [function(element) for element in self.__source]
 
+    def peek(self, function: Callable):
+        self.__queue.append(Process(self.__peek, function))
+        return self
+
+    def __peek(self, function: Callable):
+        for element in self.__source:
+            function(element)
+
     def reduce(self, function: Callable):
         self.__trigger_exec()
         return reduce(function, self.__source)
@@ -36,7 +44,8 @@ class Stream:
 
     def for_each(self, function: Callable):
         self.__trigger_exec()
-        self.__source = [function(element) for element in self.__source]
+        for element in self.__source:
+            function(element)
 
     def to_list(self):
         self.__trigger_exec()

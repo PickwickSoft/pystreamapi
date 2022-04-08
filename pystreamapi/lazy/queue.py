@@ -8,8 +8,8 @@ class ProcessQueue:
     def __init__(self):
         self.__queue: List[Process] = []
 
-    def append(self, proc: Process, index=-1):
-        self.__queue.insert(index, proc)
+    def append(self, proc: Process):
+        self.__queue.append(proc)
 
     def execute_all(self):
         for proc in self.__queue:
