@@ -9,17 +9,17 @@ class Stream:
 
     def __init__(self, source: Iterable):
         self.__source = list(source)
-        self.queue = ProcessQueue()
+        self.__queue = ProcessQueue()
 
     def filter(self, function: Callable[[Any], bool]):
-        self.queue.append(Process(self.__filter, function))
+        self.__queue.append(Process(self.__filter, function))
         return self
 
     def __filter(self, function: Callable[[Any], bool]):
         self.__source = [element for element in self.__source if function(element)]
 
     def map(self, function: Callable[[Any], bool]):
-        self.queue.append(Process(self.__map, function))
+        self.__queue.append(Process(self.__map, function))
         return self
 
     def __map(self, function: Callable[[Any], Any]):
@@ -47,4 +47,4 @@ class Stream:
         return len(self.__source)
 
     def __trigger_exec(self):
-        self.queue.execute_all()
+        self.__queue.execute_all()
