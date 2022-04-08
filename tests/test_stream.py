@@ -27,7 +27,7 @@ class TestStream(unittest.TestCase):
         self.assertListEqual(result, [1, 2, "3"])
 
     def test_filter_str(self):
-        result = Stream([1, 2, "3", None]).filter(lambda x: type(x) == str).to_list()
+        result = Stream([1, 2, "3", None]).filter(lambda x: isinstance(x, str)).to_list()
         self.assertListEqual(result, ["3"])
 
     def test_count(self):
