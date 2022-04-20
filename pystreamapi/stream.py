@@ -16,7 +16,8 @@ class Stream:
         return self
 
     def __filter(self, function: Callable[[Any], bool]):
-        self.__source = [element for element in self.__source if function(element)]
+        self.__source = [
+            element for element in self.__source if function(element)]
 
     def map(self, function: Callable[[Any], bool]):
         self.__queue.append(Process(self.__map, function))
