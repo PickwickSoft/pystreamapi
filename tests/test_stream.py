@@ -56,7 +56,7 @@ class TestStream(unittest.TestCase):
 
     def test_peek(self):
         src = []
-        result = Stream(["1", "2", "3", "9"]).map(int).peek(lambda x: src.append(x)).map(str).to_list()
+        result = Stream(["1", "2", "3", "9"]).map(int).peek(src.append).map(str).to_list()
         self.assertListEqual(result, ["1", "2", "3", "9"])
         self.assertListEqual(src, [1, 2, 3, 9])
 
