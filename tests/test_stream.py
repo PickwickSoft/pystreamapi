@@ -27,11 +27,13 @@ class TestStream(unittest.TestCase):
         self.assertListEqual(result, ["1", "2", "3", "9"])
 
     def test_filter_not_none(self):
-        result = Stream.of([1, 2, "3", None]).filter(lambda x: x is not None).to_list()
+        result = Stream.of([1, 2, "3", None]).filter(
+            lambda x: x is not None).to_list()
         self.assertListEqual(result, [1, 2, "3"])
 
     def test_filter_str(self):
-        result = Stream.of([1, 2, "3", None]).filter(lambda x: isinstance(x, str)).to_list()
+        result = Stream.of([1, 2, "3", None]).filter(
+            lambda x: isinstance(x, str)).to_list()
         self.assertListEqual(result, ["3"])
 
     def test_count(self):
@@ -56,7 +58,8 @@ class TestStream(unittest.TestCase):
 
     def test_peek(self):
         src = []
-        result = Stream.of(["1", "2", "3", "9"]).map(int).peek(src.append).map(str).to_list()
+        result = Stream.of(["1", "2", "3", "9"]).map(
+            int).peek(src.append).map(str).to_list()
         self.assertListEqual(result, ["1", "2", "3", "9"])
         self.assertListEqual(src, [1, 2, 3, 9])
 

@@ -14,7 +14,8 @@ class SequentialStream(stream.BaseStream):
         return self
 
     def __filter(self, function: Callable[[Any], bool]):
-        self._source = [element for element in self._source if function(element)]
+        self._source = [
+            element for element in self._source if function(element)]
 
     def map(self, function: Callable[[Any], bool]):
         self._queue.append(Process(self.__map, function))
