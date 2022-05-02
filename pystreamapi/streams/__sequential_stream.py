@@ -6,9 +6,6 @@ from pystreamapi.lazy.process import Process
 
 class SequentialStream(stream.BaseStream):
 
-    def __init__(self, source: Iterable):
-        super().__init__(source)
-
     def filter(self, function: Callable[[Any], bool]):
         self._queue.append(Process(self.__filter, function))
         return self
