@@ -1,17 +1,12 @@
 import unittest
 
+from optional import Optional
+
 from pystreamapi.stream import Stream
+from pystreamapi.streams.basestream import BaseStream
 
 
-class TestStream(unittest.TestCase):
-
-    def test_sort_unsorted(self):
-        result = Stream.of([3, 2, 9, 1]).sorted().to_list()
-        self.assertListEqual(result, [1, 2, 3, 9])
-
-    def test_sort_sorted(self):
-        result = Stream.of([1, 2, 3, 9]).sorted().to_list()
-        self.assertListEqual(result, [1, 2, 3, 9])
+class TestSequentialStream(unittest.TestCase):
 
     def test_for_each(self):
         out = []
@@ -34,16 +29,7 @@ class TestStream(unittest.TestCase):
         result = Stream.of([1, 2, "3", None]).filter(lambda x: isinstance(x, str)).to_list()
         self.assertListEqual(result, ["3"])
 
-    def test_count(self):
-        result = Stream.of([1, 2, "3", None]).count()
-        self.assertEqual(result, 4)
-
-    def test_reduce(self):
-        src = [1, 2, 3, 4, 5]
-        result = Stream.of(src).reduce(lambda x, y: x + y)
-        self.assertEqual(result, sum(src))
-
-    def test_lazy_filter(self):
+    def test_filter_complex(self):
         result = Stream.of([" ", '3', None, "2", 1, ""]) \
             .filter(lambda x: x is not None) \
             .map(str) \
@@ -54,11 +40,34 @@ class TestStream(unittest.TestCase):
             .to_list()
         self.assertListEqual(result, [1, 2, 3])
 
+    def test_filter_lazy(self):
+        result = Stream.of([1, 2, 3]).filter(lambda x: x > 1)
+        self.assertListEqual(result.to_list(), [2, 3])
+        self.assertTrue(isinstance(result, BaseStream))
+
     def test_peek(self):
         src = []
         result = Stream.of(["1", "2", "3", "9"]).map(int).peek(src.append).map(str).to_list()
         self.assertListEqual(result, ["1", "2", "3", "9"])
         self.assertListEqual(src, [1, 2, 3, 9])
+
+    def test_all_match(self):
+        result = Stream.of([1, 2, 3, 9]).all_match(lambda x: x > 0)
+        self.assertTrue(result)
+        result = Stream.of([1, 2, 3, 9]).all_match(lambda x: x > 1)
+        self.assertFalse(result)
+
+    def test_all_match_empty(self):
+        result = Stream.of([]).all_match(lambda x: x > 0)
+        self.assertTrue(result)
+
+    def test_find_any(self):
+        result = Stream.of([1, 2, 3, 9]).find_any()
+        self.assertEqual(result, Optional.of(1))
+
+    def test_find_any_empty(self):
+        result = Stream.of([]).find_any()
+        self.assertEqual(result, Optional.empty())
 
 
 if __name__ == '__main__':
