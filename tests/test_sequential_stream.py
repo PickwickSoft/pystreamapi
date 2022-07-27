@@ -21,6 +21,22 @@ class TestSequentialStream(unittest.TestCase):
         result = Stream.of(["1", "2", "3", "9"]).map(int).map(str).to_list()
         self.assertListEqual(result, ["1", "2", "3", "9"])
 
+    def test_map_to_int(self):
+        result = Stream.of(["1", "2", "3", "9"]).map_to_int().to_list()
+        self.assertListEqual(result, [1, 2, 3, 9])
+
+    def test_map_to_int_empty(self):
+        result = Stream.of([]).map_to_int().to_list()
+        self.assertListEqual(result, [])
+
+    def test_map_to_str(self):
+        result = Stream.of([1, 2, 3, 9]).map_to_str().to_list()
+        self.assertListEqual(result, ["1", "2", "3", "9"])
+
+    def test_flat_map(self):
+        result = Stream.of([1, 2, 3, 9]).flat_map(lambda x: Stream.of([x, x])).to_list()
+        self.assertListEqual(result, [1, 1, 2, 2, 3, 3, 9, 9])
+
     def test_filter_not_none(self):
         result = Stream.of([1, 2, "3", None]).filter(lambda x: x is not None).to_list()
         self.assertListEqual(result, [1, 2, "3"])
@@ -68,6 +84,14 @@ class TestSequentialStream(unittest.TestCase):
     def test_find_any_empty(self):
         result = Stream.of([]).find_any()
         self.assertEqual(result, Optional.empty())
+
+    def test_limit(self):
+        result = Stream.of([1, 2, 3, 9]).limit(2).to_list()
+        self.assertListEqual(result, [1, 2])
+
+    def test_limit_empty(self):
+        result = Stream.of([]).limit(2).to_list()
+        self.assertListEqual(result, [])
 
 
 if __name__ == '__main__':
