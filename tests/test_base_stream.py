@@ -74,7 +74,7 @@ class TestBaseStream(unittest.TestCase):
 
     def test_reduce_empty_stream_no_identity(self):
         result = Stream.of([]).reduce(lambda x, y: x + y)
-        self.assertEqual(result, None)
+        self.assertEqual(result, Optional.empty())
 
     def test_reduce_empty_stream_with_identity(self):
         result = Stream.of([]).reduce(lambda x, y: x + y, identity=0)

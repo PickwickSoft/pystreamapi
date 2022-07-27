@@ -97,10 +97,7 @@ class BaseStream:
             if identity is not _identity_missing:
                 return reduce(function, self._source)
             return Optional.of(reduce(function, self._source))
-        if identity is not _identity_missing:
-            return identity
-        else:
-            Optional.empty()
+        return identity if identity is not _identity_missing else Optional.empty()
 
     @abstractmethod
     def all_match(self, function: Callable[[Any], bool]):
