@@ -15,14 +15,16 @@ class ParallelStream(stream.BaseStream):
         return self
 
     def __filter(self, function: Callable[[Any], bool]):
-        self._source = [element for element in parallelize(self._source) if function(element)]
+        self._source = [element for element in parallelize(
+            self._source) if function(element)]
 
     def map(self, function: Callable[[Any], bool]):
         self._queue.append(Process(self.__map, function))
         return self
 
     def __map(self, function: Callable[[Any], Any]):
-        self._source = [function(element) for element in parallelize(self._source)]
+        self._source = [function(element)
+                        for element in parallelize(self._source)]
 
     def peek(self, function: Callable):
         self._queue.append(Process(self.__peek, function))
