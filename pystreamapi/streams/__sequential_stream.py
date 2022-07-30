@@ -1,8 +1,12 @@
-from typing import Callable, Any, Iterable
+from functools import reduce
+from typing import Callable, Any
+
 from optional import Optional
 
 import pystreamapi.streams.basestream as stream
 from pystreamapi.lazy.process import Process
+
+_identity_missing = object()
 
 
 class SequentialStream(stream.BaseStream):
@@ -52,6 +56,14 @@ class SequentialStream(stream.BaseStream):
     def __peek(self, function: Callable):
         for element in self._source:
             function(element)
+
+    def reduce(self, function: Callable, identity=_identity_missing):
+        self._trigger_exec()
+        if len(self._source) > 0:
+            if identity is not _identity_missing:
+                return reduce(function, self._source)
+            return Optional.of(reduce(function, self._source))
+        return identity if identity is not _identity_missing else Optional.empty()
 
     def all_match(self, function: Callable[[Any], bool]):
         self._trigger_exec()

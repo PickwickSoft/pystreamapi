@@ -1,6 +1,5 @@
 import itertools
 from abc import abstractmethod
-from functools import reduce
 from typing import Iterable, Callable, Any
 
 from optional import Optional
@@ -8,13 +7,11 @@ from optional import Optional
 from pystreamapi.lazy.process import Process
 from pystreamapi.lazy.queue import ProcessQueue
 
-_identity_missing = object()
-
 
 class BaseStream:
 
     def __init__(self, source: Iterable):
-        self._source = list(source)
+        self._source = source
         self._queue = ProcessQueue()
 
     @abstractmethod
@@ -91,13 +88,9 @@ class BaseStream:
     def for_each(self, function: Callable):
         pass
 
-    def reduce(self, function: Callable, identity=_identity_missing):
-        self._trigger_exec()
-        if len(self._source) > 0:
-            if identity is not _identity_missing:
-                return reduce(function, self._source)
-            return Optional.of(reduce(function, self._source))
-        return identity if identity is not _identity_missing else Optional.empty()
+    @abstractmethod
+    def reduce(self, function: Callable[[Any, Any], Any], identity):
+        pass
 
     @abstractmethod
     def all_match(self, function: Callable[[Any], bool]):
