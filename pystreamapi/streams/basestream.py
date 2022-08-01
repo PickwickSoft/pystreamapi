@@ -14,6 +14,10 @@ class BaseStream:
         self._source = source
         self._queue = ProcessQueue()
 
+    def __iter__(self):
+        self._trigger_exec()
+        return iter(self._source)
+
     @abstractmethod
     def filter(self, function: Callable[[Any], bool]):
         pass

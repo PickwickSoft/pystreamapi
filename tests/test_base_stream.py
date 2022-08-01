@@ -1,7 +1,6 @@
 import unittest
 
 from optional import Optional
-from optional.something import Something
 
 from pystreamapi.stream import Stream
 
@@ -59,26 +58,6 @@ class TestBaseStream(unittest.TestCase):
     def test_count(self):
         result = Stream.of([1, 2, "3", None]).count()
         self.assertEqual(result, 4)
-
-    def test_reduce_no_identity(self):
-        src = [1, 2, 3, 4, 5]
-        result = Stream.of(src).reduce(lambda x, y: x + y)
-        self.assertEqual(type(result), Something)
-        self.assertEqual(result.get_or_default("Empty"), sum(src))
-
-    def test_reduce_with_identity(self):
-        src = [1, 2, 3, 4, 5]
-        result = Stream.of(src).reduce(lambda x, y: x + y, identity=0)
-        self.assertEqual(type(result), int)
-        self.assertEqual(result, sum(src))
-
-    def test_reduce_empty_stream_no_identity(self):
-        result = Stream.of([]).reduce(lambda x, y: x + y)
-        self.assertEqual(result, Optional.empty())
-
-    def test_reduce_empty_stream_with_identity(self):
-        result = Stream.of([]).reduce(lambda x, y: x + y, identity=0)
-        self.assertEqual(result, 0)
 
     def test_any_match(self):
         result = Stream.of([1, 2, 3, 9]).any_match(lambda x: x > 3)
