@@ -3,7 +3,7 @@ from joblib import Parallel, delayed
 from optional import Optional
 from functools import reduce as seq_reduce
 
-import pystreamapi.streams.basestream as stream
+import pystreamapi.streams.__base_stream as stream
 from pystreamapi.lazy.process import Process
 from pystreamapi.parallel.itertools import reduce, pfilter
 

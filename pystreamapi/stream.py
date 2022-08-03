@@ -2,7 +2,7 @@ from typing import Iterable
 
 from pystreamapi.streams.__parallel_stream import ParallelStream
 from pystreamapi.streams.__sequential_stream import SequentialStream
-from pystreamapi.streams.basestream import BaseStream
+from pystreamapi.streams.__base_stream import BaseStream
 
 
 class Stream:

@@ -1,11 +1,14 @@
 import itertools
 from abc import abstractmethod
-from typing import Iterable, Callable, Any
+from builtins import reversed
+from typing import Iterable, Callable, Any, TypeVar
 
 from optional import Optional
 
 from pystreamapi.lazy.process import Process
 from pystreamapi.lazy.queue import ProcessQueue
+
+_K = TypeVar('_K')
 
 
 class BaseStream:
@@ -17,6 +20,10 @@ class BaseStream:
     def __iter__(self):
         self._trigger_exec()
         return iter(self._source)
+
+    def __reversed__(self):
+        self.__reversed()
+        return self
 
     @abstractmethod
     def filter(self, function: Callable[[Any], bool]):
@@ -69,6 +76,16 @@ class BaseStream:
 
     def __sorted(self):
         self._source = sorted(self._source)
+
+    def reversed(self):
+        self._queue.append(Process(self.__reversed))
+        return self
+
+    def __reversed(self):
+        try:
+            self._source = reversed(self._source)
+        except TypeError:
+            self._source = reversed(list(self._source))
 
     def drop_while(self, function: Callable[[Any], bool]):
         self._queue.append(Process(self.__drop_while, function))
@@ -128,7 +145,7 @@ class BaseStream:
 
     def to_list(self):
         self._trigger_exec()
-        return self._source
+        return list(self._source)
 
     def to_tuple(self):
         self._trigger_exec()

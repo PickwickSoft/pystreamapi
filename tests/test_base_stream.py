@@ -15,6 +15,18 @@ class TestBaseStream(unittest.TestCase):
         result = Stream.of([1, 2, 3, 9]).sorted().to_list()
         self.assertListEqual(result, [1, 2, 3, 9])
 
+    def test_reversed(self):
+        result = Stream.of([1, 2, 3, 9]).reversed().to_list()
+        self.assertListEqual(result, [9, 3, 2, 1])
+
+    def test_reversed_unsorted(self):
+        result = Stream.of([2, 1, 9, 6]).reversed().to_list()
+        self.assertListEqual(result, [6, 9, 1, 2])
+
+    def test_reversed_empty(self):
+        result = Stream.of([]).reversed().to_list()
+        self.assertListEqual(result, [])
+
     def test_limit(self):
         result = Stream.of([1, 2, 3, 9]).limit(3).to_list()
         self.assertListEqual(result, [1, 2, 3])

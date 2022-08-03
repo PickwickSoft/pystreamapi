@@ -3,7 +3,7 @@ from typing import Callable, Any
 
 from optional import Optional
 
-import pystreamapi.streams.basestream as stream
+import pystreamapi.streams.__base_stream as stream
 from pystreamapi.lazy.process import Process
 
 _identity_missing = object()
