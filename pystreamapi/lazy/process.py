@@ -6,6 +6,7 @@ class Process:
     def __init__(self, work: Callable, arg=None):
         """
         The class representing a function to be executed lazy.
+
         :param work: the function or executable (normally with object)
         :param arg: the argument to be passed to the function
         """
