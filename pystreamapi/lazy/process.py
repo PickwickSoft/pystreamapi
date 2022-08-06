@@ -14,6 +14,9 @@ class Process:
         self.__arg = arg
 
     def exec(self):
+        """
+        Run the callable in the process
+        """
         if self.__arg is not None:
             self.__work(self.__arg)
         else:

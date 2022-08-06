@@ -1,0 +1,7 @@
+[SIMILARITIES]
+
+# Minimum lines number of a similarity.
+min-similarity-lines=-1
+
+[MESSAGES CONTROL]
+disable=missing-function-docstring,missing-class-docstring,missing-module-docstring,import-error,too-few-public-methods,invalid-name,no-member,too-many-public-methods
