@@ -109,9 +109,7 @@ class BaseStream(Iterable[_K]):
         self._source = self._source[n:]
 
     def distinct(self):
-        """
-        Returns a stream consisting of the distinct elements of this stream.
-        """
+        """Returns a stream consisting of the distinct elements of this stream."""
         self._queue.append(Process(self.__distinct))
         return self
 
@@ -217,18 +215,14 @@ class BaseStream(Iterable[_K]):
         return not any(predicate(element) for element in self._source)
 
     def min(self):
-        """
-        Returns the minimum element of this stream.
-        """
+        """Returns the minimum element of this stream."""
         self._trigger_exec()
         if len(self._source) > 0:
             return Optional.of(min(self._source))
         return Optional.empty()
 
     def max(self):
-        """
-        Returns the maximum element of this stream.
-        """
+        """Returns the maximum element of this stream."""
         self._trigger_exec()
         if len(self._source) > 0:
             return Optional.of(max(self._source))
@@ -245,23 +239,17 @@ class BaseStream(Iterable[_K]):
         return Optional.empty()
 
     def to_list(self):
-        """
-        Accumulates the elements of this stream into a List.
-        """
+        """Accumulates the elements of this stream into a List."""
         self._trigger_exec()
         return list(self._source)
 
     def to_tuple(self):
-        """
-        Accumulates the elements of this stream into a Tuple.
-        """
+        """Accumulates the elements of this stream into a Tuple."""
         self._trigger_exec()
         return tuple(self._source)
 
     def to_set(self):
-        """
-        Accumulates the elements of this stream into a Set.
-        """
+        """Accumulates the elements of this stream into a Set."""
         self._trigger_exec()
         return set(self._source)
 
