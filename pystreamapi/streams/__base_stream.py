@@ -38,7 +38,8 @@ class BaseStream(Iterable[_K]):
     @abstractmethod
     def map(self, mapper: Callable[[_K], _V]) -> 'BaseStream[_V]':
         """
-        Returns a stream consisting of the results of applying the given function to the elements of this stream.
+        Returns a stream consisting of the results of applying the given function to the elements
+        of this stream.
 
         :param mapper:
         """
@@ -47,22 +48,25 @@ class BaseStream(Iterable[_K]):
     @abstractmethod
     def map_to_int(self):
         """
-        Returns a stream consisting of the results of converting the elements of this stream to integers.
+        Returns a stream consisting of the results of converting the elements of this stream to
+        integers.
         """
         return self
 
     @abstractmethod
     def map_to_str(self):
         """
-        Returns a stream consisting of the results of converting the elements of this stream to strings.
+        Returns a stream consisting of the results of converting the elements of this stream to
+        strings.
         """
         return self
 
     @abstractmethod
     def flat_map(self, predicate: Callable[[_K], Iterable[_V]]):
         """
-        Returns a stream consisting of the results of replacing each element of this stream with the contents of a
-        mapped stream produced by applying the provided mapping function to each element.
+        Returns a stream consisting of the results of replacing each element of this stream with
+        the contents of a mapped stream produced by applying the provided mapping function to
+        each element.
 
         :param predicate:
         """
@@ -71,16 +75,17 @@ class BaseStream(Iterable[_K]):
     @abstractmethod
     def peek(self, action: Callable):
         """
-        Returns a stream consisting of the elements of this stream, additionally performing the provided action on 
-        each element as elements are consumed from the resulting stream. 
+        Returns a stream consisting of the elements of this stream, additionally performing the
+        provided action on each element as elements are consumed from the resulting stream.
 
-        :param action: 
+        :param action:
         """
         return self
 
     def limit(self, max_size: int):
         """
-        Returns a stream consisting of the elements of this stream, truncated to be no longer than maxSize in length.
+        Returns a stream consisting of the elements of this stream, truncated to be no longer
+        than maxSize in length.
 
         :param max_size:
         """
@@ -92,8 +97,8 @@ class BaseStream(Iterable[_K]):
 
     def skip(self, n: int):
         """
-        Returns a stream consisting of the remaining elements of this stream after discarding the first n elements of
-        the stream.
+        Returns a stream consisting of the remaining elements of this stream after discarding the
+        first n elements of the stream.
 
         :param n:
         """
@@ -115,7 +120,8 @@ class BaseStream(Iterable[_K]):
 
     def sorted(self):
         """
-        Returns a stream consisting of the elements of this stream, sorted according to natural order.
+        Returns a stream consisting of the elements of this stream, sorted according to natural
+        order.
         """
         self._queue.append(Process(self.__sorted))
         return self
@@ -135,8 +141,8 @@ class BaseStream(Iterable[_K]):
 
     def drop_while(self, predicate: Callable[[_K], bool]):
         """
-        Returns, if this stream is ordered, a stream consisting of the remaining elements of this stream after
-        dropping the longest prefix of elements that match the given predicate.
+        Returns, if this stream is ordered, a stream consisting of the remaining elements of this
+        stream after dropping the longest prefix of elements that match the given predicate.
 
         :param predicate:
         """
@@ -148,8 +154,8 @@ class BaseStream(Iterable[_K]):
 
     def take_while(self, predicate: Callable[[_K], bool]):
         """
-        Returns, if this stream is ordered, a stream consisting of the longest prefix of elements taken from this
-        stream that match the given predicate.
+        Returns, if this stream is ordered, a stream consisting of the longest prefix of elements
+        taken from this stream that match the given predicate.
 
         :param predicate:
         """
@@ -162,9 +168,9 @@ class BaseStream(Iterable[_K]):
     @abstractmethod
     def find_any(self) -> Optional:
         """
-        Returns an Optional describing some element of the stream, or an empty Optional if the stream is empty.
+        Returns an Optional describing some element of the stream, or an empty Optional if the
+        stream is empty.
         """
-        pass
 
     @abstractmethod
     def for_each(self, predicate: Callable):
@@ -173,18 +179,16 @@ class BaseStream(Iterable[_K]):
 
         :param predicate:
         """
-        pass
 
     @abstractmethod
     def reduce(self, predicate: Callable[[_K, _K], _K], identity) -> _K:
         """
-        Performs a reduction on the elements of this stream, using the provided identity value and an associative
-        accumulation function, and returns the reduced value.
+        Performs a reduction on the elements of this stream, using the provided identity value
+        and an associative accumulation function, and returns the reduced value.
 
         :param predicate:
         :param identity:
         """
-        pass
 
     @abstractmethod
     def all_match(self, predicate: Callable[[_K], bool]):
@@ -193,7 +197,6 @@ class BaseStream(Iterable[_K]):
 
         :param predicate: The callable predicate
         """
-        pass
 
     def any_match(self, predicate: Callable[[_K], bool]):
         """
@@ -233,8 +236,8 @@ class BaseStream(Iterable[_K]):
 
     def find_first(self):
         """
-        Returns an Optional describing the first element of this stream, or an empty Optional if the stream is empty.
-        :return:
+        Returns an Optional describing the first element of this stream, or an empty Optional if
+        the stream is empty. :return:
         """
         self._trigger_exec()
         if len(self._source) > 0:
