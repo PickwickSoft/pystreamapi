@@ -11,6 +11,9 @@ _identity_missing = object()
 
 
 class ParallelStream(stream.BaseStream):
+    """
+    The parallel implementation of BaseStream
+    """
 
     def filter(self, predicate: Callable[[Any], bool]):
         self._queue.append(Process(self.__filter, predicate))

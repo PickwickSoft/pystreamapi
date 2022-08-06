@@ -10,6 +10,9 @@ _identity_missing = object()
 
 
 class SequentialStream(stream.BaseStream):
+    """
+    The sequential implementation of BaseStream
+    """
 
     def filter(self, predicate: Callable[[Any], bool]):
         self._queue.append(Process(self.__filter, predicate))
