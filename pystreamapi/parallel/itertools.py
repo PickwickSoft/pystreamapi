@@ -5,6 +5,7 @@ from joblib import Parallel, delayed
 
 
 def pfilter(src, function):
+    """Filter in parallel using parallelism"""
     if len(src) < 1:
         return src
     cpu_nr = os.cpu_count() - 2 if os.cpu_count() > 2 else os.cpu_count()
@@ -21,6 +22,7 @@ def __filter(src, function):
 
 
 def reduce(function: Callable[[Any, Any], Any], source: list):
+    """Parallel reduce function using functools.reduce behind"""
     if len(source) < 2:
         return source
     cpu_nr = os.cpu_count()

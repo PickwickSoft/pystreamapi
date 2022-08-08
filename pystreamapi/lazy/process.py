@@ -2,6 +2,7 @@ from typing import Callable
 
 
 class Process:
+    """Represents a Callable with arguments to pass in. Used with the Queue"""
 
     def __init__(self, work: Callable, arg=None):
         """
@@ -14,9 +15,7 @@ class Process:
         self.__arg = arg
 
     def exec(self):
-        """
-        Run the callable in the process
-        """
+        """Run the callable in the process"""
         if self.__arg is not None:
             self.__work(self.__arg)
         else:

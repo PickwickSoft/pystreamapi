@@ -17,15 +17,10 @@ class ProcessQueue:
         self.__queue.append(proc)
 
     def execute_all(self):
-        """
-        Run all processes from the queue
-        """
+        """Run all processes from the queue"""
         for proc in self.__queue:
             proc.exec()
 
     def get_queue(self) -> List[Process]:
-        """
-        Get a list of the processes
-        :return:
-        """
+        """Get a list of the processes"""
         return self.__queue
