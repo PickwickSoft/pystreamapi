@@ -18,9 +18,9 @@ class BaseStream(Iterable[_K]):
 
     To perform a computation, stream operations are composed into a stream pipeline. A stream
     pipeline consists of a source (which might be an array, a collection, a generator function,
-    an I/O channel, etc), zero or more intermediate operations (which transform a stream into
+    an I/O channel, etc.), zero or more intermediate operations (which transform a stream into
     another stream, such as filter(Predicate)), and a terminal operation (which produces a result
-    or side-effect, such as count() or forEach(Consumer)). Streams are lazy; computation on the
+    or side effect, such as count() or forEach(Consumer)). Streams are lazy; computation on the
     source data is only performed when the terminal operation is initiated, and source elements
     are consumed only as needed.
     """
@@ -36,6 +36,17 @@ class BaseStream(Iterable[_K]):
     def __reversed__(self):
         self.__reversed()
         return self
+
+    @classmethod
+    def concat(cls, *streams: "BaseStream[_K]"):
+        """
+        Creates a lazily concatenated stream whose elements are all the elements of the first stream
+        followed by all the elements of the other streams.
+
+        :param streams: The streams to concatenate
+        :return: The concatenated stream
+        """
+        return cls(itertools.chain(*list(streams)))
 
     @abstractmethod
     def filter(self, predicate: Callable[[_K], bool]):
@@ -104,7 +115,7 @@ class BaseStream(Iterable[_K]):
         return self
 
     def __limit(self, max_size: int):
-        self._source = self._source[:max_size]
+        self._source = itertools.islice(self._source, max_size)
 
     def skip(self, n: int):
         """

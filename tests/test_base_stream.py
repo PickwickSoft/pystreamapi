@@ -2,10 +2,42 @@ import unittest
 
 from optional import Optional
 
-from pystreamapi.stream import Stream
+from pystreamapi.__stream import Stream
 
 
 class TestBaseStream(unittest.TestCase):
+
+    def test_concat(self):
+        result = Stream.concat(Stream.of([1, 2, 3]), Stream.of([9, 10, 11]))
+        self.assertListEqual(result.to_list(), [1, 2, 3, 9, 10, 11])
+
+    def test_concat_empty(self):
+        result = Stream.concat(Stream.of([]), Stream.of([1, 2, 3, 9]))
+        self.assertListEqual(result.to_list(), [1, 2, 3, 9])
+
+    def test_concat_empty_empty(self):
+        result = Stream.concat(Stream.of([]), Stream.of([])).to_list()
+        self.assertListEqual(result, [])
+
+    def test_concat_unsorted(self):
+        result = Stream.concat(Stream.of([9, 6, 1]), Stream.of([3, 5, 99]))
+        self.assertListEqual(result.to_list(), [9, 6, 1, 3, 5, 99])
+
+    def test_iterate(self):
+        result = Stream.iterate(1, lambda x: x + 1).limit(3).to_list()
+        self.assertListEqual(result, [1, 2, 3])
+
+    def test_iterate_empty(self):
+        result = Stream.iterate(1, lambda x: x + 1).limit(0).to_list()
+        self.assertListEqual(result, [])
+
+    def test_of_noneable_none(self):
+        result = Stream.of_noneable(None).to_list()
+        self.assertListEqual(result, [])
+
+    def test_of_noneable_valid(self):
+        result = Stream.of_noneable([1, 2, 3]).to_list()
+        self.assertListEqual(result, [1, 2, 3])
 
     def test_sort_unsorted(self):
         result = Stream.of([3, 2, 9, 1]).sorted().to_list()
