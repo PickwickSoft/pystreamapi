@@ -107,7 +107,7 @@ Based on the above points, a stream is:
 To start using PyStreamAPI just install the module with this command:
 
 ```bash
-pip install pystreamapi  
+pip install streams.py  
 ```
 
 Afterwards you can import it with:
