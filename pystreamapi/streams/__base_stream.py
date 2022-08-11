@@ -154,8 +154,10 @@ class BaseStream(Iterable[_K]):
             self._source = sorted(self._source, key=cmp_to_key(comparator))
 
     def reversed(self):
-        """Returns a stream consisting of the elements of this stream, with their order being
-        reversed."""
+        """
+        Returns a stream consisting of the elements of this stream, with their order being
+        reversed.
+        """
         self._queue.append(Process(self.__reversed))
         return self
 
