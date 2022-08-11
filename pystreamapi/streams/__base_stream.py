@@ -1,6 +1,7 @@
 import itertools
 from abc import abstractmethod
 from builtins import reversed
+from functools import cmp_to_key
 from typing import Iterable, Callable, Any, TypeVar, Iterator
 
 from optional import Optional
@@ -138,18 +139,23 @@ class BaseStream(Iterable[_K]):
     def __distinct(self):
         self._source = list(set(self._source))
 
-    def sorted(self):
+    def sorted(self, comparator: Callable[[_K], int] = None):
         """
         Returns a stream consisting of the elements of this stream, sorted according to natural
         order.
         """
-        self._queue.append(Process(self.__sorted))
+        self._queue.append(Process(self.__sorted, comparator))
         return self
 
-    def __sorted(self):
-        self._source = sorted(self._source)
+    def __sorted(self, comparator: Callable[[_K], int] = None):
+        if comparator is None:
+            self._source = sorted(self._source)
+        else:
+            self._source = sorted(self._source, key=cmp_to_key(comparator))
 
     def reversed(self):
+        """Returns a stream consisting of the elements of this stream, with their order being
+        reversed."""
         self._queue.append(Process(self.__reversed))
         return self
 

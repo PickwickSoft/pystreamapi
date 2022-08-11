@@ -47,6 +47,18 @@ class TestBaseStream(unittest.TestCase):
         result = Stream.of([1, 2, 3, 9]).sorted().to_list()
         self.assertListEqual(result, [1, 2, 3, 9])
 
+    @staticmethod
+    def compare(a, b):
+        return b - a
+
+    def test_sort_comparator_unsorted(self):
+        result = Stream.of([1, 2, 3, 9]).sorted(self.compare).to_list()
+        self.assertListEqual(result, [9, 3, 2, 1])
+
+    def test_sort_comparator_sorted(self):
+        result = Stream.of([9, 3, 2, 1]).sorted(self.compare).to_list()
+        self.assertListEqual(result, [9, 3, 2, 1])
+
     def test_reversed(self):
         result = Stream.of([1, 2, 3, 9]).reversed().to_list()
         self.assertListEqual(result, [9, 3, 2, 1])
