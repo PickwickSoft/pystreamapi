@@ -206,7 +206,7 @@ Stream.of([1, "2", 3.0]) \
     .to_list() # [1, 2, 3]
 ```
 
-#### m̀ap_to_str() : Convert the elements in the Stream to a String
+#### `map_to_str()` : Convert the elements in the Stream to a String
 
 Returns a stream consisting of the results of applying the `str()` function to the elements of this stream.
 
@@ -238,12 +238,20 @@ Stream.of([1, 1, 2, 3]) \
 
 #### `sorted()` : Sort Stream
 
-Returns a stream consisting of the elements of this stream, sorted according to natural order.
+Returns a stream consisting of the elements of this stream, sorted according to natural order or comparator.
 
 ```python
-Stream.of([2, 9, 1]) \
-    .sorted() \
-    .to_list() # [1, 2, 9]
+Stream.of([2, 9, 1])
+    .sorted()
+    .to_list()  # [1, 2, 9]
+```
+
+Here is an example with a custom comparator:
+
+```python
+Stream.of(["a", "cc", "bbb"])
+    .sorted(lambda x, y: len(y) - len(x))
+    .to_list()  # ['bbb', 'cc', 'a']
 ```
 
 #### `reversed()` : Reverse Stream
@@ -251,9 +259,9 @@ Stream.of([2, 9, 1]) \
 Returns a stream consisting of the elements of this stream in reverse order.
 
 ```python
-Stream.of([1, 2, 3]) \
-    .reversed() \
-    .to_list() # [3, 2, 1]
+Stream.of([1, 2, 3])
+    .reversed()
+    .to_list()  # [3, 2, 1]
 ```
 
 #### `peek()` : View intermediate results
