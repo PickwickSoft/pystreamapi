@@ -3,9 +3,9 @@ import unittest
 from optional import Optional
 from optional.something import Something
 from parameterized import parameterized_class
-from pystreamapi.streams.__parallel_stream import ParallelStream
-from pystreamapi.streams.__sequential_stream import SequentialStream
-from pystreamapi.streams.__base_stream import BaseStream
+from pystreamapi._streams.__parallel_stream import ParallelStream
+from pystreamapi._streams.__sequential_stream import SequentialStream
+from pystreamapi._streams.__base_stream import BaseStream
 
 
 @parameterized_class("stream", [

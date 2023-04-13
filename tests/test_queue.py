@@ -1,8 +1,8 @@
 from unittest import TestCase
 
 from helper import TestHelper
-from pystreamapi.lazy.process import Process
-from pystreamapi.lazy.queue import ProcessQueue
+from pystreamapi._lazy.process import Process
+from pystreamapi._lazy.queue import ProcessQueue
 
 
 class TestProcessQueue(TestCase):

@@ -6,8 +6,8 @@ from typing import Iterable, Callable, Any, TypeVar, Iterator
 
 from optional import Optional
 
-from pystreamapi.lazy.process import Process
-from pystreamapi.lazy.queue import ProcessQueue
+from pystreamapi._lazy.process import Process
+from pystreamapi._lazy.queue import ProcessQueue
 
 _K = TypeVar('_K')
 _V = TypeVar('_V')

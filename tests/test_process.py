@@ -1,7 +1,7 @@
 import unittest
 
 from helper import TestHelper
-from pystreamapi.lazy.process import Process
+from pystreamapi._lazy.process import Process
 
 
 class TestProcess(unittest.TestCase):

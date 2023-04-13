@@ -1,10 +1,10 @@
 import itertools
 from typing import Iterable, TypeVar, Callable, Optional
 
-from pystreamapi.streams.__base_stream import BaseStream
-from pystreamapi.streams.__parallel_stream import ParallelStream
-from pystreamapi.streams.__sequential_stream import SequentialStream
 from pystreamapi.__iterate import iterate
+from pystreamapi._streams.__base_stream import BaseStream
+from pystreamapi._streams.__parallel_stream import ParallelStream
+from pystreamapi._streams.__sequential_stream import SequentialStream
 
 _K = TypeVar('_K')
 

@@ -1,32 +1,30 @@
+from functools import reduce
 from typing import Callable, Any
-from functools import reduce as seq_reduce
-from joblib import Parallel, delayed
+
 from optional import Optional
 
-import pystreamapi.streams.__base_stream as stream
-from pystreamapi.lazy.process import Process
-from pystreamapi.parallel.itertools import reduce, pfilter
+import pystreamapi._streams.__base_stream as stream
+from pystreamapi._lazy.process import Process
 
 _identity_missing = object()
 
 
-class ParallelStream(stream.BaseStream):
-    """The parallel implementation of BaseStream"""
+class SequentialStream(stream.BaseStream):
+    """The sequential implementation of BaseStream"""
 
     def filter(self, predicate: Callable[[Any], bool]):
         self._queue.append(Process(self.__filter, predicate))
         return self
 
     def __filter(self, predicate: Callable[[Any], bool]):
-        self._source = pfilter(self._source, predicate)
+        self._source = [element for element in self._source if predicate(element)]
 
     def map(self, mapper: Callable[[Any], Any]):
         self._queue.append(Process(self.__map, mapper))
         return self
 
     def __map(self, predicate: Callable[[Any], Any]):
-        self._source = Parallel(n_jobs=-1, prefer="threads")(delayed(predicate)(element)
-                                                             for element in self._source)
+        self._source = [predicate(element) for element in self._source]
 
     def map_to_int(self):
         self._queue.append(Process(self.__map_to_int))
@@ -48,8 +46,7 @@ class ParallelStream(stream.BaseStream):
 
     def __flat_map(self, predicate: Callable[[Any], stream.BaseStream]):
         new_src = []
-        for element in Parallel(n_jobs=-1, prefer="threads")(delayed(predicate)(element)
-                                                             for element in self._source):
+        for element in [predicate(element) for element in self._source]:
             new_src.extend(element.to_list())
         self._source = new_src
 
@@ -58,23 +55,20 @@ class ParallelStream(stream.BaseStream):
         return self
 
     def __peek(self, predicate: Callable):
-        Parallel(n_jobs=-1, prefer="threads")(delayed(predicate)(element)
-                                              for element in self._source)
+        for element in self._source:
+            predicate(element)
 
-    def reduce(self, predicate: Callable[[Any, Any], Any], identity=_identity_missing,
-               depends_on_state=True):
+    def reduce(self, predicate: Callable, identity=_identity_missing):
         self._trigger_exec()
-        reduce_func = reduce if depends_on_state is False else seq_reduce
         if len(self._source) > 0:
             if identity is not _identity_missing:
-                return reduce_func(predicate, self._source)
-            return Optional.of(reduce_func(predicate, self._source))
+                return reduce(predicate, self._source)
+            return Optional.of(reduce(predicate, self._source))
         return identity if identity is not _identity_missing else Optional.empty()
 
     def all_match(self, predicate: Callable[[Any], bool]):
         self._trigger_exec()
-        return all(Parallel(n_jobs=-1, prefer="threads")(delayed(predicate)(element)
-                                                         for element in self._source))
+        return all(predicate(element) for element in self._source)
 
     def find_any(self):
         self._trigger_exec()
@@ -84,5 +78,5 @@ class ParallelStream(stream.BaseStream):
 
     def for_each(self, predicate: Callable):
         self._trigger_exec()
-        Parallel(n_jobs=-1, prefer="threads")(delayed(predicate)(element)
-                                              for element in self._source)
+        for element in self._source:
+            predicate(element)

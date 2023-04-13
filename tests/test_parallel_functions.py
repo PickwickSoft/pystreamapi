@@ -1,6 +1,6 @@
 import unittest
 from functools import reduce as seq_reduce
-from pystreamapi.parallel.itertools import reduce, pfilter
+from pystreamapi._parallel.itertools import reduce, pfilter
 
 
 class TestParallelFunctions(unittest.TestCase):
