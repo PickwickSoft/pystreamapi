@@ -61,9 +61,11 @@ It is similar to SQL queries and is used to manipulate data.
 E.g. Get the second-highest salary of Employee
 
 ```sql
-Select distinct Salary from Employee e1 
-where 2=Select count(distinct Salary) 
-from Employee e2 where e1.salary<=e2.salary;
+SELECT DISTINCT Salary 
+FROM Employee e1 
+WHERE 2 = (SELECT COUNT(DISTINCT Salary) 
+           FROM Employee e2 
+           WHERE e1.Salary <= e2.Salary);
 ```
 
 Now the same thing in Python
