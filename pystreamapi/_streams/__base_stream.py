@@ -48,7 +48,7 @@ class BaseStream(Iterable[K]):
         return cls(itertools.chain(*list(streams)))
 
     @abstractmethod
-    def filter(self, predicate: Callable[[K], bool]):
+    def filter(self, predicate: Callable[[K], bool]) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the elements of this stream that match the given predicate.
 
@@ -97,7 +97,7 @@ class BaseStream(Iterable[K]):
         :param action:
         """
 
-    def limit(self, max_size: int):
+    def limit(self, max_size: int) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the elements of this stream, truncated to be no longer
         than maxSize in length.
@@ -110,7 +110,7 @@ class BaseStream(Iterable[K]):
     def __limit(self, max_size: int):
         self._source = itertools.islice(self._source, max_size)
 
-    def skip(self, n: int):
+    def skip(self, n: int) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the remaining elements of this stream after discarding the
         first n elements of the stream.
@@ -123,7 +123,7 @@ class BaseStream(Iterable[K]):
     def __skip(self, n: int):
         self._source = self._source[n:]
 
-    def distinct(self):
+    def distinct(self) -> 'BaseStream[_V]':
         """Returns a stream consisting of the distinct elements of this stream."""
         self._queue.append(Process(self.__distinct))
         return self
@@ -131,7 +131,7 @@ class BaseStream(Iterable[K]):
     def __distinct(self):
         self._source = list(set(self._source))
 
-    def sorted(self, comparator: Callable[[K], int] = None):
+    def sorted(self, comparator: Callable[[K], int] = None) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the elements of this stream, sorted according to natural
         order.
@@ -145,7 +145,7 @@ class BaseStream(Iterable[K]):
         else:
             self._source = sorted(self._source, key=cmp_to_key(comparator))
 
-    def reversed(self):
+    def reversed(self) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the elements of this stream, with their order being
         reversed.
@@ -159,7 +159,7 @@ class BaseStream(Iterable[K]):
         except TypeError:
             self._source = reversed(list(self._source))
 
-    def drop_while(self, predicate: Callable[[K], bool]):
+    def drop_while(self, predicate: Callable[[K], bool]) -> 'BaseStream[_V]':
         """
         Returns, if this stream is ordered, a stream consisting of the remaining elements of this
         stream after dropping the longest prefix of elements that match the given predicate.
@@ -172,7 +172,7 @@ class BaseStream(Iterable[K]):
     def __drop_while(self, predicate: Callable[[Any], bool]):
         self._source = list(itertools.dropwhile(predicate, self._source))
 
-    def take_while(self, predicate: Callable[[K], bool]):
+    def take_while(self, predicate: Callable[[K], bool]) -> 'BaseStream[_V]':
         """
         Returns, if this stream is ordered, a stream consisting of the longest prefix of elements
         taken from this stream that match the given predicate.
