@@ -1,11 +1,12 @@
-from typing import Callable, Any
 from functools import reduce as seq_reduce
+from typing import Callable, Any, Iterable
+
 from joblib import Parallel, delayed
 from optional import Optional
 
 import pystreamapi._streams.__base_stream as stream
 from pystreamapi._lazy.process import Process
-from pystreamapi._parallel.itertools import reduce, pfilter
+from pystreamapi._parallel.fork_and_join import Parallelizer
 
 _identity_missing = object()
 
@@ -13,12 +14,17 @@ _identity_missing = object()
 class ParallelStream(stream.BaseStream):
     """The parallel implementation of BaseStream"""
 
+    def __init__(self, source: Iterable[stream.K]):
+        super().__init__(source)
+        self.parallelizer = Parallelizer()
+
     def filter(self, predicate: Callable[[Any], bool]):
         self._queue.append(Process(self.__filter, predicate))
         return self
 
     def __filter(self, predicate: Callable[[Any], bool]):
-        self._source = pfilter(self._source, predicate)
+        self.set_parallelizer_src()
+        self._source = self.parallelizer.filter(predicate)
 
     def map(self, mapper: Callable[[Any], Any]):
         self._queue.append(Process(self.__map, mapper))
@@ -62,14 +68,18 @@ class ParallelStream(stream.BaseStream):
                                               for element in self._source)
 
     def reduce(self, predicate: Callable[[Any, Any], Any], identity=_identity_missing,
-               depends_on_state=True):
+               depends_on_state=False):
         self._trigger_exec()
-        reduce_func = reduce if depends_on_state is False else seq_reduce
+        self.set_parallelizer_src()
+        reduce_func = self.__reduce if depends_on_state is False else seq_reduce
         if len(self._source) > 0:
             if identity is not _identity_missing:
                 return reduce_func(predicate, self._source)
             return Optional.of(reduce_func(predicate, self._source))
         return identity if identity is not _identity_missing else Optional.empty()
+
+    def __reduce(self, pred, _):
+        return self.parallelizer.reduce(pred)
 
     def all_match(self, predicate: Callable[[Any], bool]):
         self._trigger_exec()
@@ -86,3 +96,6 @@ class ParallelStream(stream.BaseStream):
         self._trigger_exec()
         Parallel(n_jobs=-1, prefer="threads")(delayed(predicate)(element)
                                               for element in self._source)
+
+    def set_parallelizer_src(self):
+        self.parallelizer.set_source(self._source)

@@ -58,7 +58,7 @@ class SequentialStream(stream.BaseStream):
         for element in self._source:
             predicate(element)
 
-    def reduce(self, predicate: Callable, identity=_identity_missing):
+    def reduce(self, predicate: Callable, identity=_identity_missing, depends_on_state=False):
         self._trigger_exec()
         if len(self._source) > 0:
             if identity is not _identity_missing:

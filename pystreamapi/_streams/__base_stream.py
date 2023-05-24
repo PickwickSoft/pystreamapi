@@ -2,18 +2,20 @@ import itertools
 from abc import abstractmethod
 from builtins import reversed
 from functools import cmp_to_key
-from typing import Iterable, Callable, Any, TypeVar, Iterator
+from typing import Iterable, Callable, Any, TypeVar, Iterator, Union
 
 from optional import Optional
+from optional.nothing import Nothing
+from optional.something import Something
 
 from pystreamapi._lazy.process import Process
 from pystreamapi._lazy.queue import ProcessQueue
 
-_K = TypeVar('_K')
+K = TypeVar('K')
 _V = TypeVar('_V')
 
 
-class BaseStream(Iterable[_K]):
+class BaseStream(Iterable[K]):
     """
     A sequence of elements supporting sequential and parallel aggregate operations.
 
@@ -26,20 +28,16 @@ class BaseStream(Iterable[_K]):
     are consumed only as needed.
     """
 
-    def __init__(self, source: Iterable[_K]):
+    def __init__(self, source: Iterable[K]):
         self._source = source
         self._queue = ProcessQueue()
 
-    def __iter__(self) -> Iterator[_K]:
+    def __iter__(self) -> Iterator[K]:
         self._trigger_exec()
         return iter(self._source)
 
-    def __reversed__(self):
-        self.__reversed()
-        return self
-
     @classmethod
-    def concat(cls, *streams: "BaseStream[_K]"):
+    def concat(cls, *streams: "BaseStream[K]"):
         """
         Creates a lazily concatenated stream whose elements are all the elements of the first stream
         followed by all the elements of the other streams.
@@ -50,42 +48,38 @@ class BaseStream(Iterable[_K]):
         return cls(itertools.chain(*list(streams)))
 
     @abstractmethod
-    def filter(self, predicate: Callable[[_K], bool]):
+    def filter(self, predicate: Callable[[K], bool]):
         """
         Returns a stream consisting of the elements of this stream that match the given predicate.
 
         :param predicate:
         """
-        return self
 
     @abstractmethod
-    def map(self, mapper: Callable[[_K], _V]) -> 'BaseStream[_V]':
+    def map(self, mapper: Callable[[K], _V]) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the results of applying the given function to the elements
         of this stream.
 
         :param mapper:
         """
-        return self
 
     @abstractmethod
-    def map_to_int(self):
+    def map_to_int(self) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the results of converting the elements of this stream to
         integers.
         """
-        return self
 
     @abstractmethod
-    def map_to_str(self):
+    def map_to_str(self) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the results of converting the elements of this stream to
         strings.
         """
-        return self
 
     @abstractmethod
-    def flat_map(self, predicate: Callable[[_K], Iterable[_V]]):
+    def flat_map(self, predicate: Callable[[K], Iterable[_V]]) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the results of replacing each element of this stream with
         the contents of a mapped stream produced by applying the provided mapping function to
@@ -93,17 +87,15 @@ class BaseStream(Iterable[_K]):
 
         :param predicate:
         """
-        return self
 
     @abstractmethod
-    def peek(self, action: Callable):
+    def peek(self, action: Callable) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the elements of this stream, additionally performing the
         provided action on each element as elements are consumed from the resulting stream.
 
         :param action:
         """
-        return self
 
     def limit(self, max_size: int):
         """
@@ -139,7 +131,7 @@ class BaseStream(Iterable[_K]):
     def __distinct(self):
         self._source = list(set(self._source))
 
-    def sorted(self, comparator: Callable[[_K], int] = None):
+    def sorted(self, comparator: Callable[[K], int] = None):
         """
         Returns a stream consisting of the elements of this stream, sorted according to natural
         order.
@@ -147,7 +139,7 @@ class BaseStream(Iterable[_K]):
         self._queue.append(Process(self.__sorted, comparator))
         return self
 
-    def __sorted(self, comparator: Callable[[_K], int] = None):
+    def __sorted(self, comparator: Callable[[K], int] = None):
         if comparator is None:
             self._source = sorted(self._source)
         else:
@@ -167,7 +159,7 @@ class BaseStream(Iterable[_K]):
         except TypeError:
             self._source = reversed(list(self._source))
 
-    def drop_while(self, predicate: Callable[[_K], bool]):
+    def drop_while(self, predicate: Callable[[K], bool]):
         """
         Returns, if this stream is ordered, a stream consisting of the remaining elements of this
         stream after dropping the longest prefix of elements that match the given predicate.
@@ -180,7 +172,7 @@ class BaseStream(Iterable[_K]):
     def __drop_while(self, predicate: Callable[[Any], bool]):
         self._source = list(itertools.dropwhile(predicate, self._source))
 
-    def take_while(self, predicate: Callable[[_K], bool]):
+    def take_while(self, predicate: Callable[[K], bool]):
         """
         Returns, if this stream is ordered, a stream consisting of the longest prefix of elements
         taken from this stream that match the given predicate.
@@ -209,24 +201,26 @@ class BaseStream(Iterable[_K]):
         """
 
     @abstractmethod
-    def reduce(self, predicate: Callable[[_K, _K], _K], identity) -> _K:
+    def reduce(self, predicate: Callable[[K, K], K], identity, depends_on_state=False) \
+            -> Union[K, Something, Nothing]:
         """
         Performs a reduction on the elements of this stream, using the provided identity value
         and an associative accumulation function, and returns the reduced value.
 
+        :param depends_on_state: Weather processing order changes result or not
         :param predicate:
-        :param identity:
+        :param identity: Default value
         """
 
     @abstractmethod
-    def all_match(self, predicate: Callable[[_K], bool]):
+    def all_match(self, predicate: Callable[[K], bool]):
         """
         Returns whether all elements of this stream match the provided predicate.
 
         :param predicate: The callable predicate
         """
 
-    def any_match(self, predicate: Callable[[_K], bool]):
+    def any_match(self, predicate: Callable[[K], bool]):
         """
         Returns whether any elements of this stream match the provided predicate.
 
@@ -235,7 +229,7 @@ class BaseStream(Iterable[_K]):
         self._trigger_exec()
         return any(predicate(element) for element in self._source)
 
-    def none_match(self, predicate: Callable[[_K], bool]):
+    def none_match(self, predicate: Callable[[K], bool]):
         """
         Returns whether no elements of this stream match the provided predicate.
 
