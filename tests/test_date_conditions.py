@@ -1,7 +1,10 @@
+# pylint: disable=wildcard-import,too-many-instance-attributes
+
 from datetime import datetime, timedelta, timezone
 from unittest import TestCase
 
-from pystreamapi.conditions import *
+from pystreamapi.conditions import equal_to, not_equal_to, between, not_between
+from pystreamapi.conditions.date import *
 
 
 class TestDateConditions(TestCase):

@@ -1,5 +1,9 @@
+# pylint: disable=wildcard-import,too-many-instance-attributes,unused-wildcard-import
+
 import unittest
-from pystreamapi.conditions import *
+
+from pystreamapi.conditions import empty, not_empty, equal_to, not_equal_to
+from pystreamapi.conditions.string import *
 
 
 class TestStringConditions(unittest.TestCase):

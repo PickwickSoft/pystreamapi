@@ -1,5 +1,7 @@
+# pylint: disable=wildcard-import,too-many-instance-attributes
+
 import unittest
-from pystreamapi.conditions import *
+from pystreamapi.conditions.numeric import *
 
 
 class TestNumericConditions(unittest.TestCase):

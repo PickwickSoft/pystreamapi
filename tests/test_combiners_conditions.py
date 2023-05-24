@@ -1,6 +1,6 @@
 import unittest
 
-from pystreamapi.conditions.__combiners import one_of
+from pystreamapi.conditions.combiners import one_of
 
 
 class TestCombinersConditions(unittest.TestCase):
