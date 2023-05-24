@@ -1,10 +1,12 @@
 import itertools
-from typing import Iterable, TypeVar, Callable, Optional
+from typing import Iterable, TypeVar, Callable, Optional, overload, Union, Sized, Generator
 
 from pystreamapi.__iterate import iterate
 from pystreamapi._streams.__base_stream import BaseStream
 from pystreamapi._streams.__parallel_stream import ParallelStream
 from pystreamapi._streams.__sequential_stream import SequentialStream
+from pystreamapi._streams.numeric.__numeric_base_stream import NumericBaseStream
+from pystreamapi._streams.numeric.__sequential_numeric_stream import SequentialNumericStream
 
 _K = TypeVar('_K')
 
@@ -13,6 +15,17 @@ class Stream:
     """The stream builder"""
 
     @staticmethod
+    @overload
+    def of(source: Iterable[Union[int, float]]) -> NumericBaseStream:
+        """
+        Create a new Stream from a numerical source. The implementation will decide whether to use a
+        sequential or a parallel stream
+
+        :param source:
+        """
+
+    @staticmethod
+    @overload
     def of(source: Iterable[_K]) -> BaseStream[_K]:
         """
         Create a new Stream from a source. The implementation will decide whether to use a
@@ -20,6 +33,19 @@ class Stream:
 
         :param source:
         """
+
+    @staticmethod
+    def of(source: Union[Iterable, Generator, Sized]):
+        """
+        Create a new Stream from a source. The implementation will decide whether to use a
+        sequential or a parallel stream
+
+        :param source:
+        """
+        # Check if the source is a numeric iterable (source can be a generator)
+        if isinstance(source, Iterable) and isinstance(source, Sized):
+            if all(isinstance(x, (int, float)) for x in source):
+                return SequentialNumericStream(source)
         return SequentialStream(source)
 
     @staticmethod
