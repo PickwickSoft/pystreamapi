@@ -37,44 +37,6 @@ def after_or_equal(d: __datetime):
     return lambda y: y >= d
 
 
-def equal_to(d: __datetime):
-    """
-    Returns a condition that checks if a datetime is equal to a given datetime.
-    :param d: The datetime to check against.
-    :return: A condition that checks if a datetime is equal to a given datetime.
-    """
-    return lambda y: y == d
-
-
-def not_equal_to(d: __datetime):
-    """
-    Returns a condition that checks if a datetime is not equal to a given datetime.
-    :param d: The datetime to check against.
-    :return: A condition that checks if a datetime is not equal to a given datetime.
-    """
-    return lambda y: y != d
-
-
-def between(d: __datetime, y: __datetime):
-    """
-    Returns a condition that checks if a datetime is between two given datetimes.
-    :param d: The datetime to check against.
-    :param y: The datetime to check against.
-    :return: A condition that checks if a datetime is between two given datetimes.
-    """
-    return lambda z: d <= z <= y
-
-
-def not_between(d: __datetime, y: __datetime):
-    """
-    Returns a condition that checks if a datetime is not between two given datetimes.
-    :param d: The datetime to check against.
-    :param y: The datetime to check against.
-    :return: A condition that checks if a datetime is not between two given datetimes.
-    """
-    return lambda z: not d <= z <= y
-
-
 def between_or_equal(d: __datetime, y: __datetime):
     """
     Returns a condition that checks if a datetime is between or equal to two given datetimes.

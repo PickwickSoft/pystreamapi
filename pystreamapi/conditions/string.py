@@ -2,14 +2,6 @@
 import re
 
 
-def empty(x: str):
-    return x == ''
-
-
-def not_empty(x: str):
-    return x != ''
-
-
 def contains(x: str):
     return lambda y: x in y
 
@@ -48,14 +40,6 @@ def longer_than_or_equal(x: int):
 
 def shorter_than_or_equal(x: int):
     return lambda y: len(y) <= x
-
-
-def equal_to(x: str):
-    return lambda y: x == y
-
-
-def not_equal_to(x: str):
-    return lambda y: x != y
 
 
 def equal_to_ignore_case(x: str):

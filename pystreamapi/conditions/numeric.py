@@ -1,5 +1,7 @@
 # Collection of numeric conditions for use with Stream.filter()
-import math
+import math as __math
+from datetime import datetime as __datetime
+from typing import overload as __overload, Callable as __Callable, Any as __Any
 
 
 def even(n):
@@ -42,19 +44,73 @@ def less_than_or_equal(n):
     return lambda y: y <= n
 
 
-def between(minimum, maximum):
+@__overload
+def between(minimum: __datetime, maximum: __datetime) -> __Callable[[__datetime], bool]:
+    """
+    Returns a condition that checks if a datetime is between two given datetimes.
+    :param minimum: The datetime to check against.
+    :param maximum: The datetime to check against.
+    :return: A condition that checks if a datetime is between two given datetimes.
+    """
+
+
+def between(minimum, maximum) -> __Callable[[__Any], bool]:
     return lambda n: minimum <= n <= maximum
 
 
-def not_between(minimum, maximum):
+@__overload
+def not_between(minimum: __datetime, maximum: __datetime) -> __Callable[[__datetime], bool]:
+    """
+    Returns a condition that checks if a datetime is not between two given datetimes.
+    :param minimum: The datetime to check against.
+    :param maximum: The datetime to check against.
+    :return: A condition that checks if a datetime is not between two given datetimes.
+    """
+
+
+def not_between(minimum, maximum) -> __Callable[[__Any], bool]:
     return lambda n: not between(minimum, maximum)(n)
+
+
+@__overload
+def equal_to(d: __datetime):
+    """
+    Returns a condition that checks if a datetime is equal to a given datetime.
+    :param d: The datetime to check against.
+    :return: A condition that checks if a datetime is equal to a given datetime.
+    """
+
+@__overload
+def equal_to(d: str):
+    """
+    Returns a condition that checks if a string is equal to a given string.
+    :param d: The string to check against.
+    :return: A condition that checks if a string is equal to a given string.
+    """
 
 
 def equal_to(n):
     return lambda y: y == n
 
 
-def not_equal_to(n):
+@__overload
+def not_equal_to(d: __datetime) -> __Callable[[__datetime], bool]:
+    """
+    Returns a condition that checks if a datetime is not equal to a given datetime.
+    :param d: The datetime to check against.
+    :return: A condition that checks if a datetime is not equal to a given datetime.
+    """
+
+@__overload
+def not_equal_to(d: str) -> __Callable[[str], bool]:
+    """
+    Returns a condition that checks if a string is not equal to a given string.
+    :param d: The string to check against.
+    :return: A condition that checks if a string is not equal to a given string.
+    """
+
+
+def not_equal_to(n) -> __Callable[[__Any], bool]:
     return lambda y: y != n
 
 
@@ -100,7 +156,7 @@ def not_perfect_cube(n):
 
 def perfect_power(n):
     return n > 0 and any(
-        n == i ** j for i in range(1, int(n ** 0.5) + 1) for j in range(2, int(math.log2(n)) + 1))
+        n == i ** j for i in range(1, int(n ** 0.5) + 1) for j in range(2, int(__math.log2(n)) + 1))
 
 
 def not_perfect_power(n):
