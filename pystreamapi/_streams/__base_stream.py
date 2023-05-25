@@ -13,6 +13,7 @@ from pystreamapi._lazy.queue import ProcessQueue
 
 K = TypeVar('K')
 _V = TypeVar('_V')
+_identity_missing = object()
 
 
 class BaseStream(Iterable[K]):
@@ -108,6 +109,7 @@ class BaseStream(Iterable[K]):
         return self
 
     def __limit(self, max_size: int):
+        """Limits the stream to the first n elements."""
         self._source = itertools.islice(self._source, max_size)
 
     def skip(self, n: int) -> 'BaseStream[_V]':
@@ -121,6 +123,7 @@ class BaseStream(Iterable[K]):
         return self
 
     def __skip(self, n: int):
+        """Skips the first n elements of the stream."""
         self._source = self._source[n:]
 
     def distinct(self) -> 'BaseStream[_V]':
@@ -129,6 +132,7 @@ class BaseStream(Iterable[K]):
         return self
 
     def __distinct(self):
+        """Removes duplicate elements from the stream."""
         self._source = list(set(self._source))
 
     def sorted(self, comparator: Callable[[K], int] = None) -> 'BaseStream[_V]':
@@ -140,6 +144,7 @@ class BaseStream(Iterable[K]):
         return self
 
     def __sorted(self, comparator: Callable[[K], int] = None):
+        """Sorts the stream."""
         if comparator is None:
             self._source = sorted(self._source)
         else:
@@ -154,6 +159,7 @@ class BaseStream(Iterable[K]):
         return self
 
     def __reversed(self):
+        """Reverses the stream."""
         try:
             self._source = reversed(self._source)
         except TypeError:
@@ -170,6 +176,7 @@ class BaseStream(Iterable[K]):
         return self
 
     def __drop_while(self, predicate: Callable[[Any], bool]):
+        """Drops elements from the stream while the predicate is true."""
         self._source = list(itertools.dropwhile(predicate, self._source))
 
     def take_while(self, predicate: Callable[[K], bool]) -> 'BaseStream[_V]':
@@ -183,6 +190,7 @@ class BaseStream(Iterable[K]):
         return self
 
     def __take_while(self, predicate: Callable[[Any], bool]):
+        """Takes elements from the stream while the predicate is true."""
         self._source = list(itertools.takewhile(predicate, self._source))
 
     @abstractmethod
@@ -201,8 +209,8 @@ class BaseStream(Iterable[K]):
         """
 
     @abstractmethod
-    def reduce(self, predicate: Callable[[K, K], K], identity, depends_on_state=False) \
-            -> Union[K, Something, Nothing]:
+    def reduce(self, predicate: Callable[[K, K], K], identity=_identity_missing,
+               depends_on_state=False) -> Union[K, Something, Nothing]:
         """
         Performs a reduction on the elements of this stream, using the provided identity value
         and an associative accumulation function, and returns the reduced value.
@@ -287,4 +295,5 @@ class BaseStream(Iterable[K]):
         return len(self._source)
 
     def _trigger_exec(self):
+        """Triggers execution of the stream."""
         self._queue.execute_all()
