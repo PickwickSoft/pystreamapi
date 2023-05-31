@@ -46,7 +46,7 @@ def empty():
 
 
 def not_empty():
-    return lambda x: bool(x)
+    return bool
 
 
 def equal(x):

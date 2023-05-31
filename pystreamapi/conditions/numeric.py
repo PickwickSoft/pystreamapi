@@ -188,7 +188,7 @@ def not_narcissistic():
 
 
 def happy():
-    return lambda n: __happy(n)
+    return __happy
 
 def __happy(n):
     return n == sum(int(d) ** 2 for d in str(n)) if n < 10 \

@@ -78,4 +78,5 @@ class Parallelizer:
     @staticmethod
     def __run_job_in_parallel(src, operation, op_function):
         """Run the operation in parallel"""
-        return Parallel(n_jobs=-1, prefer="processes")(delayed(operation)(op_function, part) for part in src)
+        return Parallel(n_jobs=-1, prefer="processes")(delayed(operation)(op_function, part) \
+                                                       for part in src)
