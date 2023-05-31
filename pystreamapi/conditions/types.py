@@ -9,28 +9,28 @@ def not_of_type(cls: Type):
     return lambda x: not isinstance(x, cls)
 
 
-def none(x):
-    return x is None
+def none():
+    return lambda x: x is None
 
 
-def not_none(x):
-    return x is not None
+def not_none():
+    return lambda x: x is not None
 
 
-def true(x):
-    return x is True
+def true():
+    return lambda x: x is True
 
 
-def not_true(x):
-    return x is not True
+def not_true():
+    return lambda x: x is not True
 
 
-def false(x):
-    return x is False
+def false():
+    return lambda x: x is False
 
 
-def not_false(x):
-    return x is not False
+def not_false():
+    return lambda x: x is not False
 
 
 def length(x):
@@ -41,12 +41,12 @@ def not_length(x):
     return lambda y: len(y) != x
 
 
-def empty(x):
-    return not x
+def empty():
+    return lambda x: not x
 
 
-def not_empty(x):
-    return bool(x)
+def not_empty():
+    return lambda x: bool(x)
 
 
 def equal(x):

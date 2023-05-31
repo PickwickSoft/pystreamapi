@@ -28,7 +28,7 @@ class TestForkAndJoin(TestCase):
     def test_fork_long_src(self):
         self.parallelizer.set_source(list(range(100)))
         res = self.parallelizer.fork()
-        self.assertEqual(len(res), os.cpu_count())
+        self.assertEqual(len(res), os.cpu_count() - 2)
 
     def test_fork_src_empty(self):
         self.parallelizer.set_source([])

@@ -57,180 +57,162 @@ def not_between_or_equal(d: __datetime, y: __datetime):
     return lambda z: not d <= z <= y
 
 
-def today(d: __datetime):
+def today():
     """
     The condition that checks if a datetime is today (use without parenthesis in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is today.
     """
-    return __datetime.now().date() == d.date()
+    return lambda d: __datetime.now().date() == d.date()
 
 
-def today_utc(d: __datetime):
+def today_utc():
     """
     The condition that checks if a datetime is today calculating in UTC (use without parenthesis
     in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is today.
     """
-    return __datetime.now(__timezone.utc).date() == d.astimezone(__timezone.utc).date()
+    return lambda d: __datetime.now(__timezone.utc).date() == d.astimezone(__timezone.utc).date()
 
 
-def yesterday(d: __datetime):
+def yesterday():
     """
     The condition that checks if a datetime is yesterday (use without parenthesis in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is yesterday.
     """
-    return __datetime.now().date() - __timedelta(days=1) == d.date()
+    return lambda d: __datetime.now().date() - __timedelta(days=1) == d.date()
 
 
-def yesterday_utc(d: __datetime):
+def yesterday_utc():
     """
     The condition that checks if a datetime is yesterday calculating in UTC (use without
     parenthesis in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is yesterday.
     """
-    return __datetime.now(__timezone.utc).date() - __timedelta(days=1) == d.astimezone(
+    return lambda d: __datetime.now(__timezone.utc).date() - __timedelta(days=1) == d.astimezone(
         __timezone.utc).date()
 
 
-def tomorrow(d: __datetime):
+def tomorrow():
     """
     A condition that checks if a datetime is tomorrow (use without parenthesis in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is tomorrow.
     """
-    return __datetime.now().date() + __timedelta(days=1) == d.date()
+    return lambda d: __datetime.now().date() + __timedelta(days=1) == d.date()
 
 
-def tomorrow_utc(d: __datetime):
+def tomorrow_utc():
     """
     A condition that checks if a datetime is tomorrow calculating in UTC (use without parenthesis
     in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is tomorrow.
     """
-    return __datetime.now(__timezone.utc).date() + __timedelta(days=1) == d.astimezone(
+    return lambda d: __datetime.now(__timezone.utc).date() + __timedelta(days=1) == d.astimezone(
         __timezone.utc).date()
 
 
-def this_week(d: __datetime):
+def this_week():
     """
     A condition that checks if a datetime is this week (use without parenthesis in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is this week.
     """
-    return __datetime.now().date().isocalendar()[1] == d.date().isocalendar()[1]
+    return lambda d: __datetime.now().date().isocalendar()[1] == d.date().isocalendar()[1]
 
 
-def this_week_utc(d: __datetime):
+def this_week_utc():
     """
     A condition that checks if a datetime is this week calculating in UTC (use without
     parenthesis in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is this week.
     """
-    return __datetime.now(__timezone.utc).date().isocalendar()[1] == \
+    return lambda d: __datetime.now(__timezone.utc).date().isocalendar()[1] == \
         d.astimezone(__timezone.utc).date().isocalendar()[1]
 
 
-def last_week(d: __datetime):
+def last_week():
     """
     A condition that checks if a datetime is last week (use without parenthesis in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is last week.
     """
-    return __datetime.now().date().isocalendar()[1] - 1 == d.date().isocalendar()[1]
+    return lambda d: __datetime.now().date().isocalendar()[1] - 1 == d.date().isocalendar()[1]
 
 
-def last_week_utc(d: __datetime):
+def last_week_utc():
     """
     A condition that checks if a datetime is last week calculating in UTC (use without
     parenthesis in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is last week.
     """
-    return __datetime.now(__timezone.utc).date().isocalendar()[1] - 1 == \
+    return lambda d: __datetime.now(__timezone.utc).date().isocalendar()[1] - 1 == \
         d.astimezone(__timezone.utc).date().isocalendar()[1]
 
 
-def next_week(d: __datetime):
+def next_week():
     """
     A condition that checks if a datetime is next week (use without parenthesis in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is next week.
     """
-    return __datetime.now().date().isocalendar()[1] + 1 == d.date().isocalendar()[1]
+    return lambda d: __datetime.now().date().isocalendar()[1] + 1 == d.date().isocalendar()[1]
 
 
-def next_week_utc(d: __datetime):
+def next_week_utc():
     """
     A condition that checks if a datetime is next week calculating in UTC (use without
     parenthesis in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is next week.
     """
-    return __datetime.now(__timezone.utc).date().isocalendar()[1] + 1 == \
+    return lambda d: __datetime.now(__timezone.utc).date().isocalendar()[1] + 1 == \
         d.astimezone(__timezone.utc).date().isocalendar()[1]
 
 
-def this_month(d: __datetime):
+def this_month():
     """
     A condition that checks if a datetime is this month (use without parenthesis in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is this month.
     """
-    return __check_is_month(d)
+    return lambda d: __check_is_month(d)
 
 
-def this_month_utc(d: __datetime):
+def this_month_utc():
     """
     A condition that checks if a datetime is this month calculating in UTC (use without
     parenthesis in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is this month.
     """
-    return __check_is_month(d, tz=__timezone.utc)
+    return lambda d: __check_is_month(d, tz=__timezone.utc)
 
 
-def last_month(d: __datetime):
+def last_month():
     """
     A condition that checks if a datetime is last month (use without parenthesis in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is last month.
     """
-    return __check_is_month(d, -1)
+    return lambda d: __check_is_month(d, -1)
 
 
-def last_month_utc(d: __datetime):
+def last_month_utc():
     """
     A condition that checks if a datetime is last month calculating in UTC (use without
     parenthesis in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is last month.
     """
-    return __check_is_month(d, -1, tz=__timezone.utc)
+    return lambda d: __check_is_month(d, -1, tz=__timezone.utc)
 
 
-def next_month(d: __datetime):
+def next_month():
     """
     A condition that checks if a datetime is next month (use without parenthesis in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is next month.
     """
-    return __check_is_month(d, 1)
+    return lambda d: __check_is_month(d, 1)
 
 
-def next_month_utc(d: __datetime):
+def next_month_utc():
     """
     A condition that checks if a datetime is next month calculating in UTC (use without
     parenthesis in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is next month.
     """
-    return __check_is_month(d, 1, tz=__timezone.utc)
+    return lambda d: __check_is_month(d, 1, tz=__timezone.utc)
 
 
 def __check_is_month(d: __datetime, offset: int = 0, tz: __timezone = None):
@@ -244,60 +226,54 @@ def __check_is_month(d: __datetime, offset: int = 0, tz: __timezone = None):
     return __datetime.now(tz).date().month + offset == d.astimezone(tz).date().month
 
 
-def this_year(d: __datetime):
+def this_year():
     """
     A condition that checks if a datetime is this year (use without parenthesis in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is this year.
     """
-    return __check_is_year(d)
+    return lambda d: __check_is_year(d)
 
 
-def this_year_utc(d: __datetime):
+def this_year_utc():
     """
     A condition that checks if a datetime is this year calculating in UTC (use without
     parenthesis in your Stream).
-    :param d: The datetime to check against.
     """
-    return __check_is_year(d, tz=__timezone.utc)
+    return lambda d: __check_is_year(d, tz=__timezone.utc)
 
 
-def last_year(d: __datetime):
+def last_year():
     """
     A condition that checks if a datetime is last year (use without parenthesis in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is last year.
     """
-    return __check_is_year(d, -1)
+    return lambda d: __check_is_year(d, -1)
 
 
-def last_year_utc(d: __datetime):
+def last_year_utc():
     """
     A condition that checks if a datetime is last year calculating in UTC (use without
     parenthesis in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is last year.
     """
-    return __check_is_year(d, -1, tz=__timezone.utc)
+    return lambda d: __check_is_year(d, -1, tz=__timezone.utc)
 
 
-def next_year(d: __datetime):
+def next_year():
     """
     A condition that checks if a datetime is next year (use without parenthesis in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is next year.
     """
-    return __check_is_year(d, 1)
+    return lambda d: __check_is_year(d, 1)
 
 
-def next_year_utc(d: __datetime):
+def next_year_utc():
     """
     A condition that checks if a datetime is next year calculating in UTC (use without
     parenthesis in your Stream).
-    :param d: The datetime to check against.
     :return: A condition that checks if a datetime is next year.
     """
-    return __check_is_year(d, 1, tz=__timezone.utc)
+    return lambda d: __check_is_year(d, 1, tz=__timezone.utc)
 
 
 def __check_is_year(d: __datetime, offset: int = 0, tz: __timezone = None):

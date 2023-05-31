@@ -9,12 +9,12 @@ from pystreamapi.conditions.string import *
 class TestStringConditions(unittest.TestCase):
 
     def test_empty(self):
-        self.assertTrue(empty(''))
-        self.assertFalse(empty('hello'))
+        self.assertTrue(empty()(''))
+        self.assertFalse(empty()('hello'))
 
     def test_not_empty(self):
-        self.assertTrue(not_empty('hello'))
-        self.assertFalse(not_empty(''))
+        self.assertTrue(not_empty()('hello'))
+        self.assertFalse(not_empty()(''))
 
     def test_contains(self):
         condition = contains('world')

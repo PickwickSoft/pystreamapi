@@ -4,28 +4,28 @@ from datetime import datetime as __datetime
 from typing import overload as __overload, Callable as __Callable, Any as __Any
 
 
-def even(n):
-    return n % 2 == 0
+def even():
+    return lambda n: n % 2 == 0
 
 
-def odd(n):
-    return n % 2 != 0
+def odd():
+    return lambda n: n % 2 != 0
 
 
-def positive(n):
-    return n > 0
+def positive():
+    return lambda n: n > 0
 
 
-def negative(n):
-    return n < 0
+def negative():
+    return lambda n: n < 0
 
 
-def zero(n):
-    return n == 0
+def zero():
+    return lambda n: n == 0
 
 
-def non_zero(n):
-    return n != 0
+def non_zero():
+    return lambda n: n != 0
 
 
 def greater_than(n):
@@ -130,91 +130,94 @@ def not_divisor_of(n):
     return lambda y: not divisor_of(n)(y)
 
 
-def prime(n):
-    return n > 1 and all(n % i for i in range(2, n))
+def prime():
+    return lambda n: n > 1 and all(n % i for i in range(2, n))
 
 
-def not_prime(n):
-    return not prime(n)
+def not_prime():
+    return lambda n: not prime()(n)
 
 
-def perfect_square(n):
-    return 0 <= n == int(n ** 0.5) ** 2
+def perfect_square():
+    return lambda n: 0 <= n == int(n ** 0.5) ** 2
 
 
-def not_perfect_square(n):
-    return not perfect_square(n)
+def not_perfect_square():
+    return lambda n: not perfect_square()(n)
 
 
-def perfect_cube(n):
-    return 0 <= n == int(n ** (1 / 3)) ** 3
+def perfect_cube():
+    return lambda n: 0 <= n == int(n ** (1 / 3)) ** 3
 
 
-def not_perfect_cube(n):
-    return not perfect_cube(n)
+def not_perfect_cube():
+    return lambda n: not perfect_cube()(n)
 
 
-def perfect_power(n):
-    return n > 0 and any(
+def perfect_power():
+    return lambda n: n > 0 and any(
         n == i ** j for i in range(1, int(n ** 0.5) + 1) for j in range(2, int(__math.log2(n)) + 1))
 
 
-def not_perfect_power(n):
-    return not perfect_power(n)
+def not_perfect_power():
+    return lambda n: not perfect_power()(n)
 
 
-def palindrome(n):
-    return str(n) == str(n)[::-1]
+def palindrome():
+    return lambda n: str(n) == str(n)[::-1]
 
 
-def not_palindrome(n):
-    return not palindrome(n)
+def not_palindrome():
+    return lambda n: not palindrome()(n)
 
 
-def armstrong(n):
-    return n == sum(int(d) ** len(str(n)) for d in str(n))
+def armstrong():
+    return lambda n: n == sum(int(d) ** len(str(n)) for d in str(n))
 
 
-def not_armstrong(n):
-    return not armstrong(n)
+def not_armstrong():
+    return lambda n: not armstrong()(n)
 
 
-def narcissistic(n):
-    return n == sum(int(d) ** len(str(n)) for d in str(n))
+def narcissistic():
+    return lambda n: n == sum(int(d) ** len(str(n)) for d in str(n))
 
 
-def not_narcissistic(n):
-    return not narcissistic(n)
+def not_narcissistic():
+    return lambda n: not narcissistic()(n)
 
 
-def happy(n):
+def happy():
+    return lambda n: __happy(n)
+
+def __happy(n):
     return n == sum(int(d) ** 2 for d in str(n)) if n < 10 \
-        else happy(sum(int(d) ** 2 for d in str(n)))
+        else __happy(sum(int(d) ** 2 for d in str(n)))
 
 
-def sad(n):
-    return not happy(n)
+def sad():
+    return lambda n: not __happy(n)
 
 
-def abundant(n):
-    return sum(i for i in range(1, n) if n % i == 0) > n
+def abundant():
+    return lambda n: sum(i for i in range(1, n) if n % i == 0) > n
 
 
-def not_abundant(n):
-    return not abundant(n)
+def not_abundant():
+    return lambda n: not abundant()(n)
 
 
-def deficient(n):
-    return sum(i for i in range(1, n) if n % i == 0) < n
+def deficient():
+    return lambda n: sum(i for i in range(1, n) if n % i == 0) < n
 
 
-def not_deficient(n):
-    return not deficient(n)
+def not_deficient():
+    return lambda n: not deficient()(n)
 
 
-def perfect(n):
-    return n == sum(i for i in range(1, n) if n % i == 0)
+def perfect():
+    return lambda n: n == sum(i for i in range(1, n) if n % i == 0)
 
 
-def not_perfect(n):
-    return not perfect(n)
+def not_perfect():
+    return lambda n: not perfect()(n)

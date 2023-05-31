@@ -18,33 +18,33 @@ class TestFilters(unittest.TestCase):
 
     def test_none(self):
         filter_func = none
-        self.assertTrue(filter_func(None))
-        self.assertFalse(filter_func(0))
+        self.assertTrue(filter_func()(None))
+        self.assertFalse(filter_func()(0))
 
     def test_not_none(self):
         filter_func = not_none
-        self.assertFalse(filter_func(None))
-        self.assertTrue(filter_func(0))
+        self.assertFalse(filter_func()(None))
+        self.assertTrue(filter_func()(0))
 
     def test_true(self):
         filter_func = true
-        self.assertTrue(filter_func(True))
-        self.assertFalse(filter_func(False))
+        self.assertTrue(filter_func()(True))
+        self.assertFalse(filter_func()(False))
 
     def test_not_true(self):
         filter_func = not_true
-        self.assertFalse(filter_func(True))
-        self.assertTrue(filter_func(False))
+        self.assertFalse(filter_func()(True))
+        self.assertTrue(filter_func()(False))
 
     def test_false(self):
         filter_func = false
-        self.assertTrue(filter_func(False))
-        self.assertFalse(filter_func(True))
+        self.assertTrue(filter_func()(False))
+        self.assertFalse(filter_func()(True))
 
     def test_not_false(self):
         filter_func = not_false
-        self.assertFalse(filter_func(False))
-        self.assertTrue(filter_func(True))
+        self.assertFalse(filter_func()(False))
+        self.assertTrue(filter_func()(True))
 
     def test_length(self):
         filter_func = length
@@ -58,13 +58,13 @@ class TestFilters(unittest.TestCase):
 
     def test_empty(self):
         filter_func = empty
-        self.assertTrue(filter_func(""))
-        self.assertFalse(filter_func("123"))
+        self.assertTrue(filter_func()(""))
+        self.assertFalse(filter_func()("123"))
 
     def test_not_empty(self):
         filter_func = not_empty
-        self.assertTrue(filter_func("123"))
-        self.assertFalse(filter_func(""))
+        self.assertTrue(filter_func()("123"))
+        self.assertFalse(filter_func()(""))
 
     def test_equal(self):
         filter_func = equal(10)

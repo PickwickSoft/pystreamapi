@@ -15,8 +15,8 @@ class TestDateConditions(TestCase):
         self.tomorrow = self.now + timedelta(days=1)
         self.last_week = self.now - timedelta(weeks=1)
         self.next_week = self.now + timedelta(weeks=1)
-        self.last_month = self.now.replace(month=self.now.month - 1)
-        self.next_month = self.now.replace(month=self.now.month + 1)
+        self.last_month = (self.now.replace(day=1) - timedelta(days=1))
+        self.next_month = (self.now.replace(day=25) + timedelta(days=15))
         self.last_year = self.now.replace(year=self.now.year - 1)
         self.next_year = self.now.replace(year=self.now.year + 1)
         self.now_utc = datetime.now(timezone.utc)
@@ -24,8 +24,8 @@ class TestDateConditions(TestCase):
         self.tomorrow_utc = self.now_utc + timedelta(days=1)
         self.last_week_utc = self.now_utc - timedelta(weeks=1)
         self.next_week_utc = self.now_utc + timedelta(weeks=1)
-        self.last_month_utc = self.now_utc.replace(month=self.now_utc.month - 1)
-        self.next_month_utc = self.now_utc.replace(month=self.now_utc.month + 1)
+        self.last_month_utc = (self.now_utc.replace(day=1) - timedelta(days=1))
+        self.next_month_utc = (self.now_utc.replace(day=25) + timedelta(days=15))
         self.last_year_utc = self.now_utc.replace(year=self.now_utc.year - 1)
         self.next_year_utc = self.now_utc.replace(year=self.now_utc.year + 1)
 
@@ -82,121 +82,121 @@ class TestDateConditions(TestCase):
         self.assertTrue(not_between_or_equal_func(self.yesterday))
 
     def test_today(self):
-        self.assertTrue(today(self.now))
-        self.assertFalse(today(self.yesterday))
-        self.assertFalse(today(self.tomorrow))
+        self.assertTrue(today()(self.now))
+        self.assertFalse(today()(self.yesterday))
+        self.assertFalse(today()(self.tomorrow))
 
     def test_today_utc(self):
-        self.assertTrue(today_utc(self.now_utc))
-        self.assertFalse(today_utc(self.yesterday_utc))
-        self.assertFalse(today_utc(self.tomorrow_utc))
+        self.assertTrue(today_utc()(self.now_utc))
+        self.assertFalse(today_utc()(self.yesterday_utc))
+        self.assertFalse(today_utc()(self.tomorrow_utc))
 
     def test_yesterday(self):
-        self.assertTrue(yesterday(self.yesterday))
-        self.assertFalse(yesterday(self.now))
-        self.assertFalse(yesterday(self.tomorrow))
+        self.assertTrue(yesterday()(self.yesterday))
+        self.assertFalse(yesterday()(self.now))
+        self.assertFalse(yesterday()(self.tomorrow))
 
     def test_yesterday_utc(self):
-        self.assertTrue(yesterday_utc(self.yesterday_utc))
-        self.assertFalse(yesterday_utc(self.now_utc))
-        self.assertFalse(yesterday_utc(self.tomorrow_utc))
+        self.assertTrue(yesterday_utc()(self.yesterday_utc))
+        self.assertFalse(yesterday_utc()(self.now_utc))
+        self.assertFalse(yesterday_utc()(self.tomorrow_utc))
 
     def test_tomorrow(self):
-        self.assertTrue(tomorrow(self.tomorrow))
-        self.assertFalse(tomorrow(self.now))
-        self.assertFalse(tomorrow(self.yesterday))
+        self.assertTrue(tomorrow()(self.tomorrow))
+        self.assertFalse(tomorrow()(self.now))
+        self.assertFalse(tomorrow()(self.yesterday))
 
     def test_tomorrow_utc(self):
-        self.assertTrue(tomorrow_utc(self.tomorrow_utc))
-        self.assertFalse(tomorrow_utc(self.now_utc))
-        self.assertFalse(tomorrow_utc(self.yesterday_utc))
+        self.assertTrue(tomorrow_utc()(self.tomorrow_utc))
+        self.assertFalse(tomorrow_utc()(self.now_utc))
+        self.assertFalse(tomorrow_utc()(self.yesterday_utc))
 
     def test_this_week(self):
-        self.assertTrue(this_week(self.now))
-        self.assertFalse(this_week(self.last_week))
-        self.assertFalse(this_week(self.next_week))
+        self.assertTrue(this_week()(self.now))
+        self.assertFalse(this_week()(self.last_week))
+        self.assertFalse(this_week()(self.next_week))
 
     def test_this_week_utc(self):
-        self.assertTrue(this_week_utc(self.now_utc))
-        self.assertFalse(this_week_utc(self.last_week_utc))
-        self.assertFalse(this_week_utc(self.next_week_utc))
+        self.assertTrue(this_week_utc()(self.now_utc))
+        self.assertFalse(this_week_utc()(self.last_week_utc))
+        self.assertFalse(this_week_utc()(self.next_week_utc))
 
     def test_last_week(self):
-        self.assertTrue(last_week(self.last_week))
-        self.assertFalse(last_week(self.now))
-        self.assertFalse(last_week(self.next_week))
+        self.assertTrue(last_week()(self.last_week))
+        self.assertFalse(last_week()(self.now))
+        self.assertFalse(last_week()(self.next_week))
 
     def test_last_week_utc(self):
-        self.assertTrue(last_week_utc(self.last_week_utc))
-        self.assertFalse(last_week_utc(self.now_utc))
-        self.assertFalse(last_week_utc(self.next_week_utc))
+        self.assertTrue(last_week_utc()(self.last_week_utc))
+        self.assertFalse(last_week_utc()(self.now_utc))
+        self.assertFalse(last_week_utc()(self.next_week_utc))
 
     def test_next_week(self):
-        self.assertTrue(next_week(self.next_week))
-        self.assertFalse(next_week(self.now))
-        self.assertFalse(next_week(self.last_week))
+        self.assertTrue(next_week()(self.next_week))
+        self.assertFalse(next_week()(self.now))
+        self.assertFalse(next_week()(self.last_week))
 
     def test_next_week_utc(self):
-        self.assertTrue(next_week_utc(self.next_week_utc))
-        self.assertFalse(next_week_utc(self.now_utc))
-        self.assertFalse(next_week_utc(self.last_week_utc))
+        self.assertTrue(next_week_utc()(self.next_week_utc))
+        self.assertFalse(next_week_utc()(self.now_utc))
+        self.assertFalse(next_week_utc()(self.last_week_utc))
 
     def test_this_month(self):
-        self.assertTrue(this_month(self.now))
-        self.assertFalse(this_month(self.last_month))
-        self.assertFalse(this_month(self.next_month))
+        self.assertTrue(this_month()(self.now))
+        self.assertFalse(this_month()(self.last_month))
+        self.assertFalse(this_month()(self.next_month))
 
     def test_this_month_utc(self):
-        self.assertTrue(this_month_utc(self.now_utc))
-        self.assertFalse(this_month_utc(self.last_month_utc))
-        self.assertFalse(this_month_utc(self.next_month_utc))
+        self.assertTrue(this_month_utc()(self.now_utc))
+        self.assertFalse(this_month_utc()(self.last_month_utc))
+        self.assertFalse(this_month_utc()(self.next_month_utc))
 
     def test_last_month(self):
-        self.assertTrue(last_month(self.last_month))
-        self.assertFalse(last_month(self.now))
-        self.assertFalse(last_month(self.next_month))
+        self.assertTrue(last_month()(self.last_month))
+        self.assertFalse(last_month()(self.now))
+        self.assertFalse(last_month()(self.next_month))
 
     def test_last_month_utc(self):
-        self.assertTrue(last_month_utc(self.last_month_utc))
-        self.assertFalse(last_month_utc(self.now_utc))
-        self.assertFalse(last_month_utc(self.next_month_utc))
+        self.assertTrue(last_month_utc()(self.last_month_utc))
+        self.assertFalse(last_month_utc()(self.now_utc))
+        self.assertFalse(last_month_utc()(self.next_month_utc))
 
     def test_next_month(self):
-        self.assertTrue(next_month(self.next_month))
-        self.assertFalse(next_month(self.now))
-        self.assertFalse(next_month(self.last_month))
+        self.assertTrue(next_month()(self.next_month))
+        self.assertFalse(next_month()(self.now))
+        self.assertFalse(next_month()(self.last_month))
 
     def test_next_month_utc(self):
-        self.assertTrue(next_month_utc(self.next_month_utc))
-        self.assertFalse(next_month_utc(self.now_utc))
-        self.assertFalse(next_month_utc(self.last_month_utc))
+        self.assertTrue(next_month_utc()(self.next_month_utc))
+        self.assertFalse(next_month_utc()(self.now_utc))
+        self.assertFalse(next_month_utc()(self.last_month_utc))
 
     def test_this_year(self):
-        self.assertTrue(this_year(self.now))
-        self.assertFalse(this_year(self.last_year))
-        self.assertFalse(this_year(self.next_year))
+        self.assertTrue(this_year()(self.now))
+        self.assertFalse(this_year()(self.last_year))
+        self.assertFalse(this_year()(self.next_year))
 
     def test_this_year_utc(self):
-        self.assertTrue(this_year_utc(self.now_utc))
-        self.assertFalse(this_year_utc(self.last_year_utc))
-        self.assertFalse(this_year_utc(self.next_year_utc))
+        self.assertTrue(this_year_utc()(self.now_utc))
+        self.assertFalse(this_year_utc()(self.last_year_utc))
+        self.assertFalse(this_year_utc()(self.next_year_utc))
 
     def test_last_year(self):
-        self.assertTrue(last_year(self.last_year))
-        self.assertFalse(last_year(self.now))
-        self.assertFalse(last_year(self.next_year))
+        self.assertTrue(last_year()(self.last_year))
+        self.assertFalse(last_year()(self.now))
+        self.assertFalse(last_year()(self.next_year))
 
     def test_last_year_utc(self):
-        self.assertTrue(last_year_utc(self.last_year_utc))
-        self.assertFalse(last_year_utc(self.now_utc))
-        self.assertFalse(last_year_utc(self.next_year_utc))
+        self.assertTrue(last_year_utc()(self.last_year_utc))
+        self.assertFalse(last_year_utc()(self.now_utc))
+        self.assertFalse(last_year_utc()(self.next_year_utc))
 
     def test_next_year(self):
-        self.assertTrue(next_year(self.next_year))
-        self.assertFalse(next_year(self.now))
-        self.assertFalse(next_year(self.last_year))
+        self.assertTrue(next_year()(self.next_year))
+        self.assertFalse(next_year()(self.now))
+        self.assertFalse(next_year()(self.last_year))
 
     def test_next_year_utc(self):
-        self.assertTrue(next_year_utc(self.next_year_utc))
-        self.assertFalse(next_year_utc(self.now_utc))
-        self.assertFalse(next_year_utc(self.last_year_utc))
+        self.assertTrue(next_year_utc()(self.next_year_utc))
+        self.assertFalse(next_year_utc()(self.now_utc))
+        self.assertFalse(next_year_utc()(self.last_year_utc))
