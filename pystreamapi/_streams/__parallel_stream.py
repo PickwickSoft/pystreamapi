@@ -71,7 +71,7 @@ class ParallelStream(stream.BaseStream):
                depends_on_state=False):
         self._trigger_exec()
         self.set_parallelizer_src()
-        reduce_func = self.__reduce if depends_on_state is False else seq_reduce
+        reduce_func = seq_reduce if depends_on_state else self.__reduce
         if len(self._source) > 0:
             if identity is not _identity_missing:
                 return reduce_func(predicate, self._source)
