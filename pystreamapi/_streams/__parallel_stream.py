@@ -18,13 +18,40 @@ class ParallelStream(stream.BaseStream):
         super().__init__(source)
         self.parallelizer = Parallelizer()
 
+    def all_match(self, predicate: Callable[[Any], bool]):
+        self._trigger_exec()
+        return all(Parallel(n_jobs=-1, prefer="threads")(delayed(predicate)(element)
+                                                         for element in self._source))
+
     def filter(self, predicate: Callable[[Any], bool]):
         self._queue.append(Process(self.__filter, predicate))
         return self
 
     def __filter(self, predicate: Callable[[Any], bool]):
-        self.set_parallelizer_src()
+        self._set_parallelizer_src()
         self._source = self.parallelizer.filter(predicate)
+
+    def find_any(self):
+        self._trigger_exec()
+        if len(self._source) > 0:
+            return Optional.of(self._source[0])
+        return Optional.empty()
+
+    def flat_map(self, predicate: Callable[[Any], stream.BaseStream]):
+        self._queue.append(Process(self.__flat_map, predicate))
+        return self
+
+    def __flat_map(self, predicate: Callable[[Any], stream.BaseStream]):
+        new_src = []
+        for element in Parallel(n_jobs=-1, prefer="threads")(delayed(predicate)(element)
+                                                             for element in self._source):
+            new_src.extend(element.to_list())
+        self._source = new_src
+
+    def for_each(self, predicate: Callable):
+        self._trigger_exec()
+        Parallel(n_jobs=-1, prefer="threads")(delayed(predicate)(element)
+                                              for element in self._source)
 
     def map(self, mapper: Callable[[Any], Any]):
         self._queue.append(Process(self.__map, mapper))
@@ -48,17 +75,6 @@ class ParallelStream(stream.BaseStream):
     def __map_to_str(self):
         self.__map(str)
 
-    def flat_map(self, predicate: Callable[[Any], stream.BaseStream]):
-        self._queue.append(Process(self.__flat_map, predicate))
-        return self
-
-    def __flat_map(self, predicate: Callable[[Any], stream.BaseStream]):
-        new_src = []
-        for element in Parallel(n_jobs=-1, prefer="threads")(delayed(predicate)(element)
-                                                             for element in self._source):
-            new_src.extend(element.to_list())
-        self._source = new_src
-
     def peek(self, action: Callable):
         self._queue.append(Process(self.__peek, action))
         return self
@@ -70,7 +86,7 @@ class ParallelStream(stream.BaseStream):
     def reduce(self, predicate: Callable[[Any, Any], Any], identity=_identity_missing,
                depends_on_state=False):
         self._trigger_exec()
-        self.set_parallelizer_src()
+        self._set_parallelizer_src()
         reduce_func = seq_reduce if depends_on_state else self.__reduce
         if len(self._source) > 0:
             if identity is not _identity_missing:
@@ -81,21 +97,5 @@ class ParallelStream(stream.BaseStream):
     def __reduce(self, pred, _):
         return self.parallelizer.reduce(pred)
 
-    def all_match(self, predicate: Callable[[Any], bool]):
-        self._trigger_exec()
-        return all(Parallel(n_jobs=-1, prefer="threads")(delayed(predicate)(element)
-                                                         for element in self._source))
-
-    def find_any(self):
-        self._trigger_exec()
-        if len(self._source) > 0:
-            return Optional.of(self._source[0])
-        return Optional.empty()
-
-    def for_each(self, predicate: Callable):
-        self._trigger_exec()
-        Parallel(n_jobs=-1, prefer="threads")(delayed(predicate)(element)
-                                              for element in self._source)
-
-    def set_parallelizer_src(self):
+    def _set_parallelizer_src(self):
         self.parallelizer.set_source(self._source)

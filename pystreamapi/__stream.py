@@ -43,9 +43,9 @@ class Stream:
         :param source:
         """
         # Check if the source is a numeric iterable (source can be a generator)
-        if isinstance(source, Iterable) and isinstance(source, Sized):
-            if all(isinstance(x, (int, float)) for x in source):
-                return SequentialNumericStream(source)
+        if isinstance(source, Iterable) and isinstance(source, Sized) \
+                and all(isinstance(x, (int, float)) for x in source):
+            return SequentialNumericStream(source)
         return SequentialStream(source)
 
     @staticmethod
