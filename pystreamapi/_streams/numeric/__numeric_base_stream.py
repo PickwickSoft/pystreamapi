@@ -7,6 +7,23 @@ from pystreamapi._streams.__base_stream import BaseStream
 
 class NumericBaseStream(BaseStream, ABC):
 
+    def interquartile_range(self) -> Union[float, int, None]:
+        """
+        Calculates the iterquartile range of a numerical Stream
+        :return: The iterquartile range, can be int or float
+        """
+        self._trigger_exec()
+        return self.third_quartile() - self.first_quartile() if len(self._source) > 0 else None
+
+    def first_quartile(self) -> Union[float, int, None]:
+        """
+        Calculates the first quartile of a numerical Stream
+        :return: The first quartile, can be int or float
+        """
+        self._trigger_exec()
+        self._source = sorted(self._source)
+        return self.__median(self._source[:(len(self._source)) // 2])
+
     @abstractmethod
     def mean(self) -> Union[float, int]:
         """
@@ -15,6 +32,10 @@ class NumericBaseStream(BaseStream, ABC):
         """
 
     def median(self) -> Union[float, int, None]:
+        """
+        Calculates the median of a numerical Stream
+        :return: The median, can be int or float
+        """
         self._trigger_exec()
         return self.__median(self._source)
 
@@ -28,17 +49,11 @@ class NumericBaseStream(BaseStream, ABC):
             return (source[midpoint] + source[midpoint - 1]) / 2
         return source[midpoint]
 
-    def first_quartile(self) -> Union[float, int, None]:
-        self._trigger_exec()
-        self._source = sorted(self._source)
-        return self.__median(self._source[:(len(self._source)) // 2])
-
-    def third_quartile(self) -> Union[float, int, None]:
-        self._trigger_exec()
-        self._source = sorted(self._source)
-        return self.__median(self._source[(len(self._source) + 1) // 2:])
-
     def mode(self) -> Union[list[Union[int, float]], None]:
+        """
+        Calculates the mode(s) (most frequently occurring element) of a numerical Stream
+        :return: The first quartile, can be int or float
+        """
         self._trigger_exec()
         frequency = Counter(self._source)
         if not frequency:
@@ -47,9 +62,18 @@ class NumericBaseStream(BaseStream, ABC):
         return [number for number, count in frequency.items() if count == max_frequency]
 
     def range(self) -> Union[float, int, None]:
+        """
+        Calculates the range of a numerical Stream
+        :return: The range, can be int or float
+        """
         self._trigger_exec()
         return max(self._source) - min(self._source) if len(self._source) > 0 else None
 
-    def interquartile_range(self) -> Union[float, int, None]:
+    def third_quartile(self) -> Union[float, int, None]:
+        """
+        Calculates the third quartile of a numerical Stream
+        :return: The third quartile, can be int or float
+        """
         self._trigger_exec()
-        return self.third_quartile() - self.first_quartile() if len(self._source) > 0 else None
+        self._source = sorted(self._source)
+        return self.__median(self._source[(len(self._source) + 1) // 2:])
