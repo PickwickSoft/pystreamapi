@@ -6,6 +6,11 @@ from pystreamapi._streams.__base_stream import BaseStream
 
 
 class NumericBaseStream(BaseStream, ABC):
+    """
+    This stream extends the capabilities of the default stream by introducing numerical operations.
+    It is designed specifically for use with numerical data sources and can only be applied
+    to such data.
+    """
 
     def interquartile_range(self) -> Union[float, int, None]:
         """
@@ -41,6 +46,7 @@ class NumericBaseStream(BaseStream, ABC):
 
     @staticmethod
     def __median(source) -> Union[float, int, None]:
+        """Calculates the median of a numerical Stream"""
         source = sorted(source)
         if not source:
             return None
