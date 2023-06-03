@@ -1,5 +1,5 @@
 version = 1
-test_patterns = ["tests/*py"]
+test_patterns = ["tests/\*\*"]
   
 [[analyzers]]
 name = "test-coverage"
