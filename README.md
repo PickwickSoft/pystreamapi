@@ -96,7 +96,7 @@ Considering the above characteristics, a stream can be defined as follows:
 
 ## Use conditions to speed up your workflow!
 
-![Conditions](file:///disks/Projects/Python/pystreamapi/assets/conditions.png?msec=1685713695461)
+![Conditions](./assets/conditions.png)
 
 Conditions provide a convenient means for performing logical operations within your Stream, such as using `filter()`, `take_while()`, `drop_while()`, and more. With PyStreamAPI, you have access to a staggering 111 diverse conditions that enable you to process various data types including strings, types, numbers, and dates. Additionally, PyStreamAPI offers a powerful combiner that allows you to effortlessly combine multiple conditions, facilitating the implementation of highly intricate pipelines.
 
