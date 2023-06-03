@@ -7,7 +7,7 @@ from joblib import Parallel, delayed
 
 
 class Parallelizer:
-    """
+    r"""
     Implementation of the fork-and-join technology.
 
     A given list gets split into multiple sublists,
@@ -18,6 +18,7 @@ class Parallelizer:
     Filter/Reduce: [[3], [7], [11]]\n
     Combine: 21
     """
+
     def __init__(self):
         self.__src = None
 
@@ -51,7 +52,8 @@ class Parallelizer:
         Split the source list into multiple sublists.
         The number of sublists is calculated based on the number of CPU cores.
         :param min_nr_items: The minimum number of items per sublist
-        :return: A list of sublists"""
+        :return: A list of sublists
+        """
         if min_nr_items < 1:
             raise ValueError("There cannot be less than one element per list")
         if len(self.__src) == 0:
@@ -78,5 +80,5 @@ class Parallelizer:
     @staticmethod
     def __run_job_in_parallel(src, operation, op_function):
         """Run the operation in parallel"""
-        return Parallel(n_jobs=-1, prefer="processes")(delayed(operation)(op_function, part) \
+        return Parallel(n_jobs=-1, prefer="processes")(delayed(operation)(op_function, part)
                                                        for part in src)

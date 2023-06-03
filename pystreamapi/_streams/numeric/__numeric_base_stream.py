@@ -52,7 +52,7 @@ class NumericBaseStream(BaseStream, ABC):
     def mode(self) -> Union[list[Union[int, float]], None]:
         """
         Calculates the mode(s) (most frequently occurring element) of a numerical Stream
-        :return: The first quartile, can be int or float
+        :return: The mode, can be int or float
         """
         self._trigger_exec()
         frequency = Counter(self._source)

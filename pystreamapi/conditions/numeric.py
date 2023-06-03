@@ -80,6 +80,7 @@ def equal_to(d: __datetime):
     :return: A condition that checks if a datetime is equal to a given datetime.
     """
 
+
 @__overload
 def equal_to(d: str):
     """
@@ -100,6 +101,7 @@ def not_equal_to(d: __datetime) -> __Callable[[__datetime], bool]:
     :param d: The datetime to check against.
     :return: A condition that checks if a datetime is not equal to a given datetime.
     """
+
 
 @__overload
 def not_equal_to(d: str) -> __Callable[[str], bool]:
@@ -189,6 +191,7 @@ def not_narcissistic():
 
 def happy():
     return __happy
+
 
 def __happy(n):
     return n == sum(int(d) ** 2 for d in str(n)) if n < 10 \
