@@ -185,7 +185,7 @@ Stream.concat(Stream.of([1, 2]), Stream.of([3, 4]))
 Creates a new Stream from multiple Streams. Order doesn't change.
 
 ## API Reference
-For a more detailed documentation view the docs on GitBook:
+For a more detailed documentation view the docs on GitBook: [PyStreamAPI Docs](https://pystreamapi.pickwicksoft.org/)
 
 ## Complex Examples
 
