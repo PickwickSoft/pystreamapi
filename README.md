@@ -6,6 +6,8 @@
   <a href="https://deepsource.io/gh/PickwickSoft/pystreamapi/?ref=repository-badge"><img src="https://deepsource.io/gh/PickwickSoft/pystreamapi.svg/?label=active+issues&show_trend=true&token=7lV9pH1U-N1oId03M-XKZL5B"  alt="DeepSource"/></a>
   <a href="https://github.com/PickwickSoft/pystreamapi/actions/workflows/unittests.yml"><img src="https://github.com/PickwickSoft/pystreamapi/actions/workflows/unittests.yml/badge.svg"  alt="Tests"/></a>
   <a href="https://github.com/PickwickSoft/pystreamapi/actions/workflows/pylint.yml"><img src="https://github.com/PickwickSoft/pystreamapi/actions/workflows/pylint.yml/badge.svg"  alt="Pylint"/></a>
+  <a href="https://sonarcloud.io/summary/new_code?id=PickwickSoft_pystreamapi"><img src="https://sonarcloud.io/api/project_badges/measure?project=PickwickSoft_pystreamapi&metric=alert_status"  alt="Quality Gate"/></a>
+  <a href="https://sonarcloud.io/summary/new_code?id=PickwickSoft_pystreamapi"><img src="https://sonarcloud.io/api/project_badges/measure?project=PickwickSoft_pystreamapi&metric=coverage"  alt="Coverage"/></a>
 </p>
 
 PyStreamAPI is a Python stream library that draws inspiration from the Java Stream API. 
@@ -181,6 +183,9 @@ Stream.concat(Stream.of([1, 2]), Stream.of([3, 4]))
 ```
 
 Creates a new Stream from multiple Streams. Order doesn't change.
+
+## API Reference
+For a more detailed documentation view the docs on GitBook:
 
 ## Complex Examples
 
