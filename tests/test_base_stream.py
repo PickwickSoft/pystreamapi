@@ -3,6 +3,9 @@ import unittest
 from optional import Optional
 
 from pystreamapi.__stream import Stream
+from pystreamapi._streams.__parallel_stream import ParallelStream
+from pystreamapi._streams.__sequential_stream import SequentialStream
+from pystreamapi._streams.numeric.__sequential_numeric_stream import SequentialNumericStream
 
 
 class TestBaseStream(unittest.TestCase):
@@ -31,6 +34,22 @@ class TestBaseStream(unittest.TestCase):
         result = Stream.iterate(1, lambda x: x + 1).limit(0).to_list()
         self.assertListEqual(result, [])
 
+    def test_of_parallel(self):
+        stream = Stream.parallel_of([1, 2])
+        self.assertIsInstance(stream, ParallelStream)
+
+    def test_of_sequential(self):
+        stream = Stream.sequential_of([1, 2])
+        self.assertIsInstance(stream, SequentialStream)
+
+    def test_of_numeric(self):
+        stream = Stream.of([1, 2])
+        self.assertIsInstance(stream, SequentialNumericStream)
+
+    def test_of_non_numeric(self):
+        stream = Stream.of(["1", "2"])
+        self.assertIsInstance(stream, SequentialStream)
+
     def test_of_noneable_none(self):
         result = Stream.of_noneable(None).to_list()
         self.assertListEqual(result, [])
@@ -38,6 +57,13 @@ class TestBaseStream(unittest.TestCase):
     def test_of_noneable_valid(self):
         result = Stream.of_noneable([1, 2, 3]).to_list()
         self.assertListEqual(result, [1, 2, 3])
+
+    def test_concat_after_initialization(self):
+        stream1 = Stream.of([1, 2, 3])
+        stream2 = Stream.of([4, 5, 6])
+        stream3 = Stream.of([7, 8, 9])
+        result = stream1.concat(stream2, stream3).to_list()
+        self.assertListEqual(result, [4, 5, 6, 7, 8, 9])
 
     def test_sort_unsorted(self):
         result = Stream.of([3, 2, 9, 1]).sorted().to_list()
@@ -70,6 +96,16 @@ class TestBaseStream(unittest.TestCase):
     def test_reversed_empty(self):
         result = Stream.of([]).reversed().to_list()
         self.assertListEqual(result, [])
+
+    def test_reversed_wrong_type(self):
+        def finite_generator():
+            index = 1
+            while index < 5:
+                yield index
+                index += 1
+
+        result = Stream.of(finite_generator()).reversed().to_list()
+        self.assertListEqual(result, [4, 3, 2, 1])
 
     def test_limit(self):
         result = Stream.of([1, 2, 3, 9]).limit(3).to_list()

@@ -3,14 +3,16 @@ import unittest
 from optional import Optional
 from optional.something import Something
 from parameterized import parameterized_class
-from pystreamapi.streams.__parallel_stream import ParallelStream
-from pystreamapi.streams.__sequential_stream import SequentialStream
-from pystreamapi.streams.__base_stream import BaseStream
+from pystreamapi._streams.__parallel_stream import ParallelStream
+from pystreamapi._streams.__sequential_stream import SequentialStream
+from pystreamapi._streams.__base_stream import BaseStream
+from pystreamapi._streams.numeric.__sequential_numeric_stream import SequentialNumericStream
 
 
 @parameterized_class("stream", [
     [SequentialStream],
-    [ParallelStream]])
+    [ParallelStream],
+    [SequentialNumericStream]])
 class TestStreamImplementation(unittest.TestCase):
 
     def test_for_each(self):
@@ -109,6 +111,12 @@ class TestStreamImplementation(unittest.TestCase):
         result = self.stream(src).reduce(lambda x, y: x + y, identity=0)
         self.assertEqual(type(result), int)
         self.assertEqual(result, sum(src))
+
+    def test_reduce_depends_on_state(self):
+        src = [4, 3, 2, 1]
+        result = self.stream(src).reduce(lambda x, y: x - y, depends_on_state=True)
+        self.assertEqual(type(result), Something)
+        self.assertEqual(result.get(), -2)
 
     def test_reduce_empty_stream_no_identity(self):
         result = self.stream([]).reduce(lambda x, y: x + y)

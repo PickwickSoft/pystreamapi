@@ -1,35 +1,36 @@
-# Python Stream API
+![Header](assets/header.png)
 
-[![DeepSource](https://deepsource.io/gh/PickwickSoft/pystreamapi.svg/?label=active+issues&show_trend=true&token=7lV9pH1U-N1oId03M-XKZL5B)](https://deepsource.io/gh/PickwickSoft/pystreamapi/?ref=repository-badge)
-[![Tests](https://github.com/PickwickSoft/pystreamapi/actions/workflows/unittests.yml/badge.svg)](https://github.com/PickwickSoft/pystreamapi/actions/workflows/unittests.yml)
-[![Pylint](https://github.com/PickwickSoft/pystreamapi/actions/workflows/pylint.yml/badge.svg)](https://github.com/PickwickSoft/pystreamapi/actions/workflows/pylint.yml)
+<h1 align="center">PyStreamAPI</h1>
 
-PyStreamAPI is a stream library for Python inspired by the Java Stream API and implements almost exact the same method names and functionality as Java Stream API!
+<p align="center">
+  <a href="https://deepsource.io/gh/PickwickSoft/pystreamapi/?ref=repository-badge"><img src="https://deepsource.io/gh/PickwickSoft/pystreamapi.svg/?label=active+issues&show_trend=true&token=7lV9pH1U-N1oId03M-XKZL5B"  alt="DeepSource"/></a>
+  <a href="https://github.com/PickwickSoft/pystreamapi/actions/workflows/unittests.yml"><img src="https://github.com/PickwickSoft/pystreamapi/actions/workflows/unittests.yml/badge.svg"  alt="Tests"/></a>
+  <a href="https://github.com/PickwickSoft/pystreamapi/actions/workflows/pylint.yml"><img src="https://github.com/PickwickSoft/pystreamapi/actions/workflows/pylint.yml/badge.svg"  alt="Pylint"/></a>
+  <a href="https://sonarcloud.io/summary/new_code?id=PickwickSoft_pystreamapi"><img src="https://sonarcloud.io/api/project_badges/measure?project=PickwickSoft_pystreamapi&metric=alert_status"  alt="Quality Gate"/></a>
+  <a href="https://sonarcloud.io/summary/new_code?id=PickwickSoft_pystreamapi"><img src="https://sonarcloud.io/api/project_badges/measure?project=PickwickSoft_pystreamapi&metric=coverage"  alt="Coverage"/></a>
+</p>
 
-PyStreamAPI uses lazy execution and offers sequential as well as parallel streams.
+PyStreamAPI is a Python stream library that draws inspiration from the Java Stream API. 
+Although it closely mirrors the Java API, PyStreamAPI adds some innovative features to make streams in Python even more 
+innovative, declarative and easy to use.
 
-***Now you might think: Why another library? There are so many!***
+PyStreamAPI offers both sequential and parallel streams and utilizes lazy execution.
 
-Here are a few of the advantages this implementation has:
+Now you might be wondering why another library when there are already a few implementations? Well, here are a few advantages of this particular implementation:
 
-- Sequential as well as parallel version
+* It provides both sequential and parallel versions.
+* Lazy execution is supported, enhancing performance.
+* It boasts high speed and efficiency.
+* The implementation achieves 100% test coverage.
+* It follows Pythonic principles, resulting in clean and readable code.
+* It adds some cool innovative features like conditions and an even more declarative look
 
-- Lazy execution
-
-- High speed
-
-- 100% test coverage
-
-- Pythonic implementation
-
-- Clean and easy to read code
-
-**Here a small example:**
+Let's take a look at a small example:
 
 ```python
 from pystreamapi import Stream
 
-Stream.parallel_of([" ", '3', None, "2", 1, ""]) \
+Stream.of([" ", '3', None, "2", 1, ""]) \
     .filter(lambda x: x is not None) \
     .map(str) \
     .map(lambda x: x.strip()) \
@@ -39,7 +40,7 @@ Stream.parallel_of([" ", '3', None, "2", 1, ""]) \
     .for_each(print) # Output: 1 2 3
 ```
 
-The same code in Java:
+And here's the equivalent code in Java:
 
 ```java
 Object[] words = { " ", '3', null, "2", 1, "" };
@@ -55,52 +56,49 @@ Arrays.stream( words )
 
 ## What is a Stream?
 
-A stream is a pipeline, in which elements from an Iterable are computed on demand.
-It is similar to SQL queries and is used to manipulate data. 
+A `Stream` is a powerful abstraction for processing sequences of data in a functional and declarative manner. It enables efficient and concise data manipulation and transformation.
 
-E.g. Get the second-highest salary of Employee
+Similar to its counterparts in Java and Kotlin, a Stream represents a pipeline of operations that can be applied to a collection or any iterable data source. It allows developers to express complex data processing logic using a combination of high-level operations, promoting code reusability and readability.
 
-```sql
-Select distinct Salary from Employee e1 
-where 2=Select count(distinct Salary) 
-from Employee e2 where e1.salary<=e2.salary;
-```
+With Streams, you can perform a wide range of operations on your data, such as filtering elements, transforming values, aggregating results, sorting, and more. These operations can be seamlessly chained together to form a processing pipeline, where each operation processes the data and passes it on to the next operation.
 
-Now the same thing in Python
+One of the key benefits of Stream is lazy evaluation. This means that the operations are executed only when the result is actually needed, optimizing resource usage and enabling efficient processing of large or infinite datasets.
 
-```python
-employees = [...] # A list with employee objects
-Stream.of(employees) \
-    .map(lambda x: x.salary) \
-    .sorted() \
-    .reversed() \
-    .to_list()[1] # Returns the second-highest salary
-```
+Furthermore, Stream supports both sequential and parallel execution. This allows you to leverage parallel processing capabilities when dealing with computationally intensive tasks or large amounts of data, significantly improving performance.
 
-`pystreamapi.Stream` represents a stream on which one or more operations can be performed. Stream operations are either intermediate or terminal.
+`pystreamapi.Stream` represents a stream that facilitates the execution of one or more operations. Stream operations can be categorized as either intermediate or terminal.
 
-The terminal operations return a result of a specific type, and intermediate operations return the stream itself, so we can chain multiple methods together to perform the operation in multiple steps.
+Terminal operations return a result of a specific type, while intermediate operations return the stream itself, enabling method chaining for multi-step operations.
 
-*Again the example from above:*
+Let's examine an example using Stream:
 
 ```python
-Stream.of(employees) \ # Create a BaseStream object
-    .map(lambda x: x.salary) \ # Intermediate Operation
-    .sorted() \ # Intermediate Operation
-    .reversed() \ # Intermediate Operation
-    .to_list()[1] # Terminal Operation
+Stream.of([" ", '3', None, "2", 1, ""]) \
+    .filter(lambda x: x is not None) \ # Intermediate operation
+    .map(str) \ # Intermediate operation
+    .map(lambda x: x.strip()) \ # Intermediate operation
+    .filter(lambda x: len(x) > 0) \ # Intermediate operation
+    .map(int) \ # Intermediate operation
+    .sorted() \ # Intermediate operation
+    .for_each(print) # Terminal Operation (Output: 1 2 3)
 ```
 
-Operations can be performed on a stream in parallel or sequentially. When parallel, it is called parallel stream else it is a sequential stream.
+Operations can be performed on a stream either in parallel or sequentially. A parallel stream executes operations concurrently, while a sequential stream processes operations in order.
 
-Based on the above points, a stream is:
+Considering the above characteristics, a stream can be defined as follows:
 
-- Not a data structure
-- Not offering indexed access
-- Designed for lambdas
-- Easy to aggregate as lists or tuples/sets
-- Parallelizable
-- Processing lazy
+* It is not a data structure itself but operates on existing data structures.
+* It does not provide indexed access like traditional collections.
+* It is designed to work seamlessly with lambda functions, enabling concise and expressive code.
+* It facilitates easy aggregation of results into lists, tuples, or sets.
+* It can be parallelized, allowing for concurrent execution of operations to improve performance.
+* It employs lazy evaluation, executing operations only when necessary.
+
+## Use conditions to speed up your workflow!
+
+![Conditions](file:///disks/Projects/Python/pystreamapi/assets/conditions.png?msec=1685713695461)
+
+Conditions provide a convenient means for performing logical operations within your Stream, such as using `filter()`, `take_while()`, `drop_while()`, and more. With PyStreamAPI, you have access to a staggering 111 diverse conditions that enable you to process various data types including strings, types, numbers, and dates. Additionally, PyStreamAPI offers a powerful combiner that allows you to effortlessly combine multiple conditions, facilitating the implementation of highly intricate pipelines.
 
 ## Get started: Installation
 
@@ -110,7 +108,7 @@ To start using PyStreamAPI just install the module with this command:
 pip install streams.py  
 ```
 
-Afterwards you can import it with:
+Afterward, you can import it with:
 
 ```python
 from pystreamapi import Stream
@@ -120,34 +118,46 @@ from pystreamapi import Stream
 
 ## Build a new Stream
 
-There are a few factory methods that create new Streams.
+PyStreamAPI offers two types of Streams, both of which are available in either sequential or parallel versions:
+
+- (Normal) `Stream`: Offers operations that do not depend on the types. The same functionality as Streams in other programming languages.
+
+- `NumericStream`: This stream extends the capabilities of the default stream by 
+  introducing numerical operations. It is designed specifically for use 
+  with numerical data sources and can only be applied to such data.
+
+There are a few factory methods that create new Streams:
 
 ```python
 Stream.of([1, 2, 3]) # Can return a sequential or a parallel stream
 ```
 
-Using the `of()` method will let the implementation decide which `Stream` to use.
+Using the `of()` method will let the implementation decide which `Stream` to use. If the source is numerical, a `NumericStream` is created.
 
 > **Note** 
 > 
-> Currently, it returns always a `SequentialStream`
+> Currently, it always returns a `SequentialStream` or a `SequentialNumericStream`
 
 ---
 
 ```python
-Stream.parallel_of([1, 2, 3]) # Returns a parallel stream
+Stream.parallel_of([1, 2, 3]) # Returns a parallel stream (Either normal or numeric)
 ```
 
 ---
 
 ```python
-Stream.sequential_of([1, 2, 3]) # Returns a sequential stream
+Stream.sequential_of([1, 2, 3]) # Returns a sequential stream (Either normal or numeric)
 ```
 
 ---
 
 ```python
-Stream.of_noneable([1, 2, 3]) # Can return a sequential or a parallel stream
+# Can return a sequential or a parallel stream (Either normal or numeric)
+Stream.of_noneable([1, 2, 3])
+
+# Returns a sequential or a parallel, empty stream (Either normal or numeric)
+Stream.of_noneable(None) 
 ```
 
 If the source is `None`, you get an empty `Stream`
@@ -158,7 +168,9 @@ If the source is `None`, you get an empty `Stream`
 Stream.iterate(0, lambda n: n + 2)
 ```
 
-Creates a Stream of an infinite Iterator like 0, 2, 4, 6, 8, 10, 12, 14...
+Creates a Stream of an infinite Iterator created by iterative application of a
+function f to an initial element seed, producing a Stream consisting of seed,
+f(seed), f(f(seed)), etc.
 
 > **Note**
 > Do not forget to limit the stream with `.limit()`
@@ -170,272 +182,10 @@ Stream.concat(Stream.of([1, 2]), Stream.of([3, 4]))
 # Like Stream.of([1, 2, 3, 4])
 ```
 
-Creates a new Stream from multiple Streams. Order doesn't change
+Creates a new Stream from multiple Streams. Order doesn't change.
 
-## API Documentation
-
-### Intermediate Operations
-
-#### `filter()` : Restrict the Stream
-
-Returns a stream consisting of the elements of this stream that match the given predicate.
-
-```python
-Stream.of([1, 2, 3, None]) \
-    .filter(lambda x: x is not None) \
-    .for_each(print) # 1 2 3
-```
-
-#### `map()` : Convert the elements in the Stream
-
-Returns a stream consisting of the results of applying the given function to the elements of this stream.
-
-```python
-Stream.of([1, "2", 3.0, None]) \
-    .map(str) \
-    .to_list() # ["1", "2", "3.0", "None"]
-```
-
-#### `map_to_int()` : Convert the elements in the Stream to an Integer
-
-Returns a stream consisting of the results of applying the `int()` function to the elements of this stream. Note that this method is not none safe.
-
-```python
-Stream.of([1, "2", 3.0]) \
-    .map_to_int() \
-    .to_list() # [1, 2, 3]
-```
-
-#### `map_to_str()` : Convert the elements in the Stream to a String
-
-Returns a stream consisting of the results of applying the `str()` function to the elements of this stream.
-
-```python
-Stream.of([1, 2, 3]) \
-    .map_to_str() \
-    .to_list() # ["1", "2", "3"]
-```
-
-#### `flat_map()` : Streams in Streams
-
-Returns a stream consisting of the results of replacing each element of this stream with the contents of a mapped stream produced by applying the provided mapping function to each element.
-
-```python
-Stream.of([1, 2, 3]) \
-    .flat_map(lambda x: self.stream([x, x])) \
-    .to_list() # [1, 1, 2, 2, 3, 3]
-```
-
-#### `distinct()` : Remove duplicates
-
-Returns a stream consisting of the distinct elements of this stream.
-
-```python
-Stream.of([1, 1, 2, 3]) \
-    .distinct() \
-    .to_list() # [1, 2, 3]
-```
-
-#### `sorted()` : Sort Stream
-
-Returns a stream consisting of the elements of this stream, sorted according to natural order or comparator.
-
-```python
-Stream.of([2, 9, 1])
-    .sorted()
-    .to_list()  # [1, 2, 9]
-```
-
-Here is an example with a custom comparator:
-
-```python
-Stream.of(["a", "cc", "bbb"])
-    .sorted(lambda x, y: len(y) - len(x))
-    .to_list()  # ['bbb', 'cc', 'a']
-```
-
-#### `reversed()` : Reverse Stream
-
-Returns a stream consisting of the elements of this stream in reverse order.
-
-```python
-Stream.of([1, 2, 3])
-    .reversed()
-    .to_list()  # [3, 2, 1]
-```
-
-#### `peek()` : View intermediate results
-
-Returns a stream consisting of the elements of this stream, additionally performing the provided action on each element as elements are consumed from the resulting stream.
-
-```python
-Stream.of([2, 1, 3]) \
-    .sorted() \
-    .peek(print) \ # 1, 2, 3
-    .reversed() \
-    .for_each(print) # 3, 2, 1
-```
-
-#### `limit()` : Limit the Stream to a certain number of elements
-
-Returns a stream consisting of the elements of this stream, truncated to be no longer than maxSize in length.
-
-```python
-Stream.of([1, 2, 3]) \
-    .limit(2) \
-    .to_list() # [1, 2]
-```
-
-#### `skip()` : Skip the first n elements of the Stream
-
-Returns a stream consisting of the remaining elements of this stream after discarding the first n elements of the stream.
-
-```python
-Stream.of([1, 2, 3]) \
-    .skip(2) \
-    .to_list() # [3]
-```
-
-#### `take_while()` : Take elements while the predicate is true
-
-Returns, if this stream is ordered, a stream consisting of the longest prefix of elements taken from this stream that match the given predicate.
-
-```python
-Stream.of([1, 2, 3]) \
-    .take_while(lambda x: x < 3) \
-    .to_list() # [1, 2]
-```
-
-#### `drop_while()` : Drop elements while the predicate is true
-
-Returns, if this stream is ordered, a stream consisting of the remaining elements of this stream after dropping the longest prefix of elements that match the given predicate.
-
-```python
-Stream.of([1, 2, 3]) \
-    .drop_while(lambda x: x < 3) \
-    .to_list() # [3]
-```
-
-### Terminal Operations
-
-These operations will trigger the pipeline's execution
-
-#### `all_match()` : Check if all elements match a predicate
-
-Returns whether all elements of this stream match the provided predicate.
-
-```python
-Stream.of([1, 2, 3]) \
-    .all_match(lambda x: x > 0) # True
-```
-
-#### `any_match()` : Check if any element matches a predicate
-
-Returns whether any elements of this stream match the provided predicate.
-
-```python
-Stream.of([1, 2, 3]) \
-    .any_match(lambda x: x < 0) # False
-```
-
-#### `none_match()` : Check if no element matches a predicate
-
-Returns whether no elements of this stream match the provided predicate.
-
-```python
-Stream.of([1, 2, 3]) \
-    .none_match(lambda x: x < 0) # True
-```
-
-#### `count()` : Count the number of elements in the Stream
-
-Returns the number of elements in this stream.
-
-```python
-Stream.of([1, 2, 3]) \
-    .count() # 3
-```
-
-#### `min()` : Find the minimum element in the Stream
-
-Returns the minimum element of this stream
-
-```python
-Stream.of([1, 2, 3]) \
-    .min() # 1
-```
-
-#### `max()` : Find the maximum element in the Stream
-
-Returns the maximum element of this stream
-
-```python
-Stream.of([1, 2, 3]) \
-    .max() # 3
-```
-
-#### `reduce()` : Reduce the Stream to a single value
-
-Returns the result of reducing the elements of this stream to a single value using the provided reducer.
-
-```python
-Stream.of([1, 2, 3]) \
-    .reduce(lambda x, y: x + y) # 6
-```
-
-#### `for_each()` : Perform an action for each element in the Stream
-
-Performs the provided action for each element of this stream.
-
-```python
-Stream.of([1, 2, 3]) \
-    .for_each(print) # 1 2 3
-```
-
-#### `to_list()` : Convert the Stream to a List
-
-Returns a list containing the elements of this stream.
-
-```python
-Stream.of([1, 2, 3]) \
-    .to_list() # [1, 2, 3]
-```
-
-#### `to_set()` : Convert the Stream to a Set
-
-Returns a set containing the elements of this stream.
-
-```python
-Stream.of([1, 2, 3]) \
-    .to_set() # {1, 2, 3}
-```
-
-#### `to_tuple()` : Convert the Stream to a Tuple
-
-Returns a tuple containing the elements of this stream.
-
-```python
-Stream.of([1, 2, 3]) \
-    .to_tuple() # (1, 2, 3)
-```
-
-#### `find_first()` : Find the first element in the Stream
-
-Returns an Optional describing the first element of this stream, or an empty Optional if the stream is empty.
-
-```python
-Stream.of([1, 2, 3]) \
-    .find_first() # Optional[1]
-```
-
-#### `find_any()` : Find an element in the Stream
-
-Returns an Optional describing an arbitrary element of this stream, or an empty Optional if the stream is empty.
-
-```python
-Stream.of([1, 2, 3]) \
-    .find_any() # Optional[1]
-```
+## API Reference
+For a more detailed documentation view the docs on GitBook:
 
 ## Complex Examples
 

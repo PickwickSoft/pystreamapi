@@ -1,6 +1,6 @@
 from typing import List
 
-from pystreamapi.lazy.process import Process
+from pystreamapi._lazy.process import Process
 
 
 class ProcessQueue:
