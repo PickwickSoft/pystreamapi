@@ -1,4 +1,4 @@
-![Header](assets/header.png)
+![Header](https://raw.githubusercontent.com/PickwickSoft/pystreamapi/main/assets/header.png)
 
 <h1 align="center">PyStreamAPI</h1>
 
@@ -8,6 +8,8 @@
   <a href="https://github.com/PickwickSoft/pystreamapi/actions/workflows/pylint.yml"><img src="https://github.com/PickwickSoft/pystreamapi/actions/workflows/pylint.yml/badge.svg"  alt="Pylint"/></a>
   <a href="https://sonarcloud.io/summary/new_code?id=PickwickSoft_pystreamapi"><img src="https://sonarcloud.io/api/project_badges/measure?project=PickwickSoft_pystreamapi&metric=alert_status"  alt="Quality Gate"/></a>
   <a href="https://sonarcloud.io/summary/new_code?id=PickwickSoft_pystreamapi"><img src="https://sonarcloud.io/api/project_badges/measure?project=PickwickSoft_pystreamapi&metric=coverage"  alt="Coverage"/></a>
+  <a href="https://pypi.org/project/streams-py/"><img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dm/streams.py"></a>
+  <a href="https://pypi.org/project/streams-py/"><img alt="PyPI" src="https://img.shields.io/pypi/v/streams.py"></a>
 </p>
 
 PyStreamAPI is a Python stream library that draws inspiration from the Java Stream API. 
@@ -96,7 +98,7 @@ Considering the above characteristics, a stream can be defined as follows:
 
 ## Use conditions to speed up your workflow!
 
-![Conditions](./assets/conditions.png)
+![Conditions](https://raw.githubusercontent.com/PickwickSoft/pystreamapi/main/assets/conditions.png)
 
 Conditions provide a convenient means for performing logical operations within your Stream, such as using `filter()`, `take_while()`, `drop_while()`, and more. With PyStreamAPI, you have access to a staggering 111 diverse conditions that enable you to process various data types including strings, types, numbers, and dates. Additionally, PyStreamAPI offers a powerful combiner that allows you to effortlessly combine multiple conditions, facilitating the implementation of highly intricate pipelines.
 
