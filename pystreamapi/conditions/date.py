@@ -64,7 +64,7 @@ def today():
     The condition that checks if a datetime is today.
     :return: A condition that checks if a datetime is today.
     """
-    return lambda d: __datetime.now().date() == d.date() if type(d) == __datetime else \
+    return lambda d: __datetime.now().date() == d.date() if isinstance(d, __datetime) else \
         __datetime.now().date() == d
 
 
@@ -75,7 +75,7 @@ def today_utc():
     :return: A condition that checks if a datetime is today.
     """
     return lambda d: __datetime.now(__timezone.utc).date() == d.astimezone(__timezone.utc).date() \
-        if type(d) == __datetime else __datetime.now(__timezone.utc).date() == d
+        if isinstance(d, __datetime) else __datetime.now(__timezone.utc).date() == d
 
 
 
@@ -84,8 +84,8 @@ def yesterday():
     The condition that checks if a datetime is yesterday.
     :return: A condition that checks if a datetime is yesterday.
     """
-    return lambda d: __datetime.now().date() - __timedelta(days=1) == d.date() if type(d) == \
-        __datetime else __datetime.now().date() - __timedelta(days=1) == d
+    return lambda d: __datetime.now().date() - __timedelta(days=1) == d.date() if \
+        isinstance(d, __datetime) else __datetime.now().date() - __timedelta(days=1) == d
 
 
 def yesterday_utc():
@@ -95,8 +95,8 @@ def yesterday_utc():
     :return: A condition that checks if a datetime is yesterday.
     """
     return lambda d: __datetime.now(__timezone.utc).date() - __timedelta(days=1) == d.astimezone(
-        __timezone.utc).date() if type(d) == __datetime else __datetime.now(__timezone.utc).date() \
-        - __timedelta(days=1) == d
+        __timezone.utc).date() if isinstance(d, __datetime) \
+        else __datetime.now(__timezone.utc).date() - __timedelta(days=1) == d
 
 
 def tomorrow():
@@ -104,8 +104,8 @@ def tomorrow():
     A condition that checks if a datetime is tomorrow.
     :return: A condition that checks if a datetime is tomorrow.
     """
-    return lambda d: __datetime.now().date() + __timedelta(days=1) == d.date() if type(d) == \
-        __datetime else __datetime.now().date() + __timedelta(days=1) == d
+    return lambda d: __datetime.now().date() + __timedelta(days=1) == d.date() if \
+        isinstance(d, __datetime) else __datetime.now().date() + __timedelta(days=1) == d
 
 
 def tomorrow_utc():
@@ -115,8 +115,8 @@ def tomorrow_utc():
     :return: A condition that checks if a datetime is tomorrow.
     """
     return lambda d: __datetime.now(__timezone.utc).date() + __timedelta(days=1) == d.astimezone(
-        __timezone.utc).date() if type(d) == __datetime else __datetime.now(__timezone.utc).date() \
-        + __timedelta(days=1) == d
+        __timezone.utc).date() if isinstance(d, __datetime) \
+        else __datetime.now(__timezone.utc).date() + __timedelta(days=1) == d
 
 
 def this_week():
@@ -124,8 +124,9 @@ def this_week():
     A condition that checks if a datetime is this week.
     :return: A condition that checks if a datetime is this week.
     """
-    return lambda d: __datetime.now().date().isocalendar()[1] == d.date().isocalendar()[1] if \
-        type(d) == __datetime else __datetime.now().date().isocalendar()[1] == d.isocalendar()[1]
+    return lambda d: __datetime.now().date().isocalendar()[1] == d.date().isocalendar()[1] \
+        if isinstance(d, __datetime) \
+        else __datetime.now().date().isocalendar()[1] == d.isocalendar()[1]
 
 
 def this_week_utc():
@@ -135,7 +136,7 @@ def this_week_utc():
     :return: A condition that checks if a datetime is this week.
     """
     return lambda d: __datetime.now(__timezone.utc).date().isocalendar()[1] == \
-        d.astimezone(__timezone.utc).date().isocalendar()[1] if type(d) == __datetime else \
+        d.astimezone(__timezone.utc).date().isocalendar()[1] if isinstance(d, __datetime) else \
         __datetime.now(__timezone.utc).date().isocalendar()[1] == d.isocalendar()[1]
 
 
@@ -145,7 +146,8 @@ def last_week():
     :return: A condition that checks if a datetime is last week.
     """
     return lambda d: __datetime.now().date().isocalendar()[1] - 1 == d.date().isocalendar()[1] if \
-        type(d) == __datetime else __datetime.now().date().isocalendar()[1] - 1 == d.isocalendar()[1]
+        isinstance(d, __datetime) else __datetime.now().date().isocalendar()[1] - 1 \
+                                   == d.isocalendar()[1]
 
 
 def last_week_utc():
@@ -155,7 +157,7 @@ def last_week_utc():
     :return: A condition that checks if a datetime is last week.
     """
     return lambda d: __datetime.now(__timezone.utc).date().isocalendar()[1] - 1 == \
-        d.astimezone(__timezone.utc).date().isocalendar()[1] if type(d) == __datetime else \
+        d.astimezone(__timezone.utc).date().isocalendar()[1] if isinstance(d, __datetime) else \
         __datetime.now(__timezone.utc).date().isocalendar()[1] - 1 == d.isocalendar()[1]
 
 
@@ -165,7 +167,8 @@ def next_week():
     :return: A condition that checks if a datetime is next week.
     """
     return lambda d: __datetime.now().date().isocalendar()[1] + 1 == d.date().isocalendar()[1] if \
-        type(d) == __datetime else __datetime.now().date().isocalendar()[1] + 1 == d.isocalendar()[1]
+        isinstance(d, __datetime) else __datetime.now().date().isocalendar()[1] + 1 \
+                                   == d.isocalendar()[1]
 
 
 def next_week_utc():
@@ -175,7 +178,7 @@ def next_week_utc():
     :return: A condition that checks if a datetime is next week.
     """
     return lambda d: __datetime.now(__timezone.utc).date().isocalendar()[1] + 1 == \
-        d.astimezone(__timezone.utc).date().isocalendar()[1] if type(d) == __datetime else \
+        d.astimezone(__timezone.utc).date().isocalendar()[1] if isinstance(d, __datetime) else \
         __datetime.now(__timezone.utc).date().isocalendar()[1] + 1 == d.isocalendar()[1]
 
 
@@ -239,7 +242,7 @@ def __check_is_month(d: __datetime, offset: int = 0, tz: __timezone = None):
     :param tz: The timezone to check against.
     """
     return __datetime.now(tz).date().month + offset == d.astimezone(tz).date().month if \
-        type(d) == __datetime else __datetime.now(tz).date().month + offset == d.month
+        isinstance(d, __datetime) else __datetime.now(tz).date().month + offset == d.month
 
 
 def this_year():
@@ -300,4 +303,4 @@ def __check_is_year(d: __datetime, offset: int = 0, tz: __timezone = None):
     :param offset: The offset to check against.
     """
     return __datetime.now(tz).date().year + offset == d.astimezone(tz).date().year if \
-        type(d) == __datetime else __datetime.now(tz).date().year + offset == d.year
+        isinstance(d, __datetime) else __datetime.now(tz).date().year + offset == d.year

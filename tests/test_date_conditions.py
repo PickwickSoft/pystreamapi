@@ -1,4 +1,4 @@
-# pylint: disable=wildcard-import,too-many-instance-attributes
+# pylint: disable=wildcard-import,too-many-instance-attributes,unused-wildcard-import
 
 from datetime import datetime, timedelta, timezone
 from unittest import TestCase
