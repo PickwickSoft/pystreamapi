@@ -78,7 +78,6 @@ def today_utc():
         if isinstance(d, __datetime) else __datetime.now(__timezone.utc).date() == d
 
 
-
 def yesterday():
     """
     The condition that checks if a datetime is yesterday.
@@ -147,7 +146,7 @@ def last_week():
     """
     return lambda d: __datetime.now().date().isocalendar()[1] - 1 == d.date().isocalendar()[1] if \
         isinstance(d, __datetime) else __datetime.now().date().isocalendar()[1] - 1 \
-                                   == d.isocalendar()[1]
+            == d.isocalendar()[1]
 
 
 def last_week_utc():
@@ -168,7 +167,7 @@ def next_week():
     """
     return lambda d: __datetime.now().date().isocalendar()[1] + 1 == d.date().isocalendar()[1] if \
         isinstance(d, __datetime) else __datetime.now().date().isocalendar()[1] + 1 \
-                                   == d.isocalendar()[1]
+            == d.isocalendar()[1]
 
 
 def next_week_utc():
