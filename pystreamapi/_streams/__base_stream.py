@@ -71,15 +71,19 @@ class BaseStream(Iterable[K]):
         """Drops elements from the stream while the predicate is true."""
         self._source = list(itertools.dropwhile(predicate, self._source))
 
-    @abstractmethod
-    def filter(self, predicate: Callable[[K], bool]) -> 'BaseStream[_V]':
+    def filter(self, predicate: Callable[[K], bool]) -> 'BaseStream[K]':
         """
         Returns a stream consisting of the elements of this stream that match the given predicate.
 
         :param predicate:
         """
+        self._queue.append(Process(self._filter, predicate))
+        return self
 
     @abstractmethod
+    def _filter(self, predicate: Callable[[K], bool]):
+        """Implementation of filter. Should be implemented by subclasses."""
+
     def flat_map(self, predicate: Callable[[K], Iterable[_V]]) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the results of replacing each element of this stream with
@@ -88,6 +92,31 @@ class BaseStream(Iterable[K]):
 
         :param predicate:
         """
+        self._queue.append(Process(self._flat_map, predicate))
+        return self
+
+    @abstractmethod
+    def _flat_map(self, predicate: Callable[[K], Iterable[_V]]):
+        """Implementation of flat_map. Should be implemented by subclasses."""
+
+    def group_by(self, key_mapper: Callable[[K], Any]) -> 'BaseStream[K]':
+        """
+        Returns a Stream consisting of the results of grouping the elements of this stream
+        by the given classifier and extracting the key/value pairs.
+
+        :param key_mapper:
+        """
+        self._queue.append(Process(self.__group_by, key_mapper))
+        return self
+
+    def __group_by(self, key_mapper: Callable[[Any], Any]):
+        """Groups the stream by the given key mapper. Uses the implementation of _group_to_dict."""
+        groups = self._group_to_dict(key_mapper)
+        self._source = groups.items()
+
+    @abstractmethod
+    def _group_to_dict(self, key_mapper: Callable[[K], Any]) -> dict[K, list]:
+        """Groups the stream into a dictionary. Should be implemented by subclasses."""
 
     def limit(self, max_size: int) -> 'BaseStream[_V]':
         """
@@ -103,7 +132,6 @@ class BaseStream(Iterable[K]):
         """Limits the stream to the first n elements."""
         self._source = itertools.islice(self._source, max_size)
 
-    @abstractmethod
     def map(self, mapper: Callable[[K], _V]) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the results of applying the given function to the elements
@@ -111,22 +139,37 @@ class BaseStream(Iterable[K]):
 
         :param mapper:
         """
+        self._queue.append(Process(self._map, mapper))
+        return self
 
     @abstractmethod
+    def _map(self, mapper: Callable[[K], _V]):
+        """Implementation of map. Should be implemented by subclasses."""
+
     def map_to_int(self) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the results of converting the elements of this stream to
         integers.
         """
+        self._queue.append(Process(self.__map_to_int))
+        return self
 
-    @abstractmethod
+    def __map_to_int(self):
+        """Converts the stream to integers."""
+        self._map(int)
+
     def map_to_str(self) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the results of converting the elements of this stream to
         strings.
         """
+        self._queue.append(Process(self.__map_to_str))
+        return self
 
-    @abstractmethod
+    def __map_to_str(self):
+        """Converts the stream to strings."""
+        self._map(str)
+
     def peek(self, action: Callable) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the elements of this stream, additionally performing the
@@ -134,6 +177,12 @@ class BaseStream(Iterable[K]):
 
         :param action:
         """
+        self._queue.append(Process(self._peek, action))
+        return self
+
+    @abstractmethod
+    def _peek(self, action: Callable):
+        """Implementation of peek. Should be implemented by subclasses."""
 
     def reversed(self) -> 'BaseStream[_V]':
         """
@@ -295,6 +344,15 @@ class BaseStream(Iterable[K]):
         """Accumulates the elements of this stream into a Set."""
         self._trigger_exec()
         return set(self._source)
+
+    @abstractmethod
+    def to_dict(self, key_mapper: Callable[[K], Any]) -> dict:
+        """
+        Returns a dictionary consisting of the results of grouping the elements of this stream
+        by the given classifier.
+
+        :param key_mapper:
+        """
 
     def _trigger_exec(self):
         """Triggers execution of the stream."""

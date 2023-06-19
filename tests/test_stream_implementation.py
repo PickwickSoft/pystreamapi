@@ -3,9 +3,10 @@ import unittest
 from optional import Optional
 from optional.something import Something
 from parameterized import parameterized_class
+
+from pystreamapi._streams.__base_stream import BaseStream
 from pystreamapi._streams.__parallel_stream import ParallelStream
 from pystreamapi._streams.__sequential_stream import SequentialStream
-from pystreamapi._streams.__base_stream import BaseStream
 from pystreamapi._streams.numeric.__sequential_numeric_stream import SequentialNumericStream
 
 
@@ -125,6 +126,37 @@ class TestStreamImplementation(unittest.TestCase):
     def test_reduce_empty_stream_with_identity(self):
         result = self.stream([]).reduce(lambda x, y: x + y, identity=0)
         self.assertEqual(result, 0)
+
+    def test_group_by(self):
+        class Point:
+            def __init__(self, x, y):
+                self.x = x
+                self.y = y
+
+        pt1, pt2, pt3, pt4 = Point(1, 2), Point(1, 3), Point(2, 3), Point(2, 4)
+        result = self.stream([pt1, pt2, pt3, pt4]) \
+            .group_by(lambda p: p.x) \
+            .to_list()
+        self.assertListEqual(result, [(1, [pt1, pt2]), (2, [pt3, pt4])])
+
+    def test_group_by_empty(self):
+        result = self.stream([]).group_by(lambda x: x).to_list()
+        self.assertListEqual(result, [])
+
+    def test_to_dict(self):
+        class Point:
+            def __init__(self, x, y):
+                self.x = x
+                self.y = y
+
+        pt1, pt2, pt3, pt4 = Point(1, 2), Point(1, 3), Point(2, 3), Point(2, 4)
+        result = self.stream([pt1, pt2, pt3, pt4]) \
+            .to_dict(lambda p: p.x)
+        self.assertDictEqual(result, {1: [pt1, pt2], 2: [pt3, pt4]})
+
+    def test_to_dict_empty(self):
+        result = self.stream([]).to_dict(lambda x: x)
+        self.assertDictEqual(result, {})
 
 
 if __name__ == '__main__':

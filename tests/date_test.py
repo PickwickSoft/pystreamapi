@@ -3,7 +3,7 @@
 from datetime import datetime, timedelta, timezone
 from unittest import TestCase
 
-
+# skipcq: PTC-W0046
 class DateTest(TestCase):
 
     def setUp(self):
