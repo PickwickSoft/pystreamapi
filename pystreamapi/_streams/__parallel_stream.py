@@ -57,12 +57,12 @@ class ParallelStream(stream.BaseStream):
         Parallel(n_jobs=-1, prefer="threads")(delayed(predicate)(element)
                                               for element in self._source)
 
-    def _map(self, predicate: Callable[[Any], Any]):
-        self._source = Parallel(n_jobs=-1, prefer="threads")(delayed(predicate)(element)
+    def _map(self, mapper: Callable[[Any], Any]):
+        self._source = Parallel(n_jobs=-1, prefer="threads")(delayed(mapper)(element)
                                                              for element in self._source)
 
-    def _peek(self, predicate: Callable):
-        Parallel(n_jobs=-1, prefer="threads")(delayed(predicate)(element)
+    def _peek(self, action: Callable):
+        Parallel(n_jobs=-1, prefer="threads")(delayed(action)(element)
                                               for element in self._source)
 
     def reduce(self, predicate: Callable[[Any, Any], Any], identity=_identity_missing,

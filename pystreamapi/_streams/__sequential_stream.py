@@ -4,7 +4,6 @@ from typing import Callable, Any
 from optional import Optional
 
 import pystreamapi._streams.__base_stream as stream
-from pystreamapi._lazy.process import Process
 
 _identity_missing = object()
 
@@ -45,12 +44,12 @@ class SequentialStream(stream.BaseStream):
         for element in self._source:
             predicate(element)
 
-    def _map(self, predicate: Callable[[Any], Any]):
-        self._source = [predicate(element) for element in self._source]
+    def _map(self, mapper: Callable[[Any], Any]):
+        self._source = [mapper(element) for element in self._source]
 
-    def _peek(self, predicate: Callable):
+    def _peek(self, action: Callable):
         for element in self._source:
-            predicate(element)
+            action(element)
 
     def reduce(self, predicate: Callable, identity=_identity_missing, depends_on_state=False):
         self._trigger_exec()
