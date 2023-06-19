@@ -1,5 +1,7 @@
 # Date conditions
 
+All date conditions can be used either with `datetime.datetime` or with `datetime.date`. All examples on this page are using `datetime`, but can be replaced by `date`.
+
 ### `before(date)`: Check if date is before another date
 
 Check if a datetime is before a given datetime.

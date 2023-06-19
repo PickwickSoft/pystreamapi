@@ -36,8 +36,28 @@ Returns a stream consisting of the results of replacing each element of this str
 
 ```python
 Stream.of([1, 2, 3]) \
-    .flat_map(lambda x: self.stream([x, x])) \
+    .flat_map(lambda x: Stream.of([x, x])) \
     .to_list() # [1, 1, 2, 2, 3, 3]
+```
+
+### `group_by()`: Group the stream by a given key
+
+Returns a stream consisting of the elements of this stream, grouped by the given classifier and extracting the key/value pairs.
+
+```python
+class Point:
+    def __init__(self, x: int, y: int):
+        self.x = x
+        self.y = y
+
+    def __str__(self):
+        return f"Point({self.x}, {self.y})"
+
+Stream.of([Point(1, 2), Point(1, 5), Point(3, 4), Point(3, 1)]) \
+    .group_by(lambda p: p.x) \
+    .map(lambda g: (g[0], [str(p) for p in g[1]])) \
+    .for_each(print)  # (1, ['Point(1, 2)', 'Point(1, 5)'])
+                      # (3, ['Point(3, 4)', 'Point(3, 1)'])
 ```
 
 ### `limit()` : Limit the Stream to a certain number of elements

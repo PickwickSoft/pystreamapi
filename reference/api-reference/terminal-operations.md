@@ -90,6 +90,15 @@ Stream.of([1, 2, 3]) \
     .reduce(lambda x, y: x + y) # 6
 ```
 
+### `to_dict()` : Convert the Stream to a dictionary
+
+Returns a dictionary containing the elements of this stream by applying the given classifier.
+
+```python
+Stream.of([(1, 2), (1, 6), (2, 3), (2, 8), (3, 0)]) \
+    .to_dict(lambda p: p[0]) # {1: [(1, 2), (1, 6)], 2: [(2, 3), (2, 8)], 3: [(3, 0)]}
+```
+
 ### `to_list()` : Convert the Stream to a List
 
 Returns a list containing the elements of this stream.
