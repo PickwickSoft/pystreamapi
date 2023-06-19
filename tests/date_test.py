@@ -1,3 +1,5 @@
+# pylint: disable=too-many-instance-attributes
+
 from datetime import datetime, timedelta, timezone
 from unittest import TestCase
 
