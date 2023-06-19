@@ -39,6 +39,23 @@ class SequentialStream(stream.BaseStream):
             new_src.extend(element.to_list())
         self._source = new_src
 
+    def group_by(self, key_mapper: Callable[[Any], Any]):
+        self._queue.append(Process(self.__group_by, key_mapper))
+        return self
+
+    def __group_by(self, key_mapper: Callable[[Any], Any]):
+        groups = self.__group_to_dict(key_mapper)
+        self._source = groups.items()
+
+    def __group_to_dict(self, key_mapper: Callable[[Any], Any]):
+        groups = {}
+        for element in self._source:
+            key = key_mapper(element)
+            if key not in groups:
+                groups[key] = []
+            groups[key].append(element)
+        return groups
+
     def for_each(self, predicate: Callable):
         self._trigger_exec()
         for element in self._source:
@@ -80,3 +97,7 @@ class SequentialStream(stream.BaseStream):
                 return reduce(predicate, self._source)
             return Optional.of(reduce(predicate, self._source))
         return identity if identity is not _identity_missing else Optional.empty()
+
+    def to_dict(self, key_mapper: Callable[[Any], Any]) -> dict:
+        self._trigger_exec()
+        return self.__group_to_dict(key_mapper)

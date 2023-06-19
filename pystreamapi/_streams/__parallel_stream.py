@@ -48,6 +48,27 @@ class ParallelStream(stream.BaseStream):
             new_src.extend(element.to_list())
         self._source = new_src
 
+    def group_by(self, key_mapper: Callable[[Any], Any]):
+        self._queue.append(Process(self.__group_by, key_mapper))
+        return self
+
+    def __group_by(self, key_mapper: Callable[[Any], Any]):
+        groups = self.__group_to_dict(key_mapper)
+        self._source = groups.items()
+
+    def __group_to_dict(self, key_mapper: Callable[[Any], Any]):
+        groups = {}
+
+        def process_element(element):
+            key = key_mapper(element)
+            if key not in groups:
+                groups[key] = []
+            groups[key].append(element)
+
+        Parallel(n_jobs=-1, prefer="threads") \
+            (delayed(process_element)(element) for element in self._source)
+        return groups
+
     def for_each(self, predicate: Callable):
         self._trigger_exec()
         Parallel(n_jobs=-1, prefer="threads")(delayed(predicate)(element)
@@ -96,6 +117,10 @@ class ParallelStream(stream.BaseStream):
 
     def __reduce(self, pred, _):
         return self.parallelizer.reduce(pred)
+
+    def to_dict(self, key_mapper: Callable[[Any], Any]) -> dict:
+        self._trigger_exec()
+        return dict(self.__group_to_dict(key_mapper))
 
     def _set_parallelizer_src(self):
         self.parallelizer.set_source(self._source)

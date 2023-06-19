@@ -89,6 +89,15 @@ class BaseStream(Iterable[K]):
         :param predicate:
         """
 
+    @abstractmethod
+    def group_by(self, key_mapper: Callable[[K], Any]) -> 'BaseStream[_V]':
+        """
+        Returns a Stream consisting of the results of grouping the elements of this stream
+        by the given classifier and extracting the key/value pairs.
+
+        :param key_mapper:
+        """
+
     def limit(self, max_size: int) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the elements of this stream, truncated to be no longer
@@ -295,6 +304,15 @@ class BaseStream(Iterable[K]):
         """Accumulates the elements of this stream into a Set."""
         self._trigger_exec()
         return set(self._source)
+
+    @abstractmethod
+    def to_dict(self, key_mapper: Callable[[K], Any]) -> dict:
+        """
+        Returns a dictionary consisting of the results of grouping the elements of this stream
+        by the given classifier.
+
+        :param key_mapper:
+        """
 
     def _trigger_exec(self):
         """Triggers execution of the stream."""
