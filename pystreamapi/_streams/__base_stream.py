@@ -110,6 +110,7 @@ class BaseStream(Iterable[K]):
         return self
 
     def __group_by(self, key_mapper: Callable[[Any], Any]):
+        """Groups the stream by the given key mapper. Uses the implementation of _group_to_dict."""
         groups = self._group_to_dict(key_mapper)
         self._source = groups.items()
 
@@ -154,6 +155,7 @@ class BaseStream(Iterable[K]):
         return self
 
     def __map_to_int(self):
+        """Converts the stream to integers."""
         self._map(int)
 
     def map_to_str(self) -> 'BaseStream[_V]':
@@ -165,6 +167,7 @@ class BaseStream(Iterable[K]):
         return self
 
     def __map_to_str(self):
+        """Converts the stream to strings."""
         self._map(str)
 
     def peek(self, action: Callable) -> 'BaseStream[_V]':
