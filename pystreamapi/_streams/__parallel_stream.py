@@ -5,7 +5,6 @@ from joblib import Parallel, delayed
 from optional import Optional
 
 import pystreamapi._streams.__base_stream as stream
-from pystreamapi._lazy.process import Process
 from pystreamapi._parallel.fork_and_join import Parallelizer
 
 _identity_missing = object()
@@ -23,11 +22,7 @@ class ParallelStream(stream.BaseStream):
         return all(Parallel(n_jobs=-1, prefer="threads")(delayed(predicate)(element)
                                                          for element in self._source))
 
-    def filter(self, predicate: Callable[[Any], bool]):
-        self._queue.append(Process(self.__filter, predicate))
-        return self
-
-    def __filter(self, predicate: Callable[[Any], bool]):
+    def _filter(self, predicate: Callable[[Any], bool]):
         self._set_parallelizer_src()
         self._source = self.parallelizer.filter(predicate)
 
@@ -37,26 +32,14 @@ class ParallelStream(stream.BaseStream):
             return Optional.of(self._source[0])
         return Optional.empty()
 
-    def flat_map(self, predicate: Callable[[Any], stream.BaseStream]):
-        self._queue.append(Process(self.__flat_map, predicate))
-        return self
-
-    def __flat_map(self, predicate: Callable[[Any], stream.BaseStream]):
+    def _flat_map(self, predicate: Callable[[Any], stream.BaseStream]):
         new_src = []
         for element in Parallel(n_jobs=-1, prefer="threads")(delayed(predicate)(element)
                                                              for element in self._source):
             new_src.extend(element.to_list())
         self._source = new_src
 
-    def group_by(self, key_mapper: Callable[[Any], Any]):
-        self._queue.append(Process(self.__group_by, key_mapper))
-        return self
-
-    def __group_by(self, key_mapper: Callable[[Any], Any]):
-        groups = self.__group_to_dict(key_mapper)
-        self._source = groups.items()
-
-    def __group_to_dict(self, key_mapper: Callable[[Any], Any]):
+    def _group_to_dict(self, key_mapper: Callable[[Any], Any]):
         groups = {}
 
         def process_element(element):
@@ -65,8 +48,8 @@ class ParallelStream(stream.BaseStream):
                 groups[key] = []
             groups[key].append(element)
 
-        Parallel(n_jobs=-1, prefer="threads") \
-            (delayed(process_element)(element) for element in self._source)
+        Parallel(n_jobs=-1, prefer="threads")(delayed(process_element)(element)
+                                              for element in self._source)
         return groups
 
     def for_each(self, predicate: Callable):
@@ -74,33 +57,11 @@ class ParallelStream(stream.BaseStream):
         Parallel(n_jobs=-1, prefer="threads")(delayed(predicate)(element)
                                               for element in self._source)
 
-    def map(self, mapper: Callable[[Any], Any]):
-        self._queue.append(Process(self.__map, mapper))
-        return self
-
-    def __map(self, predicate: Callable[[Any], Any]):
+    def _map(self, predicate: Callable[[Any], Any]):
         self._source = Parallel(n_jobs=-1, prefer="threads")(delayed(predicate)(element)
                                                              for element in self._source)
 
-    def map_to_int(self):
-        self._queue.append(Process(self.__map_to_int))
-        return self
-
-    def __map_to_int(self):
-        self.__map(int)
-
-    def map_to_str(self):
-        self._queue.append(Process(self.__map_to_str))
-        return self
-
-    def __map_to_str(self):
-        self.__map(str)
-
-    def peek(self, action: Callable):
-        self._queue.append(Process(self.__peek, action))
-        return self
-
-    def __peek(self, predicate: Callable):
+    def _peek(self, predicate: Callable):
         Parallel(n_jobs=-1, prefer="threads")(delayed(predicate)(element)
                                               for element in self._source)
 
@@ -120,7 +81,7 @@ class ParallelStream(stream.BaseStream):
 
     def to_dict(self, key_mapper: Callable[[Any], Any]) -> dict:
         self._trigger_exec()
-        return dict(self.__group_to_dict(key_mapper))
+        return dict(self._group_to_dict(key_mapper))
 
     def _set_parallelizer_src(self):
         self.parallelizer.set_source(self._source)
