@@ -75,6 +75,13 @@ class NumericBaseStream(BaseStream, ABC):
         self._trigger_exec()
         return max(self._source) - min(self._source) if len(self._source) > 0 else None
 
+    @abstractmethod
+    def sum(self) -> Union[float, int, None]:
+        """
+        Calculates the sum of all items of a numerical stream
+        :return: The sum, can be int or float
+        """
+
     def third_quartile(self) -> Union[float, int, None]:
         """
         Calculates the third quartile of a numerical Stream

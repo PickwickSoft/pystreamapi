@@ -11,3 +11,8 @@ class SequentialNumericStream(NumericBaseStream, SequentialStream):
         """Calculates mean of values"""
         self._trigger_exec()
         return sum(self._source) / len(self._source) if len(self._source) > 0 else None
+
+    def sum(self) -> Union[float, int, None]:
+        """Calculates the sum of values"""
+        self._trigger_exec()
+        return sum(self._source)

@@ -12,6 +12,12 @@ class ParallelNumericStream(NumericBaseStream, ParallelStream):
         self._trigger_exec()
         return self.__sum() / len(self._source) if len(self._source) > 0 else None
 
+    def sum(self) -> Union[float, int, None]:
+        """Calculates the sum of values"""
+        self._trigger_exec()
+        _sum = self.__sum()
+        return 0 if _sum == [] else _sum
+
     def __sum(self):
         """Parallel sum method"""
         self._set_parallelizer_src()
