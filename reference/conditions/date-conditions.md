@@ -4,7 +4,7 @@ All date conditions can be used either with `datetime.datetime` or with `datetim
 
 ### `before(date)`: Check if date is before another date
 
-Check if a datetime is before a given datetime.
+Check if a datetime/date is before a given datetime/date.
 
 ```python
 Stream.of([datetime.now() - timedelta(days=1)])\
@@ -14,7 +14,7 @@ Stream.of([datetime.now() - timedelta(days=1)])\
 
 ### `after(date)`: Check if date is after another date
 
-Check if a datetime is after a given datetime.
+Check if a datetime/date is after a given datetime/date.
 
 ```python
 Stream.of([datetime.now() + timedelta(days=1)])\
@@ -24,7 +24,7 @@ Stream.of([datetime.now() + timedelta(days=1)])\
 
 ### `before_or_equal(date)`: Check if date is before or equal to another date
 
-Check if a datetime is before or equal to a given datetime.
+Check if a datetime/date is before or equal to a given datetime/date.
 
 ```python
 Stream.of([datetime.now() - timedelta(days=1)])\
@@ -34,7 +34,7 @@ Stream.of([datetime.now() - timedelta(days=1)])\
 
 ### `after_or_equal(date)`: Check if date is after or equal to another date
 
-Check if a datetime is after or equal to a given datetime.
+Check if a datetime/date is after or equal to a given datetime/date.
 
 ```python
 Stream.of([datetime.now() + timedelta(days=1)])\
@@ -44,7 +44,7 @@ Stream.of([datetime.now() + timedelta(days=1)])\
 
 ### `between_or_equal(start_date, end_date)`: Check if date is between or equal to two dates
 
-Check if a datetime is between or equal to two given datetimes.
+Check if a datetime/date is between or equal to two given datetimes/date.
 
 ```python
 Stream.of([datetime.now() - timedelta(days=2)])\
@@ -54,7 +54,7 @@ Stream.of([datetime.now() - timedelta(days=2)])\
 
 ### `not_between_or_equal(start_date, end_date)`: Check if date is not between or equal to two dates
 
-Check if a datetime is not between or equal to two given datetimes.
+Check if a datetime/date is not between or equal to two given datetimes/dates.
 
 ```python
 Stream.of([datetime.now() - timedelta(days=2)])\
@@ -64,7 +64,7 @@ Stream.of([datetime.now() - timedelta(days=2)])\
 
 ### `today()`: Check if date is today
 
-Check if a datetime is today.
+Check if a datetime/date is today.
 
 ```python
 Stream.of([datetime.now()])\
@@ -74,7 +74,7 @@ Stream.of([datetime.now()])\
 
 ### `today_utc()`: Check if date is today in UTC
 
-Check if a datetime is today (in UTC).
+Check if a datetime/date is today (in UTC).
 
 ```python
 Stream.of([datetime.now(timezone.utc)])\
@@ -84,7 +84,7 @@ Stream.of([datetime.now(timezone.utc)])\
 
 ### `yesterday()`: Check if date is yesterday
 
-Check if a datetime is yesterday.
+Check if a datetime/date is yesterday.
 
 ```python
 Stream.of([datetime.now() - timedelta(days=1)])\
@@ -94,7 +94,7 @@ Stream.of([datetime.now() - timedelta(days=1)])\
 
 ### `yesterday_utc()`: Check if date is yesterday in UTC
 
-Check if a datetime is yesterday (in UTC).
+Check if a datetime/date is yesterday (in UTC).
 
 ```python
 Stream.of([datetime.now(timezone.utc) - timedelta(days=1)])\
@@ -104,7 +104,7 @@ Stream.of([datetime.now(timezone.utc) - timedelta(days=1)])\
 
 ### `tomorrow()`: Check if date is tomorrow
 
-Check if a datetime is tomorrow.
+Check if a datetime/date is tomorrow.
 
 ```python
 Stream.of([datetime.now() + timedelta(days=1)])\
@@ -114,7 +114,7 @@ Stream.of([datetime.now() + timedelta(days=1)])\
 
 ### `tomorrow_utc()`: Check if date is tomorrow in UTC
 
-Check if a datetime is tomorrow (in UTC).
+Check if a datetime/date is tomorrow (in UTC).
 
 ```python
 Stream.of([datetime.now(timezone.utc) + timedelta(days=1)])\
@@ -124,7 +124,7 @@ Stream.of([datetime.now(timezone.utc) + timedelta(days=1)])\
 
 ### `this_week()`: Check if date is within the current week
 
-Check if a datetime is within the current week.
+Check if a datetime/date is within the current week.
 
 ```python
 Stream.of([datetime.now()])\
@@ -134,7 +134,7 @@ Stream.of([datetime.now()])\
 
 ### `this_week_utc()`: Check if date is within the current week in UTC
 
-Check if a datetime is within the current week (in UTC).
+Check if a datetime/date is within the current week (in UTC).
 
 ```python
 Stream.of([datetime.now(timezone.utc)])\
@@ -144,7 +144,7 @@ Stream.of([datetime.now(timezone.utc)])\
 
 ### `last_week()`: Check if date is within the previous week
 
-Check if a datetime is within the previous week.
+Check if a datetime/date is within the previous week.
 
 ```python
 Stream.of([datetime.now() - timedelta(weeks=1)])\
@@ -154,7 +154,7 @@ Stream.of([datetime.now() - timedelta(weeks=1)])\
 
 ### `last_week_utc()`: Check if date is within the previous week in UTC
 
-Check if a datetime is within the previous week (in UTC).
+Check if a datetime/date is within the previous week (in UTC).
 
 ```python
 Stream.of([datetime.now(timezone.utc) - timedelta(weeks=1)])\
@@ -164,7 +164,7 @@ Stream.of([datetime.now(timezone.utc) - timedelta(weeks=1)])\
 
 ### `next_week()`: Check if date is within the next week
 
-Check if a datetime is within the next week.
+Check if a datetime/date is within the next week.
 
 ```python
 Stream.of([datetime.now() + timedelta(weeks=1)])\
@@ -174,7 +174,7 @@ Stream.of([datetime.now() + timedelta(weeks=1)])\
 
 ### `next_week_utc()`: Check if date is within the next week in UTC
 
-Check if a datetime is within the next week (in UTC).
+Check if a datetime/date is within the next week (in UTC).
 
 ```python
 Stream.of([datetime.now(timezone.utc) + timedelta(weeks=1)])\
@@ -184,7 +184,7 @@ Stream.of([datetime.now(timezone.utc) + timedelta(weeks=1)])\
 
 ### `this_month()`: Check if date is within the current month
 
-Check if a datetime is within the current month.
+Check if a datetime/date is within the current month.
 
 ```python
 Stream.of([datetime.now()])\
@@ -194,7 +194,7 @@ Stream.of([datetime.now()])\
 
 ### `this_month_utc()`: Check if date is within the current month in UTC
 
-Check if a datetime is within the current month (in UTC).
+Check if a datetime/date is within the current month (in UTC).
 
 ```python
 Stream.of([datetime.now(timezone.utc)])\
@@ -204,7 +204,7 @@ Stream.of([datetime.now(timezone.utc)])\
 
 ### `last_month()`: Check if date is within the previous month
 
-Check if a datetime is within the previous month.
+Check if a datetime/date is within the previous month.
 
 ```python
 Stream.of([datetime.now() - relativedelta(months=1)])\
@@ -214,7 +214,7 @@ Stream.of([datetime.now() - relativedelta(months=1)])\
 
 ### `last_month_utc()`: Check if date is within the previous month in UTC
 
-Check if a datetime is within the previous month (in UTC).
+Check if a datetime/date is within the previous month (in UTC).
 
 ```python
 Stream.of([datetime.now(timezone.utc) - relativedelta(months=1)])\
@@ -224,7 +224,7 @@ Stream.of([datetime.now(timezone.utc) - relativedelta(months=1)])\
 
 ### `next_month()`: Check if date is within the next month
 
-Check if a datetime is within the next month.
+Check if a datetime/date is within the next month.
 
 ```python
 Stream.of([datetime.now() + relativedelta(months=1)])\
@@ -234,7 +234,7 @@ Stream.of([datetime.now() + relativedelta(months=1)])\
 
 ### `next_month_utc()`: Check if date is within the next month in UTC
 
-Check if a datetime is within the next month (in UTC).
+Check if a datetime/date is within the next month (in UTC).
 
 ```python
 Stream.of([datetime.now(timezone.utc) + relativedelta(months=1)])\
@@ -242,11 +242,9 @@ Stream.of([datetime.now(timezone.utc) + relativedelta(months=1)])\
     .for_each(print)  # Output: 2023-07-02 17:03:54.386812
 ```
 
-Certainly! Here are the remaining documentation sections for the date conditions:
-
 ### `this_year()`: Check if date is within the current year
 
-Check if a datetime is within the current year.
+Check if a datetime/date is within the current year.
 
 ```python
 Stream.of([datetime.now()])\
@@ -256,7 +254,7 @@ Stream.of([datetime.now()])\
 
 ### `this_year_utc()`: Check if date is within the current year in UTC
 
-Check if a datetime is within the current year (in UTC).
+Check if a datetime/date is within the current year (in UTC).
 
 ```python
 Stream.of([datetime.now(timezone.utc)])\
@@ -266,7 +264,7 @@ Stream.of([datetime.now(timezone.utc)])\
 
 ### `last_year()`: Check if date is within the previous year
 
-Check if a datetime is within the previous year.
+Check if a datetime/date is within the previous year.
 
 ```python
 Stream.of([datetime.now() - relativedelta(years=1)])\
@@ -276,7 +274,7 @@ Stream.of([datetime.now() - relativedelta(years=1)])\
 
 ### `last_year_utc()`: Check if date is within the previous year in UTC
 
-Check if a datetime is within the previous year (in UTC).
+Check if a datetime/date is within the previous year (in UTC).
 
 ```python
 Stream.of([datetime.now(timezone.utc) - relativedelta(years=1)])\
@@ -286,7 +284,7 @@ Stream.of([datetime.now(timezone.utc) - relativedelta(years=1)])\
 
 ### `next_year()`: Check if date is within the next year
 
-Check if a datetime is within the next year.
+Check if a datetime/date is within the next year.
 
 ```python
 Stream.of([datetime.now() + relativedelta(years=1)])\
@@ -296,7 +294,7 @@ Stream.of([datetime.now() + relativedelta(years=1)])\
 
 ### `next_year_utc()`: Check if date is within the next year in UTC
 
-Check if a datetime is within the next year (in UTC).
+Check if a datetime/date is within the next year (in UTC).
 
 ```python
 Stream.of([datetime.now(timezone.utc) + relativedelta(years=1)])\
