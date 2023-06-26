@@ -137,3 +137,7 @@ class TestOptional(unittest.TestCase):
         # Test that eq returns False if the other object is not an Optional
         optional = Optional.of(5)
         self.assertNotEqual(optional, 5)
+
+    def test_hash(self):
+        optional = Optional(5)
+        self.assertEqual(hash(5), hash(optional))
