@@ -32,29 +32,21 @@ class Optional:
 
     @staticmethod
     def empty():
-        """
-        Returns an empty Optional.
-        """
+        """Returns an empty Optional."""
         return Optional()
 
     def is_present(self):
-        """
-        Returns `True` if the Optional contains a non-none value, `False` otherwise.
-        """
+        """Returns `True` if the Optional contains a non-none value, `False` otherwise."""
         return self._is_present
 
     def get(self):
-        """
-        Returns the value if present, otherwise raises a `ValueError`.
-        """
+        """Returns the value if present, otherwise raises a `ValueError`."""
         if not self._is_present:
             raise ValueError("Value is not present")
         return self._value
 
     def or_else(self, default_value):
-        """
-        Returns the value if present, otherwise returns the given default value.
-        """
+        """Returns the value if present, otherwise returns the given default value."""
         return self._value if self._is_present else default_value
 
     def or_else_get(self, supplier):
@@ -98,32 +90,25 @@ class Optional:
         return self if self._is_present and predicate(self._value) else Optional()
 
     def if_present(self, consumer):
-        """
-        Calls the given consumer function with the value if present, otherwise does nothing.
-        """
+        """Calls the given consumer function with the value if present, otherwise does nothing."""
         if self._is_present:
             consumer(self._value)
 
     def __str__(self):
-        """
-        Returns a string representation of the Optional.
-        """
+        """Returns a string representation of the Optional."""
         return f"Optional({self._value if self._is_present else ''})"
 
     def __repr__(self):
-        """
-        Returns a string representation of the Optional.
-        """
+        """Returns a string representation of the Optional."""
         return self.__str__()
 
     def __eq__(self, other):
         """
-        Returns `True` if the other object is an Optional with the same value, `False` otherwise.
+        Returns `True` if the other object is an Optional with the same value,
+        `False` otherwise.
         """
         return self._value == other._value if isinstance(other, Optional) else False
 
     def __hash__(self):
-        """
-        Returns the hash of the Optional's value.
-        """
+        """Returns the hash of the Optional's value."""
         return hash(self._value)
