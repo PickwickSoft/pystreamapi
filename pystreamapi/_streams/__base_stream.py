@@ -2,7 +2,7 @@ import itertools
 from abc import abstractmethod
 from builtins import reversed
 from functools import cmp_to_key
-from typing import Iterable, Callable, Any, TypeVar, Iterator, Union
+from typing import Iterable, Callable, Any, TypeVar, Iterator
 
 from pystreamapi._lazy.process import Process
 from pystreamapi._lazy.queue import ProcessQueue

@@ -1,12 +1,12 @@
 import unittest
 
-from pystreamapi.__optional import Optional
 from parameterized import parameterized_class
 
 from pystreamapi._streams.__base_stream import BaseStream
 from pystreamapi._streams.__parallel_stream import ParallelStream
 from pystreamapi._streams.__sequential_stream import SequentialStream
 from pystreamapi._streams.numeric.__sequential_numeric_stream import SequentialNumericStream
+from pystreamapi.__optional import Optional
 
 
 @parameterized_class("stream", [

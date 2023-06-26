@@ -58,7 +58,8 @@ class TestOptional(unittest.TestCase):
         self.assertFalse(mapped_optional.is_present())
 
     def test_flat_map(self):
-        # Test that flat_map applies the mapper function to the Optional's value and returns the result
+        # Test that flat_map applies the mapper function to the
+        # Optional's value and returns the result
         optional = Optional.of(5)
         mapped_optional = optional.flat_map(lambda x: Optional.of(x * 2))
         self.assertTrue(mapped_optional.is_present())
@@ -95,13 +96,13 @@ class TestOptional(unittest.TestCase):
         # Test that if_present calls the consumer function if the Optional is present
         optional = Optional.of(5)
         result = []
-        optional.if_present(lambda x: result.append(x))
+        optional.if_present(result.append)
         self.assertEqual(result, [5])
 
         # Test that if_present doesn't call the consumer function if the Optional is empty
         optional = Optional.empty()
         result = []
-        optional.if_present(lambda x: result.append(x))
+        optional.if_present(result.append)
         self.assertEqual(result, [])
 
     def test_str(self):
