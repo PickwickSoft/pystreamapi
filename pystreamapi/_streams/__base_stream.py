@@ -2,14 +2,11 @@ import itertools
 from abc import abstractmethod
 from builtins import reversed
 from functools import cmp_to_key
-from typing import Iterable, Callable, Any, TypeVar, Iterator, Union
-
-from optional import Optional
-from optional.nothing import Nothing
-from optional.something import Something
+from typing import Iterable, Callable, Any, TypeVar, Iterator
 
 from pystreamapi._lazy.process import Process
 from pystreamapi._lazy.queue import ProcessQueue
+from pystreamapi.__optional import Optional
 
 K = TypeVar('K')
 _V = TypeVar('_V')
@@ -320,7 +317,7 @@ class BaseStream(Iterable[K]):
 
     @abstractmethod
     def reduce(self, predicate: Callable[[K, K], K], identity=_identity_missing,
-               depends_on_state=False) -> Union[K, Something, Nothing]:
+               depends_on_state=False) -> Optional:
         """
         Performs a reduction on the elements of this stream, using the provided identity value
         and an associative accumulation function, and returns the reduced value.

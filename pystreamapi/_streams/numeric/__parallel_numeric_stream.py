@@ -21,4 +21,4 @@ class ParallelNumericStream(NumericBaseStream, ParallelStream):
     def __sum(self):
         """Parallel sum method"""
         self._set_parallelizer_src()
-        return self.parallelizer.reduce(lambda x, y: x + y)
+        return self._parallelizer.reduce(lambda x, y: x + y)
