@@ -2,7 +2,7 @@ from functools import reduce as seq_reduce
 from typing import Callable, Any, Iterable
 
 from joblib import Parallel, delayed
-from optional import Optional
+from pystreamapi.__optional import Optional
 
 import pystreamapi._streams.__base_stream as stream
 from pystreamapi._parallel.fork_and_join import Parallelizer

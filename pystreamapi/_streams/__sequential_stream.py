@@ -1,7 +1,7 @@
 from functools import reduce
 from typing import Callable, Any
 
-from optional import Optional
+from pystreamapi.__optional import Optional
 
 import pystreamapi._streams.__base_stream as stream
 

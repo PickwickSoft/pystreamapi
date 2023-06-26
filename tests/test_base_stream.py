@@ -1,6 +1,6 @@
 import unittest
 
-from optional import Optional
+from pystreamapi.__optional import Optional
 
 from pystreamapi.__stream import Stream
 from pystreamapi._streams.__parallel_stream import ParallelStream
