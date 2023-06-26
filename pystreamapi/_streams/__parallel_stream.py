@@ -15,7 +15,7 @@ class ParallelStream(stream.BaseStream):
 
     def __init__(self, source: Iterable[stream.K]):
         super().__init__(source)
-        self.parallelizer = Parallelizer()
+        self._parallelizer = Parallelizer()
 
     def all_match(self, predicate: Callable[[Any], bool]):
         self._trigger_exec()
@@ -24,7 +24,7 @@ class ParallelStream(stream.BaseStream):
 
     def _filter(self, predicate: Callable[[Any], bool]):
         self._set_parallelizer_src()
-        self._source = self.parallelizer.filter(predicate)
+        self._source = self._parallelizer.filter(predicate)
 
     def find_any(self):
         self._trigger_exec()
@@ -77,11 +77,11 @@ class ParallelStream(stream.BaseStream):
         return identity if identity is not _identity_missing else Optional.empty()
 
     def __reduce(self, pred, _):
-        return self.parallelizer.reduce(pred)
+        return self._parallelizer.reduce(pred)
 
     def to_dict(self, key_mapper: Callable[[Any], Any]) -> dict:
         self._trigger_exec()
         return dict(self._group_to_dict(key_mapper))
 
     def _set_parallelizer_src(self):
-        self.parallelizer.set_source(self._source)
+        self._parallelizer.set_source(self._source)
