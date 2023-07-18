@@ -1,24 +1,38 @@
+import functools
 import itertools
 from abc import abstractmethod
 from builtins import reversed
 from functools import cmp_to_key
 from typing import Iterable, Callable, Any, TypeVar, Iterator
 
+from pystreamapi.__optional import Optional
 from pystreamapi._lazy.process import Process
 from pystreamapi._lazy.queue import ProcessQueue
-from pystreamapi.__optional import Optional
+from pystreamapi._streams.error.__error import ErrorHandler
+from pystreamapi._itertools.tools import dropwhile
 
 K = TypeVar('K')
 _V = TypeVar('_V')
 _identity_missing = object()
 
 
-class BaseStream(Iterable[K]):
+def terminal(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        self: BaseStream = args[0]
+        # pylint: disable=protected-access
+        self._queue.execute_all()
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
+class BaseStream(Iterable[K], ErrorHandler):
     """
     A sequence of elements supporting sequential and parallel aggregate operations.
 
     To perform a computation, stream operations are composed into a stream pipeline. A stream
-    pipeline consists of a source (which might be an array, a collection, a generator function,
+    pipeline consists of a source (which might be an iterable, a collection, a generator function,
     an I/O channel, etc.), zero or more intermediate operations (which transform a stream into
     another stream, such as filter(Predicate)), and a terminal operation (which produces a result
     or side effect, such as count() or forEach(Consumer)). Streams are lazy; computation on the
@@ -30,8 +44,8 @@ class BaseStream(Iterable[K]):
         self._source = source
         self._queue = ProcessQueue()
 
+    @terminal
     def __iter__(self) -> Iterator[K]:
-        self._trigger_exec()
         return iter(self._source)
 
     @classmethod
@@ -66,7 +80,7 @@ class BaseStream(Iterable[K]):
 
     def __drop_while(self, predicate: Callable[[Any], bool]):
         """Drops elements from the stream while the predicate is true."""
-        self._source = list(itertools.dropwhile(predicate, self._source))
+        self._source = list(dropwhile(predicate, self._source, self))
 
     def filter(self, predicate: Callable[[K], bool]) -> 'BaseStream[K]':
         """
@@ -242,6 +256,7 @@ class BaseStream(Iterable[K]):
     # Terminal Operations:
 
     @abstractmethod
+    @terminal
     def all_match(self, predicate: Callable[[K], bool]):
         """
         Returns whether all elements of this stream match the provided predicate.
@@ -249,73 +264,76 @@ class BaseStream(Iterable[K]):
         :param predicate: The callable predicate
         """
 
+    @terminal
     def any_match(self, predicate: Callable[[K], bool]):
         """
         Returns whether any elements of this stream match the provided predicate.
 
         :param predicate: The callable predicate
         """
-        self._trigger_exec()
-        return any(predicate(element) for element in self._source)
+        return any(self._itr(self._source, predicate))
 
+    @terminal
     def count(self):
         """
         Returns the count of elements in this stream.
 
         :return: Number of elements in the stream
         """
-        self._trigger_exec()
         return len(self._source)
 
     @abstractmethod
+    @terminal
     def find_any(self) -> Optional:
         """
         Returns an Optional describing some element of the stream, or an empty Optional if the
         stream is empty.
         """
 
+    @terminal
     def find_first(self):
         """
         Returns an Optional describing the first element of this stream, or an empty Optional if
         the stream is empty. :return:
         """
-        self._trigger_exec()
         if len(self._source) > 0:
             return Optional.of(self._source[0])
         return Optional.empty()
 
     @abstractmethod
-    def for_each(self, predicate: Callable):
+    @terminal
+    def for_each(self, action: Callable):
         """
         Performs an action for each element of this stream.
 
-        :param predicate:
+        :param action:
         """
 
+    @terminal
     def none_match(self, predicate: Callable[[K], bool]):
         """
         Returns whether no elements of this stream match the provided predicate.
 
         :param predicate:
         """
-        self._trigger_exec()
-        return not any(predicate(element) for element in self._source)
+        return not any(self._itr(self._source, predicate))
 
+    @terminal
     def min(self):
         """Returns the minimum element of this stream."""
-        self._trigger_exec()
         if len(self._source) > 0:
             return Optional.of(min(self._source))
         return Optional.empty()
 
+    @terminal
     def max(self):
         """Returns the maximum element of this stream."""
-        self._trigger_exec()
         if len(self._source) > 0:
             return Optional.of(max(self._source))
         return Optional.empty()
 
     @abstractmethod
+    @terminal
     def reduce(self, predicate: Callable[[K, K], K], identity=_identity_missing,
                depends_on_state=False) -> Optional:
         """
@@ -327,22 +345,23 @@ class BaseStream(Iterable[K]):
         :param identity: Default value
         """
 
+    @terminal
     def to_list(self):
         """Accumulates the elements of this stream into a List."""
-        self._trigger_exec()
         return list(self._source)
 
+    @terminal
     def to_tuple(self):
         """Accumulates the elements of this stream into a Tuple."""
-        self._trigger_exec()
         return tuple(self._source)
 
+    @terminal
     def to_set(self):
         """Accumulates the elements of this stream into a Set."""
-        self._trigger_exec()
         return set(self._source)
 
     @abstractmethod
+    @terminal
     def to_dict(self, key_mapper: Callable[[K], Any]) -> dict:
         """
         Returns a dictionary consisting of the results of grouping the elements of this stream
@@ -350,7 +369,3 @@ class BaseStream(Iterable[K]):
 
         :param key_mapper:
         """
-
-    def _trigger_exec(self):
-        """Triggers execution of the stream."""
-        self._queue.execute_all()
