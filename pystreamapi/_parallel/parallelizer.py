@@ -3,6 +3,7 @@ from joblib import Parallel as _JoblibParallel, delayed # pylint: disable=unused
 from pystreamapi._streams.error.__error import ErrorHandler
 from pystreamapi._streams.error.__levels import ErrorLevel
 
+
 class Parallel:
     """Wrapper for joblib.Parallel supporting error handling"""
 

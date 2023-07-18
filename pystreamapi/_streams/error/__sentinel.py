@@ -6,3 +6,6 @@ class Sentinel:
 
     def __ne__(self, other):
         return not isinstance(other, Sentinel)
+
+    def __hash__(self):
+        return hash(Sentinel)

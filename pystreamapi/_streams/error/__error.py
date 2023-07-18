@@ -11,13 +11,16 @@ if TYPE_CHECKING:
 
 _sentinel = Sentinel()
 
+
 def nothing(sth):
     """Do not modify the input"""
     return sth
 
+
 def true_condition(_):
     """Always return True"""
     return True
+
 
 class ErrorHandler:
     """Handle errors in stream operations"""
@@ -40,7 +43,7 @@ class ErrorHandler:
         """Get the error level"""
         return self.__error_level
 
-    def _itr(self, src, mapper = nothing, condition = true_condition) -> list:
+    def _itr(self, src, mapper=nothing, condition=true_condition) -> list:
         """Iterate over the source and apply the mapper and condition"""
         new_src = []
         for i in src:

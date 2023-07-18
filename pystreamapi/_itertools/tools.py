@@ -21,10 +21,9 @@ def dropwhile(predicate, iterable, handler: ErrorHandler=None):
 
 _initial_missing = object()
 
+
 def reduce(function, sequence, initial=_initial_missing, handler: ErrorHandler=None):
     """
-    reduce(function, iterable[, initial]) -> value
-
     Apply a function of two arguments cumulatively to the items of a sequence
     or iterable, from left to right, to reduce the iterable to a single
     value.  For example, reduce(lambda x, y: x+y, [1, 2, 3, 4, 5]) calculates
@@ -32,7 +31,6 @@ def reduce(function, sequence, initial=_initial_missing, handler: ErrorHandler=N
     of the iterable in the calculation, and serves as a default when the
     iterable is empty.
     """
-
     it = iter(sequence)
 
     if initial is _initial_missing:
