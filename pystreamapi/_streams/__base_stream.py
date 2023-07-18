@@ -17,8 +17,10 @@ _identity_missing = object()
 
 
 def terminal(func):
-    """Decorator to execute all the processes in the queue
-     before executing the decorated function. To be applied to terminal operations."""
+    """
+    Decorator to execute all the processes in the queue before executing the decorated function.
+    To be applied to terminal operations.
+    """
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         self: BaseStream = args[0]

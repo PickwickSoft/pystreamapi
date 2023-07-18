@@ -37,8 +37,8 @@ class ParallelStream(stream.BaseStream):
 
     def _flat_map(self, predicate: Callable[[Any], stream.BaseStream]):
         new_src = []
-        for element in Parallel(n_jobs=-1, prefer="threads", handler=self)\
-            (delayed(self.__mapper(predicate))(element) for element in self._source):
+        for element in Parallel(n_jobs=-1, prefer="threads", handler=self)(
+                delayed(self.__mapper(predicate))(element) for element in self._source):
             new_src.extend(element.to_list())
         self._source = new_src
 
@@ -49,8 +49,9 @@ class ParallelStream(stream.BaseStream):
             key = key_mapper(element)
             groups[key].append(element)
 
-        Parallel(n_jobs=-1, prefer="threads", handler=self)\
-            (delayed(self.__mapper(process_element))(element) for element in self._source)
+        Parallel(n_jobs=-1, prefer="threads", handler=self)(
+            delayed(self.__mapper(process_element))(element) for element in self._source
+        )
         return groups
 
     @terminal
@@ -59,12 +60,14 @@ class ParallelStream(stream.BaseStream):
             (delayed(self.__mapper(action))(element) for element in self._source)
 
     def _map(self, mapper: Callable[[Any], Any]):
-        self._source = Parallel(n_jobs=-1, prefer="threads", handler=self)\
-            (delayed(self.__mapper(mapper))(element) for element in self._source)
+        self._source = Parallel(n_jobs=-1, prefer="threads", handler=self)(
+            delayed(self.__mapper(mapper))(element) for element in self._source
+        )
 
     def _peek(self, action: Callable):
-        Parallel(n_jobs=-1, prefer="threads", handler=self)\
-            (delayed(self.__mapper(action))(element) for element in self._source)
+        Parallel(n_jobs=-1, prefer="threads", handler=self)(
+            delayed(self.__mapper(action))(element) for element in self._source
+        )
 
     @terminal
     def reduce(self, predicate: Callable[[Any, Any], Any], identity=_identity_missing,

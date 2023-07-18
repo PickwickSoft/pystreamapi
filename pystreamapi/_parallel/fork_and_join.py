@@ -95,5 +95,6 @@ class Parallelizer:
 
     def __run_job_in_parallel(self, src, operation, op_function):
         """Run the operation in parallel"""
-        return Parallel(n_jobs=-1, prefer="processes", handler=self.__handler)\
-            (delayed(operation)(op_function, part) for part in src)
+        return Parallel(n_jobs=-1, prefer="processes", handler=self.__handler)(
+            delayed(operation)(op_function, part) for part in src
+        )
