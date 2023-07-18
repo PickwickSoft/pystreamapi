@@ -1,7 +1,7 @@
 # pylint: disable=protected-access
 import os
 
-from typing import Callable, Any
+from typing import Callable, Any, Optional
 
 from pystreamapi._parallel.parallelizer import Parallel, delayed
 from pystreamapi._streams.error.__error import ErrorHandler
@@ -24,7 +24,7 @@ class Parallelizer:
 
     def __init__(self):
         self.__src = None
-        self.__handler: ErrorHandler | None = None
+        self.__handler: Optional[ErrorHandler] = None
 
     def set_source(self, src: list, handler: ErrorHandler=None):
         """
