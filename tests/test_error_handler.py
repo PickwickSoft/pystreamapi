@@ -120,3 +120,9 @@ class TestErrorLevelMeta(TestCase):
         s1 = Sentinel()
         s2 = Sentinel()
         self.assertFalse(s1 != s2)
+
+    def test_sentinel_hash(self):
+        s1 = Sentinel()
+        s2 = Sentinel()
+        self.assertEqual(hash(s1), hash(s2))
+        self.assertEqual(hash(s1), 0)

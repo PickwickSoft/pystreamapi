@@ -8,4 +8,4 @@ class Sentinel:
         return not isinstance(other, Sentinel)
 
     def __hash__(self):
-        return hash(Sentinel)
+        return 0  # Return a constant value for all instances
