@@ -25,7 +25,7 @@ Now you might be wondering why another library when there are already a few impl
 * It boasts high speed and efficiency.
 * The implementation achieves 100% test coverage.
 * It follows Pythonic principles, resulting in clean and readable code.
-* It adds some cool innovative features like conditions and an even more declarative look
+* It adds some cool innovative features such as conditions or error handling and an even more declarative look.
 
 Let's take a look at a small example:
 
@@ -101,6 +101,31 @@ Considering the above characteristics, a stream can be defined as follows:
 ![Conditions](https://raw.githubusercontent.com/PickwickSoft/pystreamapi/main/assets/conditions.png)
 
 Conditions provide a convenient means for performing logical operations within your Stream, such as using `filter()`, `take_while()`, `drop_while()`, and more. With PyStreamAPI, you have access to a staggering 111 diverse conditions that enable you to process various data types including strings, types, numbers, and dates. Additionally, PyStreamAPI offers a powerful combiner that allows you to effortlessly combine multiple conditions, facilitating the implementation of highly intricate pipelines.
+
+## Error handling: Work with data that you don't know
+PyStreamAPI offers a powerful error handling mechanism that allows you to handle errors in a declarative manner. This is especially useful when working with data that you don't know.
+
+PyStreamAPI offers three different error levels:
+- `ErrorLevel.RAISE`: This is the default error level. It will raise an exception if an error occurs.
+- `ErrorLevel.IGNORE`: This error level will ignore any errors that occur and won't inform you.
+- `ErrorLevel.WARN`: This error level will warn you about any errors that occur and logs them as a warning with default logger.
+
+
+This is how you can use them:
+
+```python
+from pystreamapi import Stream, ErrorLevel
+
+Stream.of([" ", '3', None, "2", 1, ""])
+.error_level(ErrorLevel.IGNORE)
+.map_to_int()
+.sorted()
+.for_each(print) # Output: 1 2 3
+```
+
+The code above will ignore all errors that occur during mapping to int and will just skip the elements.
+
+For more details on how to use error handling, please refer to the documentation.
 
 ## Get started: Installation
 

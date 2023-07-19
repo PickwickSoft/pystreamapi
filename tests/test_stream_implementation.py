@@ -17,8 +17,8 @@ class TestStreamImplementation(unittest.TestCase):
 
     def test_for_each(self):
         out = []
-        self.stream([1, 2, 3, 9]).for_each(out.append)
-        self.assertListEqual(out, [1, 2, 3, 9])
+        self.stream([1, 2, 3, 9]).map_to_str().for_each(out.append)
+        self.assertListEqual(out, ["1", "2", "3", "9"])
 
     def test_map_str_to_int(self):
         result = self.stream(["1", "2", "3", "9"]).map(int).to_list()
@@ -79,6 +79,8 @@ class TestStreamImplementation(unittest.TestCase):
         self.assertTrue(result)
         result = self.stream([1, 2, 3, 9]).all_match(lambda x: x > 1)
         self.assertFalse(result)
+        result = self.stream([1, 2, 3, 9]).map_to_str().all_match(lambda x: isinstance(x, str))
+        self.assertTrue(result)
 
     def test_all_match_empty(self):
         result = self.stream([]).all_match(lambda x: x > 0)

@@ -1,9 +1,12 @@
+# pylint: disable=protected-access
 import os
 
-from functools import reduce
-from typing import Callable, Any
+from typing import Callable, Any, Optional
 
-from joblib import Parallel, delayed
+from pystreamapi._parallel.parallelizer import Parallel, delayed
+from pystreamapi._streams.error.__error import ErrorHandler
+from pystreamapi._streams.error.__levels import ErrorLevel
+from pystreamapi._itertools.tools import reduce
 
 
 class Parallelizer:
@@ -21,31 +24,44 @@ class Parallelizer:
 
     def __init__(self):
         self.__src = None
+        self.__handler: Optional[ErrorHandler] = None
 
-    def set_source(self, src: list):
-        """Set the source list
+    def set_source(self, src: list, handler: ErrorHandler=None):
+        """
+        Set the source list
+        :param handler: The error handler to be used
         :param src: The source list
         """
         self.__src = src
+        self.__handler = handler
 
     def filter(self, function):
         """Parallel filter function"""
         parts = self.fork()
-        result = self.__run_job_in_parallel(parts, self.__filter, function)
+        if self.__handler is not None and self.__handler._get_error_level() != ErrorLevel.RAISE:
+            result = self.__run_job_in_parallel(parts, self._filter_ignore_errors, function)
+        else:
+            result = self.__run_job_in_parallel(parts, self.__filter, function)
         return [item for sublist in result for item in sublist]
+
+    @staticmethod
+    def __filter(function, src):
+        """Filter function used in the fork-and-join technology"""
+        return [element for element in src if function(element)]
+
+    def _filter_ignore_errors(self, function, src):
+        """Filter function used in the fork-and-join technology using an error handler"""
+        return [self.__handler._one(condition=function, item=element) for element in src]
 
     def reduce(self, function: Callable[[Any, Any], Any]):
         """Parallel reduce function using functools.reduce behind"""
         if len(self.__src) < 2:
             return self.__src
         parts = self.fork(min_nr_items=2)
-        result = self.__run_job_in_parallel(parts, reduce, function)
-        return reduce(function, result)
-
-    @staticmethod
-    def __filter(function, src):
-        """Filter function used in the fork-and-join technology"""
-        return [element for element in src if function(element)]
+        result = self.__run_job_in_parallel(
+            parts, lambda x, y: reduce(function=x, sequence=y, handler=self.__handler), function
+        )
+        return reduce(function, result, handler=self.__handler)
 
     def fork(self, min_nr_items=1):
         """
@@ -77,8 +93,8 @@ class Parallelizer:
             return round(len(self.__src) / min_nr_items)
         return os.cpu_count() - 2 if os.cpu_count() > 2 else os.cpu_count()
 
-    @staticmethod
-    def __run_job_in_parallel(src, operation, op_function):
+    def __run_job_in_parallel(self, src, operation, op_function):
         """Run the operation in parallel"""
-        return Parallel(n_jobs=-1, prefer="processes")(delayed(operation)(op_function, part)
-                                                       for part in src)
+        return Parallel(n_jobs=-1, prefer="processes", handler=self.__handler)(
+            delayed(operation)(op_function, part) for part in src
+        )
