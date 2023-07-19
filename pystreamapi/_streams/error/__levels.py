@@ -1,4 +1,7 @@
-class ErrorLevel:
+from enum import Enum
+
+
+class ErrorLevel(Enum):
     """
     PyStreamAPI error levels.
     RAISE: raise an exception
