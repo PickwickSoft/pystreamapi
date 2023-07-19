@@ -18,7 +18,10 @@ class NumericBaseStream(BaseStream, ABC):
         Calculates the iterquartile range of a numerical Stream
         :return: The iterquartile range, can be int or float
         """
-        return self.third_quartile() - self.first_quartile() if len(self._source) > 0 else None
+        return self._interquartile_range()
+
+    def _interquartile_range(self):
+        return self._third_quartile() - self._first_quartile() if len(self._source) > 0 else None
 
     @terminal
     def first_quartile(self) -> Union[float, int, None]:
@@ -26,6 +29,9 @@ class NumericBaseStream(BaseStream, ABC):
         Calculates the first quartile of a numerical Stream
         :return: The first quartile, can be int or float
         """
+        return self._first_quartile()
+
+    def _first_quartile(self):
         self._source = sorted(self._source)
         return self.__median(self._source[:(len(self._source)) // 2])
 
@@ -90,5 +96,8 @@ class NumericBaseStream(BaseStream, ABC):
         Calculates the third quartile of a numerical Stream
         :return: The third quartile, can be int or float
         """
+        return self._third_quartile()
+
+    def _third_quartile(self):
         self._source = sorted(self._source)
         return self.__median(self._source[(len(self._source) + 1) // 2:])

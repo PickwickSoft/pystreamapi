@@ -19,7 +19,6 @@ class ParallelNumericStream(NumericBaseStream, ParallelStream):
         _sum = self.__sum()
         return 0 if _sum == [] else _sum
 
-    @terminal
     def __sum(self):
         """Parallel sum method"""
         self._set_parallelizer_src()
