@@ -55,8 +55,7 @@ class ErrorHandler:
                     raise e
                 if self.__error_level == ErrorLevel.IGNORE:
                     continue
-                else:
-                    self.__log(e)
+                self.__log(e)
         return new_src
 
     def _one(self, mapper=nothing, condition=true_condition, item=None):
@@ -77,8 +76,7 @@ class ErrorHandler:
                 raise e
             if self.__error_level == ErrorLevel.IGNORE:
                 return _sentinel
-            else:
-                self.__log(e)
+            self.__log(e)
         return _sentinel
 
     @staticmethod
