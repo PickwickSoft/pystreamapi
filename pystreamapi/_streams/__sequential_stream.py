@@ -43,7 +43,7 @@ class SequentialStream(stream.BaseStream):
 
     @stream.terminal
     def for_each(self, action: Callable):
-        self._itr(self._source, mapper=action)
+        self._peek(action)
 
     def _map(self, mapper: Callable[[Any], Any]):
         self._source = self._itr(self._source, mapper=mapper)

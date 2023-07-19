@@ -44,7 +44,7 @@ def reduce(function, sequence, initial=_initial_missing, handler: ErrorHandler=N
 
     for element in it:
         if handler is not None:
-            new_value = handler._one(mapper=lambda x: function(value, x), item=element)
+            new_value = handler._one(mapper=lambda x, val=value: function(val, x), item=element)
             if new_value is not _sentinel:
                 value = new_value
         else:

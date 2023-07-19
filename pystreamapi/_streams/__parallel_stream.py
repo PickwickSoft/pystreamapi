@@ -56,9 +56,7 @@ class ParallelStream(stream.BaseStream):
 
     @terminal
     def for_each(self, action: Callable):
-        Parallel(n_jobs=-1, prefer="threads", handler=self)(
-            delayed(self.__mapper(action))(element) for element in self._source
-        )
+        self._peek(action)
 
     def _map(self, mapper: Callable[[Any], Any]):
         self._source = Parallel(n_jobs=-1, prefer="threads", handler=self)(
