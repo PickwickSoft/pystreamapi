@@ -55,7 +55,7 @@ class ErrorHandler:
                     raise e
                 if self.__error_level == ErrorLevel.IGNORE:
                     continue
-                if self.__error_level == ErrorLevel.WARN:
+                else:
                     self.__log(e)
         return new_src
 
@@ -77,7 +77,7 @@ class ErrorHandler:
                 raise e
             if self.__error_level == ErrorLevel.IGNORE:
                 return _sentinel
-            if self.__error_level == ErrorLevel.WARN:
+            else:
                 self.__log(e)
         return _sentinel
 

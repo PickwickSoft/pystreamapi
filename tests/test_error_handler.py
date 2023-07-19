@@ -62,6 +62,10 @@ class TestErrorLevelMeta(TestCase):
         self.assertRaises(ValueError, lambda: self.handler._one(int, lambda x: x != "",
                                                                 "a"))
 
+    def test_one_condition_false(self):
+        self.handler.error_level(ErrorLevel.RAISE)
+        self.assertEqual(self.handler._one(int, lambda x: x == "", "1"), _sentinel)
+
     def test_one_ignore(self):
         self.handler.error_level(ErrorLevel.IGNORE)
         self.assertEqual(self.handler._one(mapper=int, item="a"), _sentinel)
