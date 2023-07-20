@@ -15,8 +15,9 @@ from pystreamapi._streams.numeric.__sequential_numeric_stream import SequentialN
     [ParallelNumericStream]])
 class BaseStreamClosed(unittest.TestCase):
     def test_closed_stream_throws_exception(self):
+        # pylint: disable=too-many-statements
         closed_stream = self.stream([])
-        closed_stream._close()
+        closed_stream.for_each(lambda _: ...)
 
         # Verify that all methods throw a RuntimeError
         with self.assertRaises(RuntimeError):

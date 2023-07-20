@@ -1,16 +1,19 @@
 # pylint: disable=protected-access
+from __future__ import annotations
 import functools
 import itertools
 from abc import abstractmethod
 from builtins import reversed
 from functools import cmp_to_key
-from typing import Iterable, Callable, Any, TypeVar, Iterator
+from typing import Iterable, Callable, Any, TypeVar, Iterator, TYPE_CHECKING
 
 from pystreamapi.__optional import Optional
 from pystreamapi._itertools.tools import dropwhile
 from pystreamapi._lazy.process import Process
 from pystreamapi._lazy.queue import ProcessQueue
 from pystreamapi._streams.error.__error import ErrorHandler
+if TYPE_CHECKING:
+    from pystreamapi._streams.numeric.__numeric_base_stream import NumericBaseStream
 
 K = TypeVar('K')
 _V = TypeVar('_V')
@@ -189,13 +192,13 @@ class BaseStream(Iterable[K], ErrorHandler):
         """Implementation of map. Should be implemented by subclasses."""
 
     @_operation
-    def map_to_int(self) -> 'BaseStream[_V]':
+    def map_to_int(self) -> NumericBaseStream[_V]:
         """
         Returns a stream consisting of the results of converting the elements of this stream to
         integers.
         """
         self._queue.append(Process(self.__map_to_int))
-        return self
+        return self._to_numeric_stream()
 
     def __map_to_int(self):
         """Converts the stream to integers."""
@@ -407,3 +410,7 @@ class BaseStream(Iterable[K], ErrorHandler):
 
         :param key_mapper:
         """
+
+    @abstractmethod
+    def _to_numeric_stream(self) -> NumericBaseStream[_V]:
+        """Converts a stream to a numeric stream. To be implemented by subclasses."""
