@@ -91,3 +91,9 @@ class ParallelStream(stream.BaseStream):
 
     def __mapper(self, mapper):
         return lambda x: self._one(mapper=mapper, item=x)
+
+    def _to_numeric_stream(self):
+        # pylint: disable=import-outside-toplevel
+        from pystreamapi._streams.numeric.__parallel_numeric_stream import ParallelNumericStream
+        self.__class__ = ParallelNumericStream
+        return self

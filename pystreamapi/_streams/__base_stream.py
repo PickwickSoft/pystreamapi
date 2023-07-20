@@ -1,19 +1,37 @@
+# pylint: disable=protected-access
+from __future__ import annotations
 import functools
 import itertools
 from abc import abstractmethod
 from builtins import reversed
 from functools import cmp_to_key
-from typing import Iterable, Callable, Any, TypeVar, Iterator
+from typing import Iterable, Callable, Any, TypeVar, Iterator, TYPE_CHECKING
 
 from pystreamapi.__optional import Optional
+from pystreamapi._itertools.tools import dropwhile
 from pystreamapi._lazy.process import Process
 from pystreamapi._lazy.queue import ProcessQueue
 from pystreamapi._streams.error.__error import ErrorHandler
-from pystreamapi._itertools.tools import dropwhile
+if TYPE_CHECKING:
+    from pystreamapi._streams.numeric.__numeric_base_stream import NumericBaseStream
 
 K = TypeVar('K')
 _V = TypeVar('_V')
 _identity_missing = object()
+
+
+def _operation(func):
+    """
+    Decorator to execute all the processes in the queue before executing the decorated function.
+    To be applied to intermediate operations.
+    """
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        self: BaseStream = args[0]
+        self._verify_open()
+        return func(*args, **kwargs)
+
+    return wrapper
 
 
 def terminal(func):
@@ -22,10 +40,11 @@ def terminal(func):
     To be applied to terminal operations.
     """
     @functools.wraps(func)
+    @_operation
     def wrapper(*args, **kwargs):
         self: BaseStream = args[0]
-        # pylint: disable=protected-access
         self._queue.execute_all()
+        self._close()
         return func(*args, **kwargs)
 
     return wrapper
@@ -47,6 +66,16 @@ class BaseStream(Iterable[K], ErrorHandler):
     def __init__(self, source: Iterable[K]):
         self._source = source
         self._queue = ProcessQueue()
+        self._open = True
+
+    def _close(self):
+        """Close the stream."""
+        self._open = False
+
+    def _verify_open(self):
+        """Verify if stream is open. If not, raise an exception."""
+        if not self._open:
+            raise RuntimeError("The stream has been closed")
 
     @terminal
     def __iter__(self) -> Iterator[K]:
@@ -63,6 +92,7 @@ class BaseStream(Iterable[K], ErrorHandler):
         """
         return cls(itertools.chain(*list(streams)))
 
+    @_operation
     def distinct(self) -> 'BaseStream[_V]':
         """Returns a stream consisting of the distinct elements of this stream."""
         self._queue.append(Process(self.__distinct))
@@ -72,6 +102,7 @@ class BaseStream(Iterable[K], ErrorHandler):
         """Removes duplicate elements from the stream."""
         self._source = list(set(self._source))
 
+    @_operation
     def drop_while(self, predicate: Callable[[K], bool]) -> 'BaseStream[_V]':
         """
         Returns, if this stream is ordered, a stream consisting of the remaining elements of this
@@ -86,6 +117,7 @@ class BaseStream(Iterable[K], ErrorHandler):
         """Drops elements from the stream while the predicate is true."""
         self._source = list(dropwhile(predicate, self._source, self))
 
+    @_operation
     def filter(self, predicate: Callable[[K], bool]) -> 'BaseStream[K]':
         """
         Returns a stream consisting of the elements of this stream that match the given predicate.
@@ -99,6 +131,7 @@ class BaseStream(Iterable[K], ErrorHandler):
     def _filter(self, predicate: Callable[[K], bool]):
         """Implementation of filter. Should be implemented by subclasses."""
 
+    @_operation
     def flat_map(self, predicate: Callable[[K], Iterable[_V]]) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the results of replacing each element of this stream with
@@ -114,6 +147,7 @@ class BaseStream(Iterable[K], ErrorHandler):
     def _flat_map(self, predicate: Callable[[K], Iterable[_V]]):
         """Implementation of flat_map. Should be implemented by subclasses."""
 
+    @_operation
     def group_by(self, key_mapper: Callable[[K], Any]) -> 'BaseStream[K]':
         """
         Returns a Stream consisting of the results of grouping the elements of this stream
@@ -133,6 +167,7 @@ class BaseStream(Iterable[K], ErrorHandler):
     def _group_to_dict(self, key_mapper: Callable[[K], Any]) -> dict[K, list]:
         """Groups the stream into a dictionary. Should be implemented by subclasses."""
 
+    @_operation
     def limit(self, max_size: int) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the elements of this stream, truncated to be no longer
@@ -147,6 +182,7 @@ class BaseStream(Iterable[K], ErrorHandler):
         """Limits the stream to the first n elements."""
         self._source = itertools.islice(self._source, max_size)
 
+    @_operation
     def map(self, mapper: Callable[[K], _V]) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the results of applying the given function to the elements
@@ -161,18 +197,20 @@ class BaseStream(Iterable[K], ErrorHandler):
     def _map(self, mapper: Callable[[K], _V]):
         """Implementation of map. Should be implemented by subclasses."""
 
-    def map_to_int(self) -> 'BaseStream[_V]':
+    @_operation
+    def map_to_int(self) -> NumericBaseStream[_V]:
         """
         Returns a stream consisting of the results of converting the elements of this stream to
         integers.
         """
         self._queue.append(Process(self.__map_to_int))
-        return self
+        return self._to_numeric_stream()
 
     def __map_to_int(self):
         """Converts the stream to integers."""
         self._map(int)
 
+    @_operation
     def map_to_str(self) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the results of converting the elements of this stream to
@@ -185,6 +223,7 @@ class BaseStream(Iterable[K], ErrorHandler):
         """Converts the stream to strings."""
         self._map(str)
 
+    @_operation
     def peek(self, action: Callable) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the elements of this stream, additionally performing the
@@ -196,9 +235,11 @@ class BaseStream(Iterable[K], ErrorHandler):
         return self
 
     @abstractmethod
+    @_operation
     def _peek(self, action: Callable):
         """Implementation of peek. Should be implemented by subclasses."""
 
+    @_operation
     def reversed(self) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the elements of this stream, with their order being
@@ -214,6 +255,7 @@ class BaseStream(Iterable[K], ErrorHandler):
         except TypeError:
             self._source = reversed(list(self._source))
 
+    @_operation
     def skip(self, n: int) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the remaining elements of this stream after discarding the
@@ -228,6 +270,7 @@ class BaseStream(Iterable[K], ErrorHandler):
         """Skips the first n elements of the stream."""
         self._source = self._source[n:]
 
+    @_operation
     def sorted(self, comparator: Callable[[K], int] = None) -> 'BaseStream[_V]':
         """
         Returns a stream consisting of the elements of this stream, sorted according to natural
@@ -243,6 +286,7 @@ class BaseStream(Iterable[K], ErrorHandler):
         else:
             self._source = sorted(self._source, key=cmp_to_key(comparator))
 
+    @_operation
     def take_while(self, predicate: Callable[[K], bool]) -> 'BaseStream[_V]':
         """
         Returns, if this stream is ordered, a stream consisting of the longest prefix of elements
@@ -256,8 +300,6 @@ class BaseStream(Iterable[K], ErrorHandler):
     def __take_while(self, predicate: Callable[[Any], bool]):
         """Takes elements from the stream while the predicate is true."""
         self._source = list(itertools.takewhile(predicate, self._source))
-
-    # Terminal Operations:
 
     @abstractmethod
     @terminal
@@ -373,3 +415,7 @@ class BaseStream(Iterable[K], ErrorHandler):
 
         :param key_mapper:
         """
+
+    @abstractmethod
+    def _to_numeric_stream(self) -> NumericBaseStream[_V]:
+        """Converts a stream to a numeric stream. To be implemented by subclasses."""
