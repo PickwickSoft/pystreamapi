@@ -21,6 +21,10 @@ _identity_missing = object()
 
 
 def _operation(func):
+    """
+    Decorator to execute all the processes in the queue before executing the decorated function.
+    To be applied to intermediate operations.
+    """
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         self: BaseStream = args[0]
@@ -65,9 +69,11 @@ class BaseStream(Iterable[K], ErrorHandler):
         self._open = True
 
     def _close(self):
+        """Close the stream."""
         self._open = False
 
     def _verify_open(self):
+        """Verify if stream is open. If not, raise an exception."""
         if not self._open:
             raise RuntimeError("The stream has been closed")
 
@@ -232,7 +238,6 @@ class BaseStream(Iterable[K], ErrorHandler):
     @_operation
     def _peek(self, action: Callable):
         """Implementation of peek. Should be implemented by subclasses."""
-
 
     @_operation
     def reversed(self) -> 'BaseStream[_V]':
