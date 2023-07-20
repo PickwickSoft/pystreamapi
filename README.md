@@ -116,11 +116,12 @@ This is how you can use them:
 ```python
 from pystreamapi import Stream, ErrorLevel
 
-Stream.of([" ", '3', None, "2", 1, ""])
-.error_level(ErrorLevel.IGNORE)
-.map_to_int()
-.sorted()
-.for_each(print) # Output: 1 2 3
+Stream.of([" ", '3', None, "2", 1, ""]) \
+    .error_level(ErrorLevel.IGNORE) \
+    .map_to_int() \
+    .error_level(ErrorLevel.RAISE) \
+    .sorted() \
+    .for_each(print) # Output: 1 2 3
 ```
 
 The code above will ignore all errors that occur during mapping to int and will just skip the elements.
