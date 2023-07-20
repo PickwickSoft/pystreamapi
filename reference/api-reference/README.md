@@ -16,6 +16,8 @@ A terminal operation is an operation that is performed on a stream and produces 
 
 When a terminal operation is invoked on a stream, it consumes the elements from the stream and produces a result, which could be a single value or a collection, or performs a side effect, such as writing to a file or displaying information on the console. Once a terminal operation is executed, the stream is considered consumed and cannot be reused.
 
+If you try to reuse the stream, it will throw a `RuntimeError`.
+
 {% content-ref url="terminal-operations.md" %}
 [terminal-operations.md](terminal-operations.md)
 {% endcontent-ref %}

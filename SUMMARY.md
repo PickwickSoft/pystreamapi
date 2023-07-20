@@ -9,6 +9,7 @@
   * [Intermediate Operations](reference/api-reference/intermediate-operations.md)
   * [Terminal Operations](reference/api-reference/terminal-operations.md)
   * [Numeric Stream](reference/api-reference/numeric-stream.md)
+  * [Error handling](reference/api-reference/error-handling.md)
 * [Conditions](reference/conditions/README.md)
   * [Type Conditions](reference/conditions/type-conditions.md)
   * [Numeric Conditions](reference/conditions/numeric-conditions.md)

@@ -6,15 +6,7 @@ description: Short introduction
 
 Welcome to PyStreamAPI! Here you'll find all the documentation you need to get up and running with Streams in Python!
 
-<p align="center">
-  <a href="https://deepsource.io/gh/PickwickSoft/pystreamapi/?ref=repository-badge"><img src="https://deepsource.io/gh/PickwickSoft/pystreamapi.svg/?label=active+issues&show_trend=true&token=7lV9pH1U-N1oId03M-XKZL5B"  alt="DeepSource"/></a>
-  <a href="https://github.com/PickwickSoft/pystreamapi/actions/workflows/unittests.yml"><img src="https://github.com/PickwickSoft/pystreamapi/actions/workflows/unittests.yml/badge.svg"  alt="Tests"/></a>
-  <a href="https://github.com/PickwickSoft/pystreamapi/actions/workflows/pylint.yml"><img src="https://github.com/PickwickSoft/pystreamapi/actions/workflows/pylint.yml/badge.svg"  alt="Pylint"/></a>
-  <a href="https://sonarcloud.io/summary/new_code?id=PickwickSoft_pystreamapi"><img src="https://sonarcloud.io/api/project_badges/measure?project=PickwickSoft_pystreamapi&metric=alert_status"  alt="Quality Gate"/></a>
-  <a href="https://sonarcloud.io/summary/new_code?id=PickwickSoft_pystreamapi"><img src="https://sonarcloud.io/api/project_badges/measure?project=PickwickSoft_pystreamapi&metric=coverage"  alt="Coverage"/></a>
-  <a href="https://pypi.org/project/streams-py/"><img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dm/streams.py"></a>
-  <a href="https://pypi.org/project/streams-py/"><img alt="PyPI" src="https://img.shields.io/pypi/v/streams.py"></a>
-</p>
+[![DeepSource](https://deepsource.io/gh/PickwickSoft/pystreamapi.svg/?label=active+issues\&show\_trend=true\&token=7lV9pH1U-N1oId03M-XKZL5B)](https://deepsource.io/gh/PickwickSoft/pystreamapi/?ref=repository-badge) [![Tests](https://github.com/PickwickSoft/pystreamapi/actions/workflows/unittests.yml/badge.svg)](https://github.com/PickwickSoft/pystreamapi/actions/workflows/unittests.yml) [![Pylint](https://github.com/PickwickSoft/pystreamapi/actions/workflows/pylint.yml/badge.svg)](https://github.com/PickwickSoft/pystreamapi/actions/workflows/pylint.yml) [![Quality Gate](https://sonarcloud.io/api/project\_badges/measure?project=PickwickSoft\_pystreamapi\&metric=alert\_status)](https://sonarcloud.io/summary/new\_code?id=PickwickSoft\_pystreamapi) [![Coverage](https://sonarcloud.io/api/project\_badges/measure?project=PickwickSoft\_pystreamapi\&metric=coverage)](https://sonarcloud.io/summary/new\_code?id=PickwickSoft\_pystreamapi) [![PyPI - Downloads](https://img.shields.io/pypi/dm/streams.py)](https://pypi.org/project/streams-py/) [![PyPI](https://img.shields.io/pypi/v/streams.py)](https://pypi.org/project/streams-py/)
 
 ## What is PyStreamAPI?
 
@@ -112,6 +104,14 @@ Explore the wide range of possibilities available to you by utilizing conditions
 
 {% content-ref url="reference/conditions/" %}
 [conditions](reference/conditions/)
+{% endcontent-ref %}
+
+### Error handling: Work with data that you don't know
+
+PyStreamAPI offers a powerful error handling mechanism that allows you to handle errors in a declarative manner. This is especially useful when working with data that you don't know.
+
+{% content-ref url="reference/api-reference/error-handling.md" %}
+[error-handling.md](reference/api-reference/error-handling.md)
 {% endcontent-ref %}
 
 ## Want to jump right in?

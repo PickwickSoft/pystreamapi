@@ -67,3 +67,13 @@ Stream.of([1, 2, 3, 4, 5, 7, 7, 8, 9, 9]) \
     .first_quartile() # Returns 8
 ```
 
+
+
+### `sum()`: Calculate the sum
+
+Calculates the sum of all elements of a numerical Stream. Returns either `int` or `float`.
+
+```python
+Stream.of([1, 2, 3]) \
+    .sum() # Returns 6
+```
