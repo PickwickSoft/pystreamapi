@@ -158,10 +158,6 @@ class TestStreamImplementation(unittest.TestCase):
                          .reduce(lambda x, y: x + y).get(), 6)
 
     def test_different_error_level(self):
-        class NoToString:
-            def __str__(self):
-                raise ValueError("NoToString")
-
         with self.assertRaises(ValueError) as cm:
             self.stream([1, 2, 3, "a", NoToString()])\
                 .error_level(ErrorLevel.IGNORE)\

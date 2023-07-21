@@ -1,14 +1,9 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Union
+
 from pystreamapi._streams.error.__levels import ErrorLevel
 from pystreamapi._streams.error.__sentinel import Sentinel
-
-if TYPE_CHECKING:
-    # Avoid circular import
-    from pystreamapi._streams.__base_stream import BaseStream
-    from pystreamapi._streams.numeric.__numeric_base_stream import NumericBaseStream
 
 _sentinel = Sentinel()
 

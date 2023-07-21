@@ -12,6 +12,8 @@ from pystreamapi._itertools.tools import dropwhile
 from pystreamapi._lazy.process import Process
 from pystreamapi._lazy.queue import ProcessQueue
 from pystreamapi._streams.error.__error import ErrorHandler
+from pystreamapi._streams.error.__levels import ErrorLevel
+
 if TYPE_CHECKING:
     from pystreamapi._streams.numeric.__numeric_base_stream import NumericBaseStream
 
