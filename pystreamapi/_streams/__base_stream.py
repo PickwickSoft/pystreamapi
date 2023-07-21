@@ -5,7 +5,7 @@ import itertools
 from abc import abstractmethod
 from builtins import reversed
 from functools import cmp_to_key
-from typing import Iterable, Callable, Any, TypeVar, Iterator, TYPE_CHECKING
+from typing import Iterable, Callable, Any, TypeVar, Iterator, TYPE_CHECKING, Union
 
 from pystreamapi.__optional import Optional
 from pystreamapi._itertools.tools import dropwhile
@@ -116,6 +116,10 @@ class BaseStream(Iterable[K], ErrorHandler):
     def __drop_while(self, predicate: Callable[[Any], bool]):
         """Drops elements from the stream while the predicate is true."""
         self._source = list(dropwhile(predicate, self._source, self))
+
+    def error_level(self, level: ErrorLevel, *exceptions) -> Union["BaseStream[K]", NumericBaseStream]:
+        self._queue.append(Process(lambda: self._error_level(level, *exceptions)))
+        return self
 
     @_operation
     def filter(self, predicate: Callable[[K], bool]) -> 'BaseStream[K]':

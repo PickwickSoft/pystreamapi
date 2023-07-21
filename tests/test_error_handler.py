@@ -15,85 +15,85 @@ class TestErrorLevelMeta(TestCase):
         self.handler = ErrorHandlerImpl()
 
     def test_iterate_raise(self):
-        self.handler.error_level(ErrorLevel.RAISE)
+        self.handler._error_level(ErrorLevel.RAISE)
         self.assertRaises(ValueError, lambda: self.handler._itr([1, 2, 3, 4, 5, "a"], int))
 
     def test_iterate_raise_with_condition(self):
-        self.handler.error_level(ErrorLevel.RAISE)
+        self.handler._error_level(ErrorLevel.RAISE)
         self.assertRaises(ValueError, lambda: self.handler._itr(
             [1, 2, 3, 4, 5, "a"], int, lambda x: x != ""))
 
     def test_iterate_ignore(self):
-        self.handler.error_level(ErrorLevel.IGNORE)
+        self.handler._error_level(ErrorLevel.IGNORE)
         self.assertEqual(self.handler._itr([1, 2, 3, 4, 5, "a"], int), [1, 2, 3, 4, 5])
 
     def test_iterate_ignore_with_condition(self):
-        self.handler.error_level(ErrorLevel.IGNORE)
+        self.handler._error_level(ErrorLevel.IGNORE)
         self.assertEqual(self.handler._itr(
             [1, 2, 3, 4, 5, "a"], int, lambda x: x != ""), [1, 2, 3, 4, 5])
 
 
     def test_iterate_ignore_specific_exceptions(self):
-        self.handler.error_level(ErrorLevel.IGNORE, ValueError, AttributeError)
+        self.handler._error_level(ErrorLevel.IGNORE, ValueError, AttributeError)
         self.assertEqual(self.handler._itr(
             ["b", 2, 3, 4, 5, "a"], mapper=lambda x: x.split()), [["b"], ["a"]])
 
 
     def test_iterate_ignore_specific_exception_raise_another(self):
-        self.handler.error_level(ErrorLevel.IGNORE, ValueError)
+        self.handler._error_level(ErrorLevel.IGNORE, ValueError)
         self.assertRaises(AttributeError, lambda: self.handler._itr(
             ["b", 2, 3, 4, 5, "a"], mapper=lambda x: x.split()))
 
     def test_iterate_warn(self):
-        self.handler.error_level(ErrorLevel.WARN)
+        self.handler._error_level(ErrorLevel.WARN)
         self.assertEqual(self.handler._itr([1, 2, 3, 4, 5, "a"], int), [1, 2, 3, 4, 5])
 
     def test_iterate_warn_with_condition(self):
-        self.handler.error_level(ErrorLevel.WARN)
+        self.handler._error_level(ErrorLevel.WARN)
         self.assertEqual(self.handler._itr(
             [1, 2, 3, 4, 5, "a"], int, lambda x: x != ""), [1, 2, 3, 4, 5])
 
     def test_one_raise(self):
-        self.handler.error_level(ErrorLevel.RAISE)
+        self.handler._error_level(ErrorLevel.RAISE)
         self.assertRaises(ValueError, lambda: self.handler._one(mapper=int, item="a"))
 
     def test_one_raise_with_condition(self):
-        self.handler.error_level(ErrorLevel.RAISE)
+        self.handler._error_level(ErrorLevel.RAISE)
         self.assertRaises(ValueError, lambda: self.handler._one(int, lambda x: x != "",
                                                                 "a"))
 
     def test_one_condition_false(self):
-        self.handler.error_level(ErrorLevel.RAISE)
+        self.handler._error_level(ErrorLevel.RAISE)
         self.assertEqual(self.handler._one(int, lambda x: x == "", "1"), _sentinel)
 
     def test_one_ignore(self):
-        self.handler.error_level(ErrorLevel.IGNORE)
+        self.handler._error_level(ErrorLevel.IGNORE)
         self.assertEqual(self.handler._one(mapper=int, item="a"), _sentinel)
 
     def test_one_ignore_with_condition(self):
-        self.handler.error_level(ErrorLevel.IGNORE)
+        self.handler._error_level(ErrorLevel.IGNORE)
         self.assertEqual(self.handler._one(int, lambda x: x != "", "a"), _sentinel)
 
     def test_one_ignore_specific_exceptions(self):
-        self.handler.error_level(ErrorLevel.IGNORE, ValueError, AttributeError)
+        self.handler._error_level(ErrorLevel.IGNORE, ValueError, AttributeError)
         self.assertEqual(self.handler._one(
             mapper=lambda x: x.split(), item=1), _sentinel)
 
     def test_one_ignore_specific_exception_raise_another(self):
-        self.handler.error_level(ErrorLevel.IGNORE, ValueError)
+        self.handler._error_level(ErrorLevel.IGNORE, ValueError)
         self.assertRaises(AttributeError, lambda: self.handler._one(
             mapper=lambda x: x.split(), item=1))
 
     def test_one_warn(self):
-        self.handler.error_level(ErrorLevel.WARN)
+        self.handler._error_level(ErrorLevel.WARN)
         self.assertEqual(self.handler._one(mapper=int, item="a"), _sentinel)
 
     def test_one_warn_with_condition(self):
-        self.handler.error_level(ErrorLevel.WARN)
+        self.handler._error_level(ErrorLevel.WARN)
         self.assertEqual(self.handler._one(int, lambda x: x != "", "a"), _sentinel)
 
     def test_remove_sentinels(self):
-        self.handler.error_level(ErrorLevel.IGNORE)
+        self.handler._error_level(ErrorLevel.IGNORE)
         src = ["1", 2, "3", "a"]
         self.assertEqual(self.handler._remove_sentinel(
             self.handler._one(mapper=int, item=item) for item in src),
@@ -101,7 +101,7 @@ class TestErrorLevelMeta(TestCase):
         )
 
     def test_remove_sentinels_no_sentinels(self):
-        self.handler.error_level(ErrorLevel.IGNORE)
+        self.handler._error_level(ErrorLevel.IGNORE)
         src = ["1", 2, "3", "a"]
         self.assertEqual(self.handler._remove_sentinel(src), src)
 

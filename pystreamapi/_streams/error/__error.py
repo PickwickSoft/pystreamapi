@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 from pystreamapi._streams.error.__levels import ErrorLevel
 from pystreamapi._streams.error.__sentinel import Sentinel
 
 if TYPE_CHECKING:
     # Avoid circular import
     from pystreamapi._streams.__base_stream import BaseStream
+    from pystreamapi._streams.numeric.__numeric_base_stream import NumericBaseStream
 
 _sentinel = Sentinel()
 
@@ -28,7 +29,7 @@ class ErrorHandler:
     __error_level = ErrorLevel.RAISE
     __exceptions_to_ignore = (Exception,)
 
-    def error_level(self, level: ErrorLevel, *exceptions) -> BaseStream:
+    def _error_level(self, level: ErrorLevel, *exceptions):
         """
         Set the error level
         :param level: Error level from ErrorLevel
@@ -37,7 +38,6 @@ class ErrorHandler:
         """
         self.__exceptions_to_ignore = exceptions or (Exception,)
         self.__error_level = level
-        return self
 
     def _get_error_level(self):
         """Get the error level"""
