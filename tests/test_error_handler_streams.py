@@ -156,3 +156,14 @@ class TestStreamImplementation(unittest.TestCase):
     def test_reduce_ignore(self):
         self.assertEqual(self.stream([1, 2, 3, "a"]).error_level(ErrorLevel.IGNORE)
                          .reduce(lambda x, y: x + y).get(), 6)
+
+    def test_different_error_level(self):
+        with self.assertRaises(ValueError) as cm:
+            self.stream([1, 2, 3, "a", NoToString()])\
+                .error_level(ErrorLevel.IGNORE)\
+                .map_to_str() \
+                .error_level(ErrorLevel.RAISE) \
+                .map_to_int() \
+                .to_list()
+
+        self.assertEqual(str(cm.exception), "invalid literal for int() with base 10: 'a'")
