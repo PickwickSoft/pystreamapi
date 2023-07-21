@@ -29,7 +29,6 @@ class ErrorHandler:
         Set the error level
         :param level: Error level from ErrorLevel
         :param exceptions: Exceptions to ignore. If not provided, all exceptions will be ignored
-        :return: The stream itself
         """
         self.__exceptions_to_ignore = exceptions or (Exception,)
         self.__error_level = level

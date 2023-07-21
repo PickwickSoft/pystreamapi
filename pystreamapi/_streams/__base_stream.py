@@ -121,6 +121,13 @@ class BaseStream(Iterable[K], ErrorHandler):
 
     def error_level(self, level: ErrorLevel, *exceptions)\
             -> Union["BaseStream[K]", NumericBaseStream]:
+        """
+        Sets the error level of the stream. If an exception is raised during the execution of the
+        stream, the error level determines what to do with the exception.
+        :param level: Error level from ErrorLevel
+        :param exceptions: Exceptions to ignore. If not provided, all exceptions will be ignored
+        :return: The stream itself
+        """
         self._queue.append(Process(lambda: self._error_level(level, *exceptions)))
         return self
 
