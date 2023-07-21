@@ -95,7 +95,7 @@ class BaseStream(Iterable[K], ErrorHandler):
         return cls(itertools.chain(*list(streams)))
 
     @_operation
-    def distinct(self) -> 'BaseStream[_V]':
+    def distinct(self) -> 'BaseStream[K]':
         """Returns a stream consisting of the distinct elements of this stream."""
         self._queue.append(Process(self.__distinct))
         return self
@@ -105,7 +105,7 @@ class BaseStream(Iterable[K], ErrorHandler):
         self._source = list(set(self._source))
 
     @_operation
-    def drop_while(self, predicate: Callable[[K], bool]) -> 'BaseStream[_V]':
+    def drop_while(self, predicate: Callable[[K], bool]) -> 'BaseStream[K]':
         """
         Returns, if this stream is ordered, a stream consisting of the remaining elements of this
         stream after dropping the longest prefix of elements that match the given predicate.
@@ -119,7 +119,8 @@ class BaseStream(Iterable[K], ErrorHandler):
         """Drops elements from the stream while the predicate is true."""
         self._source = list(dropwhile(predicate, self._source, self))
 
-    def error_level(self, level: ErrorLevel, *exceptions) -> Union["BaseStream[K]", NumericBaseStream]:
+    def error_level(self, level: ErrorLevel, *exceptions)\
+            -> Union["BaseStream[K]", NumericBaseStream]:
         self._queue.append(Process(lambda: self._error_level(level, *exceptions)))
         return self
 
@@ -174,7 +175,7 @@ class BaseStream(Iterable[K], ErrorHandler):
         """Groups the stream into a dictionary. Should be implemented by subclasses."""
 
     @_operation
-    def limit(self, max_size: int) -> 'BaseStream[_V]':
+    def limit(self, max_size: int) -> 'BaseStream[K]':
         """
         Returns a stream consisting of the elements of this stream, truncated to be no longer
         than maxSize in length.
@@ -204,7 +205,7 @@ class BaseStream(Iterable[K], ErrorHandler):
         """Implementation of map. Should be implemented by subclasses."""
 
     @_operation
-    def map_to_int(self) -> NumericBaseStream[_V]:
+    def map_to_int(self) -> NumericBaseStream:
         """
         Returns a stream consisting of the results of converting the elements of this stream to
         integers.
@@ -217,7 +218,7 @@ class BaseStream(Iterable[K], ErrorHandler):
         self._map(int)
 
     @_operation
-    def map_to_str(self) -> 'BaseStream[_V]':
+    def map_to_str(self) -> 'BaseStream[K]':
         """
         Returns a stream consisting of the results of converting the elements of this stream to
         strings.
@@ -230,7 +231,7 @@ class BaseStream(Iterable[K], ErrorHandler):
         self._map(str)
 
     @_operation
-    def peek(self, action: Callable) -> 'BaseStream[_V]':
+    def peek(self, action: Callable) -> 'BaseStream[K]':
         """
         Returns a stream consisting of the elements of this stream, additionally performing the
         provided action on each element as elements are consumed from the resulting stream.
@@ -246,7 +247,7 @@ class BaseStream(Iterable[K], ErrorHandler):
         """Implementation of peek. Should be implemented by subclasses."""
 
     @_operation
-    def reversed(self) -> 'BaseStream[_V]':
+    def reversed(self) -> 'BaseStream[K]':
         """
         Returns a stream consisting of the elements of this stream, with their order being
         reversed.
@@ -262,7 +263,7 @@ class BaseStream(Iterable[K], ErrorHandler):
             self._source = reversed(list(self._source))
 
     @_operation
-    def skip(self, n: int) -> 'BaseStream[_V]':
+    def skip(self, n: int) -> 'BaseStream[K]':
         """
         Returns a stream consisting of the remaining elements of this stream after discarding the
         first n elements of the stream.
@@ -277,7 +278,7 @@ class BaseStream(Iterable[K], ErrorHandler):
         self._source = self._source[n:]
 
     @_operation
-    def sorted(self, comparator: Callable[[K], int] = None) -> 'BaseStream[_V]':
+    def sorted(self, comparator: Callable[[K], int] = None) -> 'BaseStream[K]':
         """
         Returns a stream consisting of the elements of this stream, sorted according to natural
         order.
@@ -293,7 +294,7 @@ class BaseStream(Iterable[K], ErrorHandler):
             self._source = sorted(self._source, key=cmp_to_key(comparator))
 
     @_operation
-    def take_while(self, predicate: Callable[[K], bool]) -> 'BaseStream[_V]':
+    def take_while(self, predicate: Callable[[K], bool]) -> 'BaseStream[K]':
         """
         Returns, if this stream is ordered, a stream consisting of the longest prefix of elements
         taken from this stream that match the given predicate.
@@ -423,5 +424,5 @@ class BaseStream(Iterable[K], ErrorHandler):
         """
 
     @abstractmethod
-    def _to_numeric_stream(self) -> NumericBaseStream[_V]:
+    def _to_numeric_stream(self) -> NumericBaseStream:
         """Converts a stream to a numeric stream. To be implemented by subclasses."""
