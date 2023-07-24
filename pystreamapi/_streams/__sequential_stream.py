@@ -62,9 +62,3 @@ class SequentialStream(stream.BaseStream):
     @stream.terminal
     def to_dict(self, key_mapper: Callable[[Any], Any]) -> dict:
         return self._group_to_dict(key_mapper)
-
-    def _to_numeric_stream(self):
-        # pylint: disable=import-outside-toplevel
-        from pystreamapi._streams.numeric.__sequential_numeric_stream import SequentialNumericStream
-        self.__class__ = SequentialNumericStream
-        return self

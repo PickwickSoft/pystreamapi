@@ -16,6 +16,8 @@ from pystreamapi._streams.error.__levels import ErrorLevel
 
 if TYPE_CHECKING:
     from pystreamapi._streams.numeric.__numeric_base_stream import NumericBaseStream
+    from pystreamapi._streams.__parallel_stream import ParallelStream
+    from pystreamapi._streams.__sequential_stream import SequentialStream
 
 K = TypeVar('K')
 _V = TypeVar('_V')
@@ -238,6 +240,13 @@ class BaseStream(Iterable[K], ErrorHandler):
         self._map(str)
 
     @_operation
+    def parallel(self) -> 'ParallelStream[K]':
+        """Returns a parallel stream. If the stream is already parallel, it is returned."""
+        # pylint: disable=import-outside-toplevel
+        from pystreamapi.__stream_converter import StreamConverter
+        return StreamConverter.to_parallel_stream(self)
+
+    @_operation
     def peek(self, action: Callable) -> 'BaseStream[K]':
         """
         Returns a stream consisting of the elements of this stream, additionally performing the
@@ -268,6 +277,13 @@ class BaseStream(Iterable[K], ErrorHandler):
             self._source = reversed(self._source)
         except TypeError:
             self._source = reversed(list(self._source))
+
+    @_operation
+    def sequential(self) -> SequentialStream[K]:
+        """Returns a sequential stream. If the stream is already sequential, it is returned."""
+        # pylint: disable=import-outside-toplevel
+        from pystreamapi.__stream_converter import StreamConverter
+        return StreamConverter.to_sequential_stream(self)
 
     @_operation
     def skip(self, n: int) -> 'BaseStream[K]':
@@ -430,6 +446,8 @@ class BaseStream(Iterable[K], ErrorHandler):
         :param key_mapper:
         """
 
-    @abstractmethod
     def _to_numeric_stream(self) -> NumericBaseStream:
-        """Converts a stream to a numeric stream. To be implemented by subclasses."""
+        """Converts a stream to a numeric stream using the stream converter"""
+        # pylint: disable=import-outside-toplevel
+        from pystreamapi.__stream_converter import StreamConverter
+        return StreamConverter.to_numeric_stream(self)
