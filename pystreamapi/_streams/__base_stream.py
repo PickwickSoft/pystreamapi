@@ -241,9 +241,7 @@ class BaseStream(Iterable[K], ErrorHandler):
 
     @_operation
     def parallel(self) -> 'ParallelStream[K]':
-        """
-        Returns a parallel stream. If the stream is already parallel, it is returned.
-        """
+        """Returns a parallel stream. If the stream is already parallel, it is returned."""
         # pylint: disable=import-outside-toplevel
         from pystreamapi.__stream_converter import StreamConverter
         return StreamConverter.to_parallel_stream(self)
@@ -282,9 +280,7 @@ class BaseStream(Iterable[K], ErrorHandler):
 
     @_operation
     def sequential(self) -> SequentialStream[K]:
-        """
-        Returns a sequential stream. If the stream is already sequential, it is returned.
-        """
+        """Returns a sequential stream. If the stream is already sequential, it is returned."""
         # pylint: disable=import-outside-toplevel
         from pystreamapi.__stream_converter import StreamConverter
         return StreamConverter.to_sequential_stream(self)

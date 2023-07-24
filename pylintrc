@@ -3,5 +3,8 @@
 # Minimum lines number of a similarity.
 min-similarity-lines=-1
 
+[tests/*.py]
+disable=missing-function-docstring,no-member,missing-class-docstring,too-few-public-methods,too-many-public-methods,cyclic-import,import-error
+
 [MESSAGES CONTROL]
-disable=missing-function-docstring,missing-class-docstring,missing-module-docstring,import-error,too-few-public-methods,invalid-name,no-member,too-many-public-methods
+disable=invalid-name,missing-module-docstring
