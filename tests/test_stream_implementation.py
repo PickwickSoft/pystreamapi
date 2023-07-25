@@ -5,6 +5,7 @@ from parameterized import parameterized_class
 from pystreamapi._streams.__base_stream import BaseStream
 from pystreamapi._streams.__parallel_stream import ParallelStream
 from pystreamapi._streams.__sequential_stream import SequentialStream
+from pystreamapi._streams.numeric.__numeric_base_stream import NumericBaseStream
 from pystreamapi._streams.numeric.__parallel_numeric_stream import ParallelNumericStream
 from pystreamapi._streams.numeric.__sequential_numeric_stream import SequentialNumericStream
 from pystreamapi.__optional import Optional
@@ -37,6 +38,22 @@ class TestStreamImplementation(unittest.TestCase):
     def test_map_to_int_empty(self):
         result = self.stream([]).map_to_int().to_list()
         self.assertListEqual(result, [])
+
+    def test_map_to_int_returns_numeric_stream(self):
+        result = self.stream(["1", "2", "3", "9"]).map_to_int()
+        self.assertTrue(isinstance(result, NumericBaseStream))
+
+    def test_map_to_float(self):
+        result = self.stream(["1", "2", "3", "9"]).map_to_float().to_list()
+        self.assertListEqual(result, [1.0, 2.0, 3.0, 9.0])
+
+    def test_map_to_float_empty(self):
+        result = self.stream([]).map_to_float().to_list()
+        self.assertListEqual(result, [])
+
+    def test_map_to_float_returns_numeric_stream(self):
+        result = self.stream(["1", "2", "3", "9"]).map_to_float()
+        self.assertTrue(isinstance(result, NumericBaseStream))
 
     def test_map_to_str(self):
         result = self.stream([1, 2, 3, 9]).map_to_str().to_list()
