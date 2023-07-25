@@ -27,3 +27,11 @@ class TestLoaders(TestCase):
     def test_csv_loader_with_empty_file(self):
         data = csv(f'{self.path}/empty.csv')
         self.assertEqual(len(data), 0)
+
+    def test_csv_loader_with_invalid_path(self):
+        with self.assertRaises(FileNotFoundError):
+            csv(f'{self.path}/invalid.csv')
+
+    def test_csv_loader_with_non_absolute_path(self):
+        with self.assertRaises(ValueError):
+            csv('invalid.csv')
