@@ -59,6 +59,14 @@ class TestStreamImplementation(unittest.TestCase):
         result = self.stream([1, 2, 3, 9]).map_to_str().to_list()
         self.assertListEqual(result, ["1", "2", "3", "9"])
 
+    def test_convert_to_numeric_stream(self):
+        result = self.stream([1, 2, 3, 9]).numeric()
+        self.assertTrue(isinstance(result, NumericBaseStream))
+
+    def test_convert_to_numeric_stream_is_already_numeric(self):
+        result = self.stream([1.0, 2.0, 3.0, 9.0]).numeric()
+        self.assertTrue(isinstance(result, NumericBaseStream))
+
     def test_flat_map(self):
         result = self.stream([1, 2, 3, 9]).flat_map(lambda x: self.stream([x, x])).to_list()
         self.assertListEqual(result, [1, 1, 2, 2, 3, 3, 9, 9])
