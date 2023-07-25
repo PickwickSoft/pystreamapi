@@ -252,9 +252,7 @@ class BaseStream(Iterable[K], ErrorHandler):
         self._map(str)
 
     def numeric(self) -> NumericBaseStream:
-        """
-        Returns a numeric stream. If the stream is already numeric, it is returned.
-        """
+        """Returns a numeric stream. If the stream is already numeric, it is returned."""
         return self._to_numeric_stream()
 
     @_operation
