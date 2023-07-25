@@ -1,12 +1,9 @@
 import contextlib
-from csv import reader
 from collections import namedtuple
-from os import PathLike
-from typing import Union
+from csv import reader
 
 
-def csv(file_path: Union[str, bytes, PathLike[str], PathLike[bytes]],
-        delimiter=',', encoding="utf-8") -> list:
+def csv(file_path: str, delimiter=',', encoding="utf-8") -> list:
     """
     Loads a CSV file and converts it into a list of namedtuples.
 
