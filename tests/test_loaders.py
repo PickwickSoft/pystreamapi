@@ -23,3 +23,7 @@ class TestLoaders(TestCase):
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0].attr1, 1)
         self.assertIsInstance(data[0].attr1, int)
+
+    def test_csv_loader_with_empty_file(self):
+        data = csv(f'{self.path}/empty.csv')
+        self.assertEqual(len(data), 0)
