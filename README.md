@@ -20,12 +20,13 @@ PyStreamAPI offers both sequential and parallel streams and utilizes lazy execut
 
 Now you might be wondering why another library when there are already a few implementations? Well, here are a few advantages of this particular implementation:
 
-* It provides both sequential and parallel versions.
+* It provides both sequential and parallel streams.
 * Lazy execution is supported, enhancing performance.
 * It boasts high speed and efficiency.
 * The implementation achieves 100% test coverage.
 * It follows Pythonic principles, resulting in clean and readable code.
 * It adds some cool innovative features such as conditions or error handling and an even more declarative look.
+* It provides loaders for various data sources such as CSV
 
 Let's take a look at a small example:
 
@@ -211,6 +212,23 @@ Stream.concat(Stream.of([1, 2]), Stream.of([3, 4]))
 ```
 
 Creates a new Stream from multiple Streams. Order doesn't change.
+
+## Use loaders: Load data from CSV files in just one line
+
+PyStreamAPI offers a convenient way to load data from CSV files. Like that you can start processing your CSV right away without having to worry about reading and parsing the file.
+
+You can import the loader with:
+
+```python
+from pystreamapi.loaders import csv
+```
+Now you can use the loader directly when creating your Stream:
+
+```python
+Stream.of(csv("data.csv", delimiter=";")) \
+    .map(lambda x: x["name"]) \
+    .for_each(print)
+```
 
 ## API Reference
 For a more detailed documentation view the docs on GitBook: [PyStreamAPI Docs](https://pystreamapi.pickwicksoft.org/)
