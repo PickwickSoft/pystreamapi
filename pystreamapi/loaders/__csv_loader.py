@@ -26,6 +26,7 @@ def csv(file_path: str, delimiter=',', encoding="utf-8") -> list:
 
     return data
 
+
 def __validate_path(file_path: str):
     """Validate a path string to prevent path traversal attacks"""
     if not os.path.isabs(file_path):
@@ -35,6 +36,7 @@ def __validate_path(file_path: str):
         raise FileNotFoundError("The specified file does not exist.")
 
     return file_path
+
 
 def __try_cast(value):
     """Try to cast value to primary data types from python (int, float, bool)"""
