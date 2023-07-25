@@ -15,6 +15,7 @@ def csv(file_path: str, delimiter=',', encoding="utf-8") -> list:
         :param delimiter: The delimiter used in the CSV file.
     """
     file_path = __validate_path(file_path)
+    # skipcq: PTC-W6004
     with open(file_path, 'r', newline='', encoding=encoding) as csvfile:
         csvreader = reader(csvfile, delimiter=delimiter)
 
