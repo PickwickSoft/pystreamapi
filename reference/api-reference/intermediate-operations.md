@@ -80,9 +80,19 @@ Stream.of([1, "2", 3.0, None]) \
     .to_list() # ["1", "2", "3.0", "None"]
 ```
 
+### `map_to_float()` : Convert the elements in the Stream to a Float
+
+Returns a [`NumericStream`](numeric-stream.md) consisting of the results of applying the `float()` function to the elements of this stream. Note that this method is not none safe.
+
+```python
+Stream.of([1, "2", 3.0]) \
+    .map_to_float() \
+    .to_list() # [1.0, 2.0, 3.0]
+```
+
 ### `map_to_int()` : Convert the elements in the Stream to an Integer
 
-Returns a stream consisting of the results of applying the `int()` function to the elements of this stream. Note that this method is not none safe.
+Returns a [`NumericStream`](numeric-stream.md) consisting of the results of applying the `int()` function to the elements of this stream. Note that this method is not none safe.
 
 ```python
 Stream.of([1, "2", 3.0]) \
@@ -98,6 +108,28 @@ Returns a stream consisting of the results of applying the `str()` function to t
 Stream.of([1, 2, 3]) \
     .map_to_str() \
     .to_list() # ["1", "2", "3"]
+```
+
+### `numeric()` : Convert the stream to a [`NumericStream`](numeric-stream.md)
+
+Returns a [`NumericStream`](numeric-stream.md) consisting of the same elements as the stream contained before conversion.
+
+```python
+Stream.of([1, "2", 3.0]) \
+    .map(int) \
+    .numeric() \
+    .sum() # 6
+```
+
+### `parallel()` : Convert the stream to a `ParallelStream`
+
+Returns a `ParallelStream` consisting of the same elements as the stream contained before conversion.
+
+```python
+Stream.sequential_of([1, 2, 3]) \
+    .parallel() \
+    .map_to_str() \
+    .for_each(print) # "1", "2", "3" (mapped in parallel mode)
 ```
 
 ### `peek()` : View intermediate results
@@ -117,9 +149,20 @@ Stream.of([2, 1, 3]) \
 Returns a stream consisting of the elements of this stream in reverse order.
 
 ```python
-Stream.of([1, 2, 3])
-    .reversed()
+Stream.of([1, 2, 3]) \
+    .reversed() \
     .to_list()  # [3, 2, 1]
+```
+
+### `sequential()` : Convert the stream to a `SequentialStream`
+
+Returns a `SequentialStream` consisting of the same elements as the stream contained before conversion.
+
+```python
+Stream.parallel_of([1, 2, 3]) \
+    .sequential() \
+    .map_to_str() \
+    .for_each(print) # "1", "2", "3" (mapped in sequential mode)
 ```
 
 ### `skip()` : Skip the first n elements of the Stream
@@ -137,16 +180,16 @@ Stream.of([1, 2, 3]) \
 Returns a stream consisting of the elements of this stream, sorted according to natural order or comparator.
 
 ```python
-Stream.of([2, 9, 1])
-    .sorted()
+Stream.of([2, 9, 1]) \
+    .sorted() \
     .to_list()  # [1, 2, 9]
 ```
 
 Here is an example with a custom comparator:
 
 ```python
-Stream.of(["a", "cc", "bbb"])
-    .sorted(lambda x, y: len(y) - len(x))
+Stream.of(["a", "cc", "bbb"]) \
+    .sorted(lambda x, y: len(y) - len(x)) \
     .to_list()  # ['bbb', 'cc', 'a']
 ```
 
