@@ -226,6 +226,18 @@ class BaseStream(Iterable[K], ErrorHandler):
         """Converts the stream to integers."""
         self._map(int)
 
+    def map_to_float(self) -> NumericBaseStream:
+        """
+        Returns a stream consisting of the results of converting the elements of this stream to
+        floats.
+        """
+        self._queue.append(Process(self.__map_to_float))
+        return self._to_numeric_stream()
+
+    def __map_to_float(self):
+        """Converts the stream to floats."""
+        self._map(float)
+
     @_operation
     def map_to_str(self) -> 'BaseStream[K]':
         """
