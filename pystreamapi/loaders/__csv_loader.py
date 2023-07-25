@@ -2,18 +2,21 @@ import contextlib
 from csv import reader
 from collections import namedtuple
 from os import PathLike
+from typing import Union
 
 
-def csv(file_path: str | bytes | PathLike[str] | PathLike[bytes] | int, delimiter=',') -> list:
+def csv(file_path: Union[str, bytes, PathLike[str], PathLike[bytes]],
+        delimiter=',', encoding="utf-8") -> list:
     """
     Loads a CSV file and converts it into a list of namedtuples.
 
     Returns:
         list: A list of namedtuples, where each namedtuple represents a row in the CSV.
+        :param encoding: The encoding of the CSV file.
         :param file_path: The path to the CSV file.
         :param delimiter: The delimiter used in the CSV file.
     """
-    with open(file_path, 'r', newline='') as csvfile:
+    with open(file_path, 'r', newline='', encoding=encoding) as csvfile:
         csvreader = reader(csvfile, delimiter=delimiter)
 
         # Create a namedtuple type, casting the header values to int or float if possible
