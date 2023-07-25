@@ -226,9 +226,10 @@ Now you can use the loader directly when creating your Stream:
 
 ```python
 Stream.of(csv("data.csv", delimiter=";")) \
-    .map(lambda x: x["name"]) \
+    .map(lambda x: x.attr1) \
     .for_each(print)
 ```
+You can access the attributes of the CSV rows directly like you would with a normal object.
 
 ## API Reference
 For a more detailed documentation view the docs on GitBook: [PyStreamAPI Docs](https://pystreamapi.pickwicksoft.org/)
