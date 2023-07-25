@@ -15,6 +15,7 @@
   * [Numeric Conditions](reference/conditions/numeric-conditions.md)
   * [String Conditions](reference/conditions/string-conditions.md)
   * [Date conditions](reference/conditions/date-conditions.md)
+* [Data Loaders](reference/data-loaders.md)
 
 ***
 

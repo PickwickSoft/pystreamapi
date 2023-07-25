@@ -27,6 +27,7 @@ Now you might be wondering why another library when there are already a few impl
 
 Let's take a look at a small example:
 
+{% code fullWidth="false" %}
 ```python
 from pystreamapi import Stream
 
@@ -39,6 +40,7 @@ Stream.of([" ", '3', None, "2", 1, ""]) \
     .sorted() \
     .for_each(print) # Output: 1 2 3
 ```
+{% endcode %}
 
 And here's the equivalent code in Java:
 
@@ -106,12 +108,20 @@ Explore the wide range of possibilities available to you by utilizing conditions
 [conditions](reference/conditions/)
 {% endcontent-ref %}
 
-### Error handling: Work with data that you don't know
+## Error handling: Work with data that you don't know
 
 PyStreamAPI offers a powerful error handling mechanism that allows you to handle errors in a declarative manner. This is especially useful when working with data that you don't know.
 
 {% content-ref url="reference/api-reference/error-handling.md" %}
 [error-handling.md](reference/api-reference/error-handling.md)
+{% endcontent-ref %}
+
+## Data loaders: Load data from CSV files
+
+Data loaders provide a convenient way to process data from a CSV in your streams. You can access the values of each column as if it were an object, containing the header names as attributes.
+
+{% content-ref url="reference/data-loaders.md" %}
+[data-loaders.md](reference/data-loaders.md)
 {% endcontent-ref %}
 
 ## Want to jump right in?
