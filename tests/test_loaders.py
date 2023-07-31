@@ -38,6 +38,6 @@ class TestLoaders(TestCase):
         with self.assertRaises(FileNotFoundError):
             csv(f'{self.path}/invalid.csv')
 
-    def test_csv_loader_with_non_absolute_path(self):
+    def test_csv_loader_with_non_file(self):
         with self.assertRaises(ValueError):
-            csv('invalid.csv')
+            csv(f'{self.path}/')

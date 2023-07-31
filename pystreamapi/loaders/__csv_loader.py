@@ -17,9 +17,7 @@ def csv(file_path: str, delimiter=',', encoding="utf-8") -> LazyFileIterable:
         :param delimiter: The delimiter used in the CSV file.
     """
     file_path = __validate_path(file_path)
-    loader = lambda: __load_csv(file_path, delimiter, encoding)
-
-    return LazyFileIterable(loader)
+    return LazyFileIterable(lambda: __load_csv(file_path, delimiter, encoding))
 
 
 def __load_csv(file_path, delimiter, encoding):
