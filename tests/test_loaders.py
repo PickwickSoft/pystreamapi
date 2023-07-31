@@ -1,6 +1,8 @@
 import os
 from unittest import TestCase
+
 from pystreamapi.loaders import csv
+
 
 class TestLoaders(TestCase):
 
@@ -17,6 +19,10 @@ class TestLoaders(TestCase):
         self.assertIsInstance(data[0].attr2, float)
         self.assertEqual(data[1].attr1, 'a')
         self.assertIsInstance(data[1].attr1, str)
+
+    def test_csv_loader_is_iterable(self):
+        data = csv(f'{self.path}/data.csv')
+        self.assertEqual(len(list(iter(data))), 2)
 
     def test_csv_loader_with_custom_delimiter(self):
         data = csv(f'{self.path}/data2.csv', delimiter=';')
