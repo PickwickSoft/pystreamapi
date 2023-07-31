@@ -1,6 +1,8 @@
 import os
 from unittest import TestCase
+
 from pystreamapi.loaders import csv
+
 
 class TestLoaders(TestCase):
 
@@ -18,6 +20,10 @@ class TestLoaders(TestCase):
         self.assertEqual(data[1].attr1, 'a')
         self.assertIsInstance(data[1].attr1, str)
 
+    def test_csv_loader_is_iterable(self):
+        data = csv(f'{self.path}/data.csv')
+        self.assertEqual(len(list(iter(data))), 2)
+
     def test_csv_loader_with_custom_delimiter(self):
         data = csv(f'{self.path}/data2.csv', delimiter=';')
         self.assertEqual(len(data), 1)
@@ -32,6 +38,6 @@ class TestLoaders(TestCase):
         with self.assertRaises(FileNotFoundError):
             csv(f'{self.path}/invalid.csv')
 
-    def test_csv_loader_with_non_absolute_path(self):
+    def test_csv_loader_with_non_file(self):
         with self.assertRaises(ValueError):
-            csv('invalid.csv')
+            csv(f'{self.path}/')

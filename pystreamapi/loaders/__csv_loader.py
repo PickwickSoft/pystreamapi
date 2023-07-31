@@ -3,8 +3,10 @@ import os
 from collections import namedtuple
 from csv import reader
 
+from pystreamapi.loaders.__lazy_file_iterable import LazyFileIterable
 
-def csv(file_path: str, delimiter=',', encoding="utf-8") -> list:
+
+def csv(file_path: str, delimiter=',', encoding="utf-8") -> LazyFileIterable:
     """
     Loads a CSV file and converts it into a list of namedtuples.
 
@@ -15,8 +17,13 @@ def csv(file_path: str, delimiter=',', encoding="utf-8") -> list:
         :param delimiter: The delimiter used in the CSV file.
     """
     file_path = __validate_path(file_path)
+    return LazyFileIterable(lambda: __load_csv(file_path, delimiter, encoding))
+
+
+def __load_csv(file_path, delimiter, encoding):
+    """Load a CSV file and convert it into a list of namedtuples"""
     # skipcq: PTC-W6004
-    with open(file_path, 'r', newline='', encoding=encoding) as csvfile:
+    with open(file_path, mode='r', newline='', encoding=encoding) as csvfile:
         csvreader = reader(csvfile, delimiter=delimiter)
 
         # Create a namedtuple type, casting the header values to int or float if possible
@@ -24,18 +31,15 @@ def csv(file_path: str, delimiter=',', encoding="utf-8") -> list:
 
         # Process the data, casting values to int or float if possible
         data = [Row(*[__try_cast(value) for value in row]) for row in csvreader]
-
     return data
 
 
 def __validate_path(file_path: str):
-    """Validate a path string to prevent path traversal attacks"""
-    if not os.path.isabs(file_path):
-        raise ValueError("The file_path must be an absolute path.")
-
+    """Validate the path to the CSV file"""
     if not os.path.exists(file_path):
         raise FileNotFoundError("The specified file does not exist.")
-
+    if not os.path.isfile(file_path):
+        raise ValueError("The specified path is not a file.")
     return file_path
 
 
