@@ -30,7 +30,7 @@ def _operation(func):
     To be applied to intermediate operations.
     """
     @functools.wraps(func)
-    def wrapper(*args, **kwargs):
+    def wrapper(*args, **kwargs) -> BaseStream[K]:
         self: BaseStream = args[0]
         self._verify_open()
         return func(*args, **kwargs)
@@ -45,7 +45,7 @@ def terminal(func):
     """
     @functools.wraps(func)
     @_operation
-    def wrapper(*args, **kwargs):
+    def wrapper(*args, **kwargs) -> BaseStream[K]:
         self: BaseStream = args[0]
         self._queue.execute_all()
         self._close()
