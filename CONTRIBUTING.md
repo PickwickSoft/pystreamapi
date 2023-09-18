@@ -173,6 +173,9 @@ git push origin BRANCH_NAME
 
 Afterward you can submit a pull request from the GitHub interface.
 
+We require all CI/CD pipelines to pass before merging a pull request. Please make sure that all checks pass and fix
+failing checks if necessary.
+
 ## Contributing Documentation
 
 If you are interested in contributing to the documentation, please follow these steps:
