@@ -127,7 +127,8 @@ Please make sure that all tests pass and the coverage of your code is 100% befor
 
 #### Linting
 
-We use [pylint](https://www.pylint.org/) to lint our code. You can run pylint by executing the following command in the
+We use [pylint](https://pylint.readthedocs.io/en/latest/) to lint our code. You can run pylint by executing the
+following command in the
 root directory of the project after staging your changes:
 
 ```bash
