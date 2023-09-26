@@ -20,6 +20,16 @@ class TestLoaders(TestCase):
         self.assertEqual(data[1].attr1, 'a')
         self.assertIsInstance(data[1].attr1, str)
 
+    def test_csv_loader_with_casting_disabled(self):
+        data = csv(f'{self.path}/data.csv', cast_types=False)
+        self.assertEqual(len(data), 2)
+        self.assertEqual(data[0].attr1, '1')
+        self.assertIsInstance(data[0].attr1, str)
+        self.assertEqual(data[0].attr2, '2.0')
+        self.assertIsInstance(data[0].attr2, str)
+        self.assertEqual(data[1].attr1, 'a')
+        self.assertIsInstance(data[1].attr1, str)
+
     def test_csv_loader_is_iterable(self):
         data = csv(f'{self.path}/data.csv')
         self.assertEqual(len(list(iter(data))), 2)
@@ -38,6 +48,6 @@ class TestLoaders(TestCase):
         with self.assertRaises(FileNotFoundError):
             csv(f'{self.path}/invalid.csv')
 
-    def test_csv_loader_with_non_file(self):
+    def test_csv_loader_with_no_file(self):
         with self.assertRaises(ValueError):
             csv(f'{self.path}/')
