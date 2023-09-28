@@ -213,23 +213,33 @@ Stream.concat(Stream.of([1, 2]), Stream.of([3, 4]))
 
 Creates a new Stream from multiple Streams. Order doesn't change.
 
-## Use loaders: Load data from CSV files in just one line
+## Use loaders: Load data from CSV and JSON files in just one line
 
-PyStreamAPI offers a convenient way to load data from CSV files. Like that you can start processing your CSV right away without having to worry about reading and parsing the file.
+PyStreamAPI offers a convenient way to load data from CSV and JSON files. Like that you can start processing your files right away without having to worry about reading and parsing the files.
 
-You can import the loader with:
+You can import the loaders with:
 
 ```python
-from pystreamapi.loaders import csv
+from pystreamapi.loaders import csv, json
 ```
-Now you can use the loader directly when creating your Stream:
+Now you can use the loaders directly when creating your Stream:
+
+For CSV:
 
 ```python
 Stream.of(csv("data.csv", delimiter=";")) \
     .map(lambda x: x.attr1) \
     .for_each(print)
 ```
-You can access the attributes of the CSV rows directly like you would with a normal object.
+
+For JSON:
+```python
+Stream.of(json("data.json")) \
+    .map(lambda x: x.attr1) \
+    .for_each(print)
+```
+
+You can access the attributes of the data structures directly like you would do with a normal object.
 
 ## API Reference
 For a more detailed documentation view the docs on GitBook: [PyStreamAPI Docs](https://pystreamapi.pickwicksoft.org/)
