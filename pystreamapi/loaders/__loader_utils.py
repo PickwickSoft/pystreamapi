@@ -3,6 +3,7 @@ import os
 
 
 class LoaderUtils:
+    """Utility class for loaders to validate paths and cast data"""
 
     @staticmethod
     def try_cast(value):

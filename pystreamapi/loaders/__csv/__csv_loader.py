@@ -39,6 +39,7 @@ def __load_csv(file_path, cast, delimiter, encoding):
 
 
 def __get_csv_header(csvreader):
+    """Get the header of a CSV file. If the header is empty, return an empty list"""
     while True:
         try:
             header = next(csvreader)
