@@ -1,8 +1,7 @@
-import contextlib
-import os
 from collections import namedtuple
 from csv import reader
 
+from pystreamapi.loaders.__loader_utils import LoaderUtils
 from pystreamapi.loaders.__lazy_file_iterable import LazyFileIterable
 
 
@@ -17,7 +16,7 @@ def csv(file_path: str, cast_types=True, delimiter=',', encoding="utf-8") -> Laz
         :param file_path: The path to the CSV file.
         :param delimiter: The delimiter used in the CSV file.
     """
-    file_path = __validate_path(file_path)
+    file_path = LoaderUtils.validate_path(file_path)
     return LazyFileIterable(lambda: __load_csv(file_path, cast_types, delimiter, encoding))
 
 
@@ -28,28 +27,23 @@ def __load_csv(file_path, cast, delimiter, encoding):
         csvreader = reader(csvfile, delimiter=delimiter)
 
         # Create a namedtuple type, casting the header values to int or float if possible
-        Row = namedtuple('Row', list(next(csvreader, [])))
+        header = __get_csv_header(csvreader)
 
-        mapper = __try_cast if cast else lambda x: x
+        Row = namedtuple('Row', list(header))
+
+        mapper = LoaderUtils.try_cast if cast else lambda x: x
 
         # Process the data, casting values to int or float if possible
         data = [Row(*[mapper(value) for value in row]) for row in csvreader]
     return data
 
 
-def __validate_path(file_path: str):
-    """Validate the path to the CSV file"""
-    if not os.path.exists(file_path):
-        raise FileNotFoundError("The specified file does not exist.")
-    if not os.path.isfile(file_path):
-        raise ValueError("The specified path is not a file.")
-    return file_path
-
-
-def __try_cast(value):
-    """Try to cast value to primary data types from python (int, float, bool)"""
-    for cast in (int, float):
-        with contextlib.suppress(ValueError):
-            return cast(value)
-    # Try to cast to bool
-    return value.lower() == 'true' if value.lower() in ('true', 'false') else value
+def __get_csv_header(csvreader):
+    while True:
+        try:
+            header = next(csvreader)
+            if header:
+                break
+        except StopIteration:
+            return []
+    return header
