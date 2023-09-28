@@ -1,3 +1,4 @@
+# pylint: disable=not-context-manager
 from json import JSONDecodeError
 from unittest import TestCase
 from unittest.mock import patch, mock_open
@@ -21,7 +22,9 @@ file_content = """
 class TestJsonLoader(TestCase):
 
     def test_json_loader_from_file(self):
-        with patch('builtins.open', mock_open(read_data=file_content)), patch('os.path.exists', return_value=True), patch('os.path.isfile', return_value=True):
+        with (patch('builtins.open', mock_open(read_data=file_content)),
+              patch('os.path.exists', return_value=True),
+              patch('os.path.isfile', return_value=True)):
             data = json('path/to/data.json')
             self.assertEqual(len(data), 2)
             self.assertEqual(data[0].attr1, 1)
@@ -32,12 +35,16 @@ class TestJsonLoader(TestCase):
             self.assertIsInstance(data[1].attr1, str)
 
     def test_json_loader_is_iterable(self):
-        with patch('builtins.open', mock_open(read_data=file_content)), patch('os.path.exists', return_value=True), patch('os.path.isfile', return_value=True):
+        with (patch('builtins.open', mock_open(read_data=file_content)),
+              patch('os.path.exists', return_value=True),
+              patch('os.path.isfile', return_value=True)):
             data = json('path/to/data.json')
             self.assertEqual(len(list(iter(data))), 2)
 
     def test_json_loader_with_empty_file(self):
-        with patch('builtins.open', mock_open(read_data="")), patch('os.path.exists', return_value=True), patch('os.path.isfile', return_value=True):
+        with (patch('builtins.open', mock_open(read_data="")),
+              patch('os.path.exists', return_value=True),
+              patch('os.path.isfile', return_value=True)):
             data = json('path/to/data.json')
             self.assertEqual(len(data), 0)
 
