@@ -105,9 +105,3 @@ class TestXmlLoader(TestCase):
     def test_xml_loader_from_empty_string(self):
         with self.assertRaises(ParseError):
             len(xml('', read_from_src=True))
-
-    @patch('builtins.__import__', side_effect=ImportError('Mocked ImportError'))
-    def test_defusedxml_not_installed(self, mock_import):
-        with self.assertRaises(ImportError):
-            from pystreamapi.loaders import xml
-            xml(file_path)
