@@ -9,6 +9,7 @@ from pystreamapi.loaders.__loader_utils import LoaderUtils
 
 class __XmlLoaderUtil:
     """Utility class for the XML loader."""
+
     def __init__(self):
         self.cast_types = True
         self.retrieve_children = True
