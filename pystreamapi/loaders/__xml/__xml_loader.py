@@ -16,7 +16,8 @@ def xml(src: str, read_from_src=False, retrieve_children=True, cast_types=True,
 
     Returns:
         LazyFileIterable: A list of namedtuples, where each namedtuple represents an XML element.
-        :param retrieve_children: If true, the children of the root element are used as stream elements.
+        :param retrieve_children: If true, the children of the root element are used as stream
+        elements.
         :param encoding: The encoding of the XML file.
         :param src: Either the path to an XML file or an XML string.
         :param read_from_src: If True, src is treated as an XML string. If False, src is treated as
@@ -36,10 +37,9 @@ def __load_xml_file(file_path, encoding):
     """Load an XML file and convert it into a list of namedtuples."""
     with open(file_path, mode='r', encoding=encoding) as xmlfile:
         src = xmlfile.read()
-        if not src:
-            return []
-        data = __parse_xml_string(src)
-    return data
+        if src:
+            return __parse_xml_string(src)
+    return []
 
 
 def __load_xml_string(xml_string):
@@ -57,10 +57,9 @@ def __parse_xml_string(xml_string):
 def __parse_xml(element):
     if len(element) == 0:
         return __parse_empty_element(element)
-    elif len(element) == 1:
+    if len(element) == 1:
         return __parse_single_element(element)
-    else:
-        return __parse_multiple_elements(element)
+    return __parse_multiple_elements(element)
 
 
 def __parse_empty_element(element):
