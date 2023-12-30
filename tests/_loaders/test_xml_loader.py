@@ -3,7 +3,7 @@ from unittest import TestCase
 from unittest.mock import patch, mock_open
 from xml.etree.ElementTree import ParseError
 
-from file_test import OPEN, PATH_EXISTS, PATH_ISFILE
+from _loaders.file_test import OPEN, PATH_EXISTS, PATH_ISFILE
 from pystreamapi.loaders import xml
 
 file_content = """
@@ -90,7 +90,7 @@ class TestXmlLoader(TestCase):
 
     def test_xml_loader_with_no_file(self):
         with self.assertRaises(ValueError):
-            xml('./')
+            xml('../')
 
     def test_xml_loader_from_string(self):
         data = xml(file_content, read_from_src=True)
