@@ -11,7 +11,7 @@ class TestNumericBaseStream(TestCase):
 
     def test_range_empty(self):
         result = Stream([]).range()
-        self.assertEqual(result, None)
+        self.assertIsNone(result)
 
     def test_range_negative(self):
         result = Stream([-1, -2, -3, -4, -5]).range()
@@ -23,7 +23,7 @@ class TestNumericBaseStream(TestCase):
 
     def test_interquartile_range_empty(self):
         result = Stream([]).interquartile_range()
-        self.assertEqual(result, None)
+        self.assertIsNone(result)
 
     def test_interquartile_range_odd(self):
         result = Stream([1, 2, 3, 4, 5, 6, 7, 8, 9]).interquartile_range()
@@ -39,7 +39,7 @@ class TestNumericBaseStream(TestCase):
 
     def test_median_empty(self):
         result = Stream([]).median()
-        self.assertEqual(result, None)
+        self.assertIsNone(result)
 
     def test_first_quartile(self):
         result = Stream([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).first_quartile()
@@ -47,7 +47,7 @@ class TestNumericBaseStream(TestCase):
 
     def test_first_quartile_empty(self):
         result = Stream([]).first_quartile()
-        self.assertEqual(result, None)
+        self.assertIsNone(result)
 
     def test_first_quartile_odd(self):
         result = Stream([1, 2, 3, 4, 5, 6, 7, 8, 9]).first_quartile()
@@ -59,7 +59,7 @@ class TestNumericBaseStream(TestCase):
 
     def test_third_quartile_empty(self):
         result = Stream([]).third_quartile()
-        self.assertEqual(result, None)
+        self.assertIsNone(result)
 
     def test_third_quartile_odd(self):
         result = Stream([1, 2, 3, 4, 5, 6, 7, 8, 9]).third_quartile()
@@ -75,7 +75,7 @@ class TestNumericBaseStream(TestCase):
 
     def test_mode_empty(self):
         result = Stream([]).mode()
-        self.assertEqual(result, None)
+        self.assertIsNone(result)
 
     def test_mode_negative(self):
         result = Stream([-1, -2, -3, -3]).mode()
