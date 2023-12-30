@@ -18,7 +18,7 @@ file_content = """
     }
 ]
 """
-
+file_path = 'path/to/data.json'
 
 class TestJsonLoader(TestCase):
 
@@ -26,7 +26,7 @@ class TestJsonLoader(TestCase):
         with (patch(OPEN, mock_open(read_data=file_content)),
               patch(PATH_EXISTS, return_value=True),
               patch(PATH_ISFILE, return_value=True)):
-            data = json('path/to/data.json')
+            data = json(file_path)
             self.assertEqual(len(data), 2)
             self.assertEqual(data[0].attr1, 1)
             self.assertIsInstance(data[0].attr1, int)
@@ -39,14 +39,14 @@ class TestJsonLoader(TestCase):
         with (patch(OPEN, mock_open(read_data=file_content)),
               patch(PATH_EXISTS, return_value=True),
               patch(PATH_ISFILE, return_value=True)):
-            data = json('path/to/data.json')
+            data = json(file_path)
             self.assertEqual(len(list(iter(data))), 2)
 
     def test_json_loader_with_empty_file(self):
         with (patch(OPEN, mock_open(read_data="")),
               patch(PATH_EXISTS, return_value=True),
               patch(PATH_ISFILE, return_value=True)):
-            data = json('path/to/data.json')
+            data = json(file_path)
             self.assertEqual(len(data), 0)
 
     def test_json_loader_with_invalid_path(self):
