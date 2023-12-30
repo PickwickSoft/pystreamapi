@@ -165,9 +165,11 @@ def next_week():
     A condition that checks if a datetime is next week.
     :return: A condition that checks if a datetime is next week.
     """
-    return lambda d: __datetime.now().date().isocalendar()[1] + 1 == d.date().isocalendar()[1] if \
+    week = __datetime.now().date().isocalendar()[1] + 1
+    week = reduce_to_valid_range(week, 52)
+    return lambda d: week == d.date().isocalendar()[1] if \
         isinstance(d, __datetime) \
-        else __datetime.now().date().isocalendar()[1] + 1 == d.isocalendar()[1]
+        else week == d.isocalendar()[1]
 
 
 def next_week_utc():
@@ -176,9 +178,10 @@ def next_week_utc():
     parenthesis in your Stream).
     :return: A condition that checks if a datetime is next week.
     """
-    return lambda d: __datetime.now(__timezone.utc).date().isocalendar()[1] + 1 == \
-        d.astimezone(__timezone.utc).date().isocalendar()[1] if isinstance(d, __datetime) else \
-        __datetime.now(__timezone.utc).date().isocalendar()[1] + 1 == d.isocalendar()[1]
+    week = __datetime.now(__timezone.utc).date().isocalendar()[1] + 1
+    week = reduce_to_valid_range(week, 52)
+    return lambda d: week == d.astimezone(__timezone.utc).date().isocalendar()[1] \
+        if isinstance(d, __datetime) else week == d.isocalendar()[1]
 
 
 def this_month():
@@ -232,7 +235,7 @@ def next_month_utc():
     return lambda d: __check_is_month(d, 1, tz=__timezone.utc)
 
 
-def __check_is_month(d: __datetime, offset: int = 0, tz: __timezone = None):
+def __check_is_month(d: Union[__datetime, __date], offset: int = 0, tz: __timezone = None):
     """
     The actual function that checks if a datetime is a specific month also supporting
     UTC timezone and offsets.
@@ -240,8 +243,10 @@ def __check_is_month(d: __datetime, offset: int = 0, tz: __timezone = None):
     :param offset: The offset to check against.
     :param tz: The timezone to check against.
     """
-    return __datetime.now(tz).date().month + offset == d.astimezone(tz).date().month if \
-        isinstance(d, __datetime) else __datetime.now(tz).date().month + offset == d.month
+    month = __datetime.now(tz).date().month + offset
+    month = reduce_to_valid_range(month, 12)
+    return month == d.astimezone(tz).date().month if \
+        isinstance(d, __datetime) else month == d.month
 
 
 def this_year():
@@ -294,7 +299,7 @@ def next_year_utc():
     return lambda d: __check_is_year(d, 1, tz=__timezone.utc)
 
 
-def __check_is_year(d: __datetime, offset: int = 0, tz: __timezone = None):
+def __check_is_year(d: Union[__datetime, __date], offset: int = 0, tz: __timezone = None):
     """
     A condition that checks if a datetime is a specific year also supporting
     UTC timezone and offsets.
@@ -303,3 +308,8 @@ def __check_is_year(d: __datetime, offset: int = 0, tz: __timezone = None):
     """
     return __datetime.now(tz).date().year + offset == d.astimezone(tz).date().year if \
         isinstance(d, __datetime) else __datetime.now(tz).date().year + offset == d.year
+
+
+def reduce_to_valid_range(value, range_val) -> int:
+    result = value - (range_val * (value // range_val))
+    return range_val if result == 0 else result
