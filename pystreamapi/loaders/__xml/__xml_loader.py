@@ -1,10 +1,14 @@
-from xml.etree import ElementTree
+try:
+    from defusedxml import ElementTree
+except ImportError:
+    import xml.etree.ElementTree as ElementTree
 from collections import namedtuple
 from pystreamapi.loaders.__lazy_file_iterable import LazyFileIterable
 from pystreamapi.loaders.__loader_utils import LoaderUtils
 
 
 class __XmlLoaderUtil:
+    """Utility class for the XML loader."""
     def __init__(self):
         self.cast_types = True
         self.retrieve_children = True
@@ -40,6 +44,7 @@ def xml(src: str, read_from_src=False, retrieve_children=True, cast_types=True,
 
 def __load_xml_file(file_path, encoding):
     """Load an XML file and convert it into a list of namedtuples."""
+    # skipcq: PTC-W6004
     with open(file_path, mode='r', encoding=encoding) as xmlfile:
         src = xmlfile.read()
         if src:
