@@ -32,7 +32,7 @@ class TestCSVLoader(TestCase):
         with (patch(OPEN, mock_open(read_data=file_content)),
               patch(PATH_EXISTS, return_value=True),
               patch(PATH_ISFILE, return_value=True)):
-            data = csv('path/to/data.csv', cast_types=False)
+            data = csv(file_path, cast_types=False)
             self.assertEqual(len(data), 2)
             self.assertEqual(data[0].attr1, '1')
             self.assertIsInstance(data[0].attr1, str)
@@ -52,7 +52,7 @@ class TestCSVLoader(TestCase):
         with (patch(OPEN, mock_open(read_data=file_content.replace(",", ";"))),
               patch(PATH_EXISTS, return_value=True),
               patch(PATH_ISFILE, return_value=True)):
-            data = csv('path/to/data.csv', delimiter=';')
+            data = csv(file_path, delimiter=';')
             self.assertEqual(len(data), 2)
             self.assertEqual(data[0].attr1, 1)
             self.assertIsInstance(data[0].attr1, int)
