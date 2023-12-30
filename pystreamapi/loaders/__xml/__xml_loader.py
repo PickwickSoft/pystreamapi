@@ -41,8 +41,7 @@ def xml(src: str, read_from_src=False, retrieve_children=True, cast_types=True,
 def __load_xml_file(file_path, encoding):
     """Load an XML file and convert it into a list of namedtuples."""
     with open(file_path, mode='r', encoding=encoding) as xmlfile:
-        src = xmlfile.read()
-        if src:
+        if src := xmlfile.read():
             return __parse_xml_string(src)
     return []
 
