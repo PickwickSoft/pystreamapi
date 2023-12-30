@@ -123,9 +123,7 @@ def this_week():
     A condition that checks if a datetime is this week.
     :return: A condition that checks if a datetime is this week.
     """
-    return lambda d: __datetime.now().date().isocalendar()[1] == d.date().isocalendar()[1] \
-        if isinstance(d, __datetime) \
-        else __datetime.now().date().isocalendar()[1] == d.isocalendar()[1]
+    return __check_is_week
 
 
 def this_week_utc():
@@ -134,9 +132,7 @@ def this_week_utc():
     parenthesis in your Stream).
     :return: A condition that checks if a datetime is this week.
     """
-    return lambda d: __datetime.now(__timezone.utc).date().isocalendar()[1] == \
-        d.astimezone(__timezone.utc).date().isocalendar()[1] if isinstance(d, __datetime) else \
-        __datetime.now(__timezone.utc).date().isocalendar()[1] == d.isocalendar()[1]
+    return lambda d: __check_is_week(d, tz=__timezone.utc)
 
 
 def last_week():
@@ -144,9 +140,7 @@ def last_week():
     A condition that checks if a datetime is last week.
     :return: A condition that checks if a datetime is last week.
     """
-    return lambda d: __datetime.now().date().isocalendar()[1] - 1 == d.date().isocalendar()[1] if \
-        isinstance(d, __datetime) \
-        else __datetime.now().date().isocalendar()[1] - 1 == d.isocalendar()[1]
+    return lambda d: __check_is_week(d, -1)
 
 
 def last_week_utc():
@@ -155,9 +149,7 @@ def last_week_utc():
     parenthesis in your Stream).
     :return: A condition that checks if a datetime is last week.
     """
-    return lambda d: __datetime.now(__timezone.utc).date().isocalendar()[1] - 1 == \
-        d.astimezone(__timezone.utc).date().isocalendar()[1] if isinstance(d, __datetime) else \
-        __datetime.now(__timezone.utc).date().isocalendar()[1] - 1 == d.isocalendar()[1]
+    return lambda d: __check_is_week(d, -1, tz=__timezone.utc)
 
 
 def next_week():
@@ -165,11 +157,7 @@ def next_week():
     A condition that checks if a datetime is next week.
     :return: A condition that checks if a datetime is next week.
     """
-    week = __datetime.now().date().isocalendar()[1] + 1
-    week = reduce_to_valid_range(week, 52)
-    return lambda d: week == d.date().isocalendar()[1] if \
-        isinstance(d, __datetime) \
-        else week == d.isocalendar()[1]
+    return lambda d: __check_is_week(d, 1)
 
 
 def next_week_utc():
@@ -178,10 +166,14 @@ def next_week_utc():
     parenthesis in your Stream).
     :return: A condition that checks if a datetime is next week.
     """
-    week = __datetime.now(__timezone.utc).date().isocalendar()[1] + 1
-    week = reduce_to_valid_range(week, 52)
-    return lambda d: week == d.astimezone(__timezone.utc).date().isocalendar()[1] \
-        if isinstance(d, __datetime) else week == d.isocalendar()[1]
+    return lambda d: __check_is_week(d, 1, tz=__timezone.utc)
+
+
+def __check_is_week(d: Union[__datetime, __date], offset: int = 0, tz: __timezone = None):
+    target_week = __datetime.now(tz=tz) + __timedelta(weeks=offset)
+    return target_week.isocalendar()[1] == d.date().isocalendar()[1] if \
+        isinstance(d, __datetime) \
+        else target_week.isocalendar()[1] == d.isocalendar()[1]
 
 
 def this_month():
@@ -267,8 +259,8 @@ def this_year_utc():
 
 def last_year():
     """
-    A condition that checks if a datetime is last year.
-    :return: A condition that checks if a datetime is last year.
+    A condition that checks if a datetime is from last year.
+    :return: A condition that checks if a datetime is from last year.
     """
     return lambda d: __check_is_year(d, -1)
 
@@ -277,7 +269,7 @@ def last_year_utc():
     """
     A condition that checks if a datetime is last year calculating in UTC (use without
     parenthesis in your Stream).
-    :return: A condition that checks if a datetime is last year.
+    :return: A condition that checks if a datetime is from last year.
     """
     return lambda d: __check_is_year(d, -1, tz=__timezone.utc)
 
