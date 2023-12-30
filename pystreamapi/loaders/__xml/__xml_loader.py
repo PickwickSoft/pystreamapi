@@ -49,8 +49,7 @@ def __load_xml_file(file_path, encoding):
     """Load an XML file and convert it into a list of namedtuples."""
     # skipcq: PTC-W6004
     with open(file_path, mode='r', encoding=encoding) as xmlfile:
-        src = xmlfile.read()
-        if src:
+        if src := xmlfile.read():
             return __parse_xml_string(src)
     return []
 
