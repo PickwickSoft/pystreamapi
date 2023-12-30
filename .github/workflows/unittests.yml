@@ -64,14 +64,14 @@ jobs:
       # Install dependencies. `--no-root` means "install all dependencies but not the project
       # itself", which is what you want to avoid caching _your_ code. The `if` statement
       # ensures this only runs on a cache miss.
-      - run: poetry install --no-root
+      - run: poetry install --no-root --extras "all"
         if: steps.cache-deps.outputs.cache-hit != 'true'
 
       # Now install _your_ project. This isn't necessary for many types of projects -- particularly
       # things like Django apps don't need this. But it's a good idea since it fully-exercises the
       # pyproject.toml and makes that if you add things like console-scripts at some point that
       # they'll be installed and working.
-      - run: poetry install
+      - run: poetry install --extras "all"
 
       # Runs a single command using the runners shell
       - name: Run Unittests
