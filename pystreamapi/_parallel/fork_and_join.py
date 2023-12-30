@@ -1,12 +1,13 @@
 # pylint: disable=protected-access
 import os
-
 from typing import Callable, Any, Optional
 
-from pystreamapi._parallel.parallelizer import Parallel, delayed
+from joblib import delayed
+
+from pystreamapi._itertools.tools import reduce
+from pystreamapi._parallel.parallelizer import Parallel
 from pystreamapi._streams.error.__error import ErrorHandler
 from pystreamapi._streams.error.__levels import ErrorLevel
-from pystreamapi._itertools.tools import reduce
 
 
 class Parallelizer:

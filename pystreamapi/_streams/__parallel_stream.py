@@ -2,13 +2,13 @@ from collections import defaultdict
 from functools import reduce as seq_reduce
 from typing import Callable, Any, Iterable
 
-from pystreamapi._streams.__base_stream import terminal
-from pystreamapi._parallel.parallelizer import Parallel, delayed
-
-from pystreamapi.__optional import Optional
+from joblib import delayed
 
 import pystreamapi._streams.__base_stream as stream
+from pystreamapi.__optional import Optional
 from pystreamapi._parallel.fork_and_join import Parallelizer
+from pystreamapi._parallel.parallelizer import Parallel
+from pystreamapi._streams.__base_stream import terminal
 
 _identity_missing = object()
 

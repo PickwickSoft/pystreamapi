@@ -2,13 +2,13 @@ import unittest
 
 from parameterized import parameterized_class
 
+from pystreamapi.__optional import Optional
 from pystreamapi._streams.__base_stream import BaseStream
 from pystreamapi._streams.__parallel_stream import ParallelStream
 from pystreamapi._streams.__sequential_stream import SequentialStream
 from pystreamapi._streams.numeric.__numeric_base_stream import NumericBaseStream
 from pystreamapi._streams.numeric.__parallel_numeric_stream import ParallelNumericStream
 from pystreamapi._streams.numeric.__sequential_numeric_stream import SequentialNumericStream
-from pystreamapi.__optional import Optional
 
 
 @parameterized_class("stream", [
@@ -41,7 +41,7 @@ class TestStreamImplementation(unittest.TestCase):
 
     def test_map_to_int_returns_numeric_stream(self):
         result = self.stream(["1", "2", "3", "9"]).map_to_int()
-        self.assertTrue(isinstance(result, NumericBaseStream))
+        self.assertIsInstance(result, NumericBaseStream)
 
     def test_map_to_float(self):
         result = self.stream(["1", "2", "3", "9"]).map_to_float().to_list()
@@ -53,7 +53,7 @@ class TestStreamImplementation(unittest.TestCase):
 
     def test_map_to_float_returns_numeric_stream(self):
         result = self.stream(["1", "2", "3", "9"]).map_to_float()
-        self.assertTrue(isinstance(result, NumericBaseStream))
+        self.assertIsInstance(result, NumericBaseStream)
 
     def test_map_to_str(self):
         result = self.stream([1, 2, 3, 9]).map_to_str().to_list()
@@ -61,11 +61,11 @@ class TestStreamImplementation(unittest.TestCase):
 
     def test_convert_to_numeric_stream(self):
         result = self.stream([1, 2, 3, 9]).numeric()
-        self.assertTrue(isinstance(result, NumericBaseStream))
+        self.assertIsInstance(result, NumericBaseStream)
 
     def test_convert_to_numeric_stream_is_already_numeric(self):
         result = self.stream([1.0, 2.0, 3.0, 9.0]).numeric()
-        self.assertTrue(isinstance(result, NumericBaseStream))
+        self.assertIsInstance(result, NumericBaseStream)
 
     def test_flat_map(self):
         result = self.stream([1, 2, 3, 9]).flat_map(lambda x: self.stream([x, x])).to_list()
@@ -93,7 +93,7 @@ class TestStreamImplementation(unittest.TestCase):
     def test_filter_lazy(self):
         result = self.stream([1, 2, 3]).filter(lambda x: x > 1)
         self.assertListEqual(result.to_list(), [2, 3])
-        self.assertTrue(isinstance(result, BaseStream))
+        self.assertIsInstance(result, BaseStream)
 
     def test_peek(self):
         src = []

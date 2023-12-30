@@ -2,9 +2,9 @@ import unittest
 
 from parameterized import parameterized_class
 
-from pystreamapi._streams.error.__levels import ErrorLevel
 from pystreamapi._streams.__parallel_stream import ParallelStream
 from pystreamapi._streams.__sequential_stream import SequentialStream
+from pystreamapi._streams.error.__levels import ErrorLevel
 from pystreamapi._streams.numeric.__parallel_numeric_stream import ParallelNumericStream
 from pystreamapi._streams.numeric.__sequential_numeric_stream import SequentialNumericStream
 
@@ -95,12 +95,12 @@ class TestStreamImplementation(unittest.TestCase):
             .error_level(ErrorLevel.IGNORE).map_to_str().to_list()
         self.assertListEqual(result, ["1", "2", "a"])
 
-    def peek_raise(self):
+    def test_peek_raise(self):
         with self.assertRaises(ValueError):
-            self.stream([1, 2, 3, "a"])\
-                .error_level(ErrorLevel.RAISE).peek(int)
+            self.stream([1, 2, 3, "a"]) \
+                .error_level(ErrorLevel.RAISE).peek(int).to_list()
 
-    def peek_ignore(self):
+    def test_peek_ignore(self):
         result = self.stream([1, 2, 3, "a"])\
             .error_level(ErrorLevel.IGNORE).peek(int).to_list()
         self.assertListEqual(result, [1, 2, 3, "a"])

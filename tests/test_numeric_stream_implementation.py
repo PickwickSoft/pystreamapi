@@ -18,7 +18,7 @@ class TestNumericStreamImplementation(TestCase):
 
     def test_mean_empty(self):
         result = self.stream([]).mean()
-        self.assertEqual(result, None)
+        self.assertIsNone(result)
 
     def test_mean_negative(self):
         result = self.stream([-1, -2, -3, -4, -5]).mean()
