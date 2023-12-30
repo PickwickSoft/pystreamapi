@@ -1,7 +1,7 @@
 try:
     from defusedxml import ElementTree
 except ImportError:
-    import xml.etree.ElementTree as ElementTree
+    from xml.etree import ElementTree
 from collections import namedtuple
 from pystreamapi.loaders.__lazy_file_iterable import LazyFileIterable
 from pystreamapi.loaders.__loader_utils import LoaderUtils
