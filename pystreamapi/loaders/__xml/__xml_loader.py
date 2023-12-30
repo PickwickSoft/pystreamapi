@@ -3,8 +3,14 @@ from collections import namedtuple
 from pystreamapi.loaders.__lazy_file_iterable import LazyFileIterable
 from pystreamapi.loaders.__loader_utils import LoaderUtils
 
-__cast_types = True
-__retrieve_children = True
+
+class __XmlLoaderUtil:
+    def __init__(self):
+        self.cast_types = True
+        self.retrieve_children = True
+
+
+config = __XmlLoaderUtil()
 
 
 def xml(src: str, read_from_src=False, retrieve_children=True, cast_types=True,
@@ -24,9 +30,8 @@ def xml(src: str, read_from_src=False, retrieve_children=True, cast_types=True,
             a path to an XML file.
         :param cast_types: Set as False to disable casting of values to int, bool or float.
     """
-    global __cast_types, __retrieve_children
-    __cast_types = cast_types
-    __retrieve_children = retrieve_children
+    config.cast_types = cast_types
+    config.retrieve_children = retrieve_children
     if read_from_src:
         return LazyFileIterable(lambda: __load_xml_string(src))
     path = LoaderUtils.validate_path(src)
@@ -51,10 +56,11 @@ def __parse_xml_string(xml_string):
     """Parse XML string and convert it into a list of namedtuples."""
     root = ElementTree.fromstring(xml_string)
     parsed_xml = __parse_xml(root)
-    return __flatten(parsed_xml) if __retrieve_children else [parsed_xml]
+    return __flatten(parsed_xml) if config.retrieve_children else [parsed_xml]
 
 
 def __parse_xml(element):
+    """Parse XML element and convert it into a namedtuple."""
     if len(element) == 0:
         return __parse_empty_element(element)
     if len(element) == 1:
@@ -63,10 +69,12 @@ def __parse_xml(element):
 
 
 def __parse_empty_element(element):
-    return LoaderUtils.try_cast(element.text) if __cast_types else element.text
+    """Parse XML element without children and convert it into a namedtuple."""
+    return LoaderUtils.try_cast(element.text) if config.cast_types else element.text
 
 
 def __parse_single_element(element):
+    """Parse XML element with a single child and convert it into a namedtuple."""
     sub_element = element[0]
     sub_item = __parse_xml(sub_element)
     Item = namedtuple(element.tag, [sub_element.tag])
@@ -74,6 +82,7 @@ def __parse_single_element(element):
 
 
 def __parse_multiple_elements(element):
+    """Parse XML element with multiple children and convert it into a namedtuple."""
     tag_dict = {}
     for e in element:
         if e.tag not in tag_dict:
@@ -85,10 +94,12 @@ def __parse_multiple_elements(element):
 
 
 def __filter_single_items(tag_dict):
+    """Filter out single-item lists from a dictionary."""
     return {key: value[0] if len(value) == 1 else value for key, value in tag_dict.items()}
 
 
 def __flatten(data):
+    """Flatten a list of lists."""
     res = []
     for item in data:
         if isinstance(item, list):

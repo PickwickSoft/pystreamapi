@@ -104,4 +104,4 @@ class TestXmlLoader(TestCase):
 
     def test_xml_loader_from_empty_string(self):
         with self.assertRaises(ParseError):
-            self.assertEqual(len(xml('', read_from_src=True)), 0)
+            len(xml('', read_from_src=True))
