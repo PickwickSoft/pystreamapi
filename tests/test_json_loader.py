@@ -69,4 +69,4 @@ class TestJsonLoader(TestCase):
 
     def test_json_loader_from_empty_string(self):
         with self.assertRaises(JSONDecodeError):
-            self.assertEqual(len(json('', read_from_src=True)), 0)
+            len(json('', read_from_src=True))
