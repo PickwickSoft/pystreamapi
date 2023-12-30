@@ -2,7 +2,7 @@
 from unittest import TestCase
 from unittest.mock import patch, mock_open
 
-from file_test import OPEN, PATH_EXISTS, PATH_ISFILE
+from _loaders.file_test import OPEN, PATH_EXISTS, PATH_ISFILE
 from pystreamapi.loaders import csv
 
 file_content = """
@@ -70,4 +70,4 @@ class TestCSVLoader(TestCase):
 
     def test_csv_loader_with_no_file(self):
         with self.assertRaises(ValueError):
-            csv('./')
+            csv('../')

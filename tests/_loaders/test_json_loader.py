@@ -3,7 +3,7 @@ from json import JSONDecodeError
 from unittest import TestCase
 from unittest.mock import patch, mock_open
 
-from file_test import OPEN, PATH_EXISTS, PATH_ISFILE
+from _loaders.file_test import OPEN, PATH_EXISTS, PATH_ISFILE
 from pystreamapi.loaders import json
 
 file_content = """
@@ -55,7 +55,7 @@ class TestJsonLoader(TestCase):
 
     def test_json_loader_with_no_file(self):
         with self.assertRaises(ValueError):
-            json('./')
+            json('../')
 
     def test_json_loader_from_string(self):
         data = json(file_content, read_from_src=True)

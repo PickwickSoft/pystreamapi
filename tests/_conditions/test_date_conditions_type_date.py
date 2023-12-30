@@ -1,6 +1,6 @@
 # pylint: disable=wildcard-import,too-many-instance-attributes,unused-wildcard-import
 
-from date_test import DateTest
+from _conditions.date_test import DateTest
 from pystreamapi.conditions import equal_to, not_equal_to, between, not_between
 from pystreamapi.conditions.date import *
 
