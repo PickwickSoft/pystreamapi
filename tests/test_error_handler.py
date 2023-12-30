@@ -108,7 +108,7 @@ class TestErrorLevelMeta(TestCase):
     def test_sentinel_eq(self):
         s1 = Sentinel()
         s2 = Sentinel()
-        self.assertTrue(s1 == s2)
+        self.assertEqual(s1, s2)
 
     def test_sentinel_eq_false(self):
         s1 = Sentinel()
@@ -118,7 +118,7 @@ class TestErrorLevelMeta(TestCase):
     def test_sentinel_ne(self):
         s1 = Sentinel()
         s2 = object()
-        self.assertTrue(s1 != s2)
+        self.assertNotEqual(s1, s2)
 
     def test_sentinel_ne_false(self):
         s1 = Sentinel()
