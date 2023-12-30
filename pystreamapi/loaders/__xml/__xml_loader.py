@@ -1,7 +1,9 @@
 try:
     from defusedxml import ElementTree
-except ImportError:
-    from xml.etree import ElementTree
+except ImportError as exc:
+    raise ImportError(
+        "Please install the xml_loader extra dependency to use the xml loader."
+    ) from exc
 from collections import namedtuple
 from pystreamapi.loaders.__lazy_file_iterable import LazyFileIterable
 from pystreamapi.loaders.__loader_utils import LoaderUtils

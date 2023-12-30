@@ -451,9 +451,10 @@ files = [
 ]
 
 [extras]
+all = ["defusedxml"]
 xml-loader = ["defusedxml"]
 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.7,<4.0"
-content-hash = "07ef4e0b2abbb74f133d682d84bbd9e74e6af5561ad213f359408ec49b47d0ab"
+content-hash = "6252674f8a6cc31e6860115894c00fd86d891059074bf6fdb77bbea533d9cf30"

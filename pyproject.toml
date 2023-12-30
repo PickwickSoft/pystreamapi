@@ -19,6 +19,7 @@ defusedxml = { version = ">=0.7,<0.8", optional = true }
 
 [tool.poetry.extras]
 xml_loader = ["defusedxml"]
+all = ["defusedxml"]
 
 [tool.poetry.group.test.dependencies]
 parameterized = "*"

@@ -244,6 +244,14 @@ You can access the attributes of the data structures directly like you would do 
 
 For XML:
 
+In order to use the XML loader, you need to install the optional xml dependency:
+
+```bash
+pip install streams.py[xml_loader]
+```
+
+Afterward, you can use the XML loader like this:
+
 ```python
 Stream.of(xml("data.xml"))
   .map(lambda x: x.attr1)
