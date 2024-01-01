@@ -6,11 +6,21 @@ description: Get started in just a few seconds!
 
 ## Installation
 
-To start using PyStreamAPI just install the module with this command:
+To start using PyStreamAPI just install the core module with this command:
 
 ```bash
-pip install streams.py  
+pip install streams.py
 ```
+
+If you want to install pystreamapi together with the optional extensions, use this command:
+
+```bash
+pip install 'streams.py[all]'
+```
+
+This will install pystreamapi together with all optional loaders. You can also install those extensions individually, as described on following page:
+
+[data-loaders.md](reference/data-loaders.md "mention")
 
 Afterward, you can import it with:
 
