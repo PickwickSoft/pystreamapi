@@ -1,3 +1,4 @@
+from pystreamapi._parallel.fork_and_join import Parallelizer
 from pystreamapi._streams.__base_stream import BaseStream
 from pystreamapi._streams.__parallel_stream import ParallelStream
 from pystreamapi._streams.__sequential_stream import SequentialStream
@@ -25,6 +26,7 @@ class StreamConverter:
             stream.__class__ = ParallelNumericStream
         elif isinstance(stream, SequentialStream):
             stream.__class__ = ParallelStream
+        stream._parallelizer = Parallelizer()
         return stream
 
     @staticmethod
