@@ -6,18 +6,18 @@ from pystreamapi.conditions import prime
 
 class TestParallelStream(TestCase):
     def test_parallel(self):
-        # success 0
+        # success
         (Stream.of(range(10)).parallel()
          .map(lambda x: x * 2)
          .for_each(print))
 
-        # success 1
+        # success
         (Stream.parallel_of(range(10))
          .map(lambda x: x * 2)
          .filter(prime())
          .for_each(print))
 
-        # failed
+        # fail -> fixed
         (Stream.of(range(10)).parallel()
          .map(lambda x: x * 2)
          .filter(prime())
