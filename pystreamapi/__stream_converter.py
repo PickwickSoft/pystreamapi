@@ -1,3 +1,4 @@
+# pylint: disable=protected-access
 from pystreamapi._streams.__base_stream import BaseStream
 from pystreamapi._streams.__parallel_stream import ParallelStream
 from pystreamapi._streams.__sequential_stream import SequentialStream
