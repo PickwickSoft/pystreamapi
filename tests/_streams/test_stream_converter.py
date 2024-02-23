@@ -58,5 +58,5 @@ class TestStreamConverter(TestCase):
                            ("sequential numeric stream", SequentialNumericStream)])
     def test_convert_sequential_to_parallel_parallelizer_working(self, _, stream):
         res = []
-        stream([1, 2, 3]).parallel().filter(lambda x: x > 1).for_each(lambda x: res.append(x))
+        stream([1, 2, 3]).parallel().filter(lambda x: x > 1).for_each(res.append)
         self.assertEqual(res, [2, 3])
