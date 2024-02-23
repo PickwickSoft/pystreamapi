@@ -20,6 +20,9 @@ class ParallelStream(stream.BaseStream):
         super().__init__(source)
         self._parallelizer = Parallelizer()
 
+    def _init_parallelizer(self):
+        self._parallelizer = Parallelizer()
+
     @terminal
     def all_match(self, predicate: Callable[[Any], bool]):
         return all(Parallel(n_jobs=-1, prefer="threads", handler=self)
