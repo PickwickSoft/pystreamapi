@@ -30,6 +30,7 @@ def yaml(src: str, read_from_src=False) -> LazyFileIterable:
 
 def __load_yaml_file(file_path):
     """Load a YAML file and convert it into a list of namedtuples"""
+    # skipcq: PTC-W6004
     with open(file_path, mode='r', encoding='utf-8') as yamlfile:
         src = yamlfile.read()
         if src == '':
