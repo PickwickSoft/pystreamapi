@@ -1,68 +1,58 @@
 # pylint: disable=not-context-manager
-from json import JSONDecodeError
 from unittest import TestCase
 from unittest.mock import patch, mock_open
 
 from _loaders.file_test import OPEN, PATH_EXISTS, PATH_ISFILE
-from pystreamapi.loaders import json
+from pystreamapi.loaders import yaml
 
 file_content = """
-[
-  {
-    "attr1": 1,
-    "attr2": 2.0
-  },
-  {
-    "attr1": [
-      {
-        "attr1": "a"
-      }
-    ],
-    "attr2": "b"
-  }
-]
+---
+- attr1: 1
+  attr2: 2.0
+- attr1:
+  - attr1: a
+  attr2: b
 """
-file_path = 'path/to/data.json'
+file_path = 'path/to/data.yaml'
 
 
-class TestJsonLoader(TestCase):
+class TestYamlLoader(TestCase):
 
-    def test_json_loader_from_file(self):
+    def test_yaml_loader_from_file(self):
         with (patch(OPEN, mock_open(read_data=file_content)),
               patch(PATH_EXISTS, return_value=True),
               patch(PATH_ISFILE, return_value=True)):
-            data = json(file_path)
+            data = yaml(file_path)
             self._check_extracted_data(data)
 
-    def test_json_loader_is_iterable(self):
+    def test_yaml_loader_is_iterable(self):
         with (patch(OPEN, mock_open(read_data=file_content)),
               patch(PATH_EXISTS, return_value=True),
               patch(PATH_ISFILE, return_value=True)):
-            data = json(file_path)
+            data = yaml(file_path)
             self.assertEqual(len(list(iter(data))), 2)
 
-    def test_json_loader_with_empty_file(self):
+    def test_yaml_loader_with_empty_file(self):
         with (patch(OPEN, mock_open(read_data="")),
               patch(PATH_EXISTS, return_value=True),
               patch(PATH_ISFILE, return_value=True)):
-            data = json(file_path)
+            data = yaml(file_path)
             self.assertEqual(len(data), 0)
 
-    def test_json_loader_with_invalid_path(self):
+    def test_yaml_loader_with_invalid_path(self):
         with self.assertRaises(FileNotFoundError):
-            json('path/to/invalid.json')
+            yaml('path/to/invalid.yaml')
 
-    def test_json_loader_with_no_file(self):
+    def test_yaml_loader_with_no_file(self):
         with self.assertRaises(ValueError):
-            json('../')
+            yaml('../')
 
-    def test_json_loader_from_string(self):
-        data = json(file_content, read_from_src=True)
+    def test_yaml_loader_from_string(self):
+        data = yaml(file_content, read_from_src=True)
         self._check_extracted_data(data)
 
-    def test_json_loader_from_empty_string(self):
-        with self.assertRaises(JSONDecodeError):
-            len(json('', read_from_src=True))
+    def test_yaml_loader_from_empty_string(self):
+        self.assertEqual(list(yaml('', read_from_src=True)), [])
 
     def _check_extracted_data(self, data):
         self.assertEqual(len(data), 2)
