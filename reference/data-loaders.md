@@ -3,13 +3,13 @@
 Data loaders provide a convenient way to process data from various data files in your streams. You can access the values of each data set as if it were an object, containing the header names as attributes.
 
 {% hint style="info" %}
-Currently, PyStreamAPI only supports reading data from CSV, JSON and XML files.
+Currently, PyStreamAPI supports reading data from CSV, JSON, XML and YAML files.
 {% endhint %}
 
 To use the loaders, you can import them with this line:
 
 ```python
-from pystreamapi.loaders import csv, json, xml
+from pystreamapi.loaders import csv, json, xml, yaml
 ```
 
 ### CSV loader
@@ -198,3 +198,45 @@ Stream.of(xml("data.xml", retrieve_children=False)) \
     .map(lambda x: x.name) \
     .for_each(print)  # John Doe, Alice Smith
 </code></pre>
+
+### YAML loader
+
+In order to load the data from a YAML file, you can use the `yaml` loader.
+
+You can read data either from a YAML file or a string containing YAML. If you read from a string you have to set the `read_from_src` parameter to `True`.
+
+By default, all values get converted to `int`, `float`, `bool` or otherwise `str`.&#x20;
+
+The example below uses this JSON file:
+
+{% code title="data.yaml" fullWidth="false" %}
+```yaml
+- name: Joe
+  age: 20
+- name: Jane
+  age: 30
+- name: John
+  age: 78
+```
+{% endcode %}
+
+```python
+from pystreamapi import Stream
+from pystreamapi.loaders import yaml
+
+Stream.of(yaml("path/to/data.yaml")) \
+    .map(lambda x: x.name) \
+    .for_each(print) # "Joe", "Jane", "John"
+```
+
+If you want to pass the YAML directly as a string, you can do it like that:
+
+```python
+from pystreamapi import Stream
+from pystreamapi.loaders import yaml
+
+Stream.of(yaml("- name: Joe\n  age: 20\n- name: Jane\n  age: 30", 
+               read_from_src=True)) \
+    .map(lambda x: x.age) \
+    .for_each(print)  # 20, 30
+```
