@@ -116,7 +116,7 @@ PyStreamAPI offers a powerful error handling mechanism that allows you to handle
 [error-handling.md](reference/api-reference/error-handling.md)
 {% endcontent-ref %}
 
-## Data loaders: Load data from CSV and JSON files
+## Data loaders: Load data from data files
 
 Data loaders provide a convenient way to process data from CSV, JSON, XML and YAML files in your streams. You can access the values of each data set as if it were an object, containing the header/key names as attributes.
 
