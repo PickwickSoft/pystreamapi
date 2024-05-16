@@ -26,7 +26,7 @@ Now you might be wondering why another library when there are already a few impl
 * The implementation achieves 100% test coverage.
 * It follows Pythonic principles, resulting in clean and readable code.
 * It adds some cool innovative features such as conditions or error handling and an even more declarative look.
-* It provides loaders for various data sources such as CSV, JSON and XML files.
+* It provides loaders for various data sources such as CSV, JSON, XML and YAML files.
 
 Let's take a look at a small example:
 
@@ -213,15 +213,15 @@ Stream.concat(Stream.of([1, 2]), Stream.of([3, 4]))
 
 Creates a new Stream from multiple Streams. Order doesn't change.
 
-## Use loaders: Load data from CSV, JSON and XML files in just one line
+## Use loaders: Load data from CSV, JSON, XML and YAML files in just one line
 
-PyStreamAPI offers a convenient way to load data from CSV, JSON and XML files. Like that you can start processing your
+PyStreamAPI offers a convenient way to load data from CSV, JSON, XML and YAML files. Like that you can start processing your
 files right away without having to worry about reading and parsing the files.
 
 You can import the loaders with:
 
 ```python
-from pystreamapi.loaders import csv, json, xml
+from pystreamapi.loaders import csv, json, xml, yaml
 ```
 Now you can use the loaders directly when creating your Stream:
 
@@ -253,13 +253,29 @@ pip install streams.py[xml_loader]
 Afterward, you can use the XML loader like this:
 
 ```python
-Stream.of(xml("data.xml"))
-  .map(lambda x: x.attr1)
+Stream.of(xml("data.xml")) \
+  .map(lambda x: x.attr1) \
   .for_each(print)
 ```
 
 The access to the attributes is using a node path syntax. For more details on how to use the node path syntax, please
 refer to the [documentation](https://pystreamapi.pickwicksoft.org/reference/data-loaders).
+
+For YAML:
+
+In order to use the YAML loader, you need to install the optional yaml dependency:
+
+```bash
+pip install streams.py[yaml_loader]
+```
+
+Afterward, you can use the YAML loader like this:
+
+```python
+Stream.of(yaml("data.yaml")) \
+  .map(lambda x: x.attr1) \
+  .for_each(print)
+```
 
 ## API Reference
 For a more detailed documentation view the docs on GitBook: [PyStreamAPI Docs](https://pystreamapi.pickwicksoft.org/)
