@@ -1,10 +1,7 @@
-__all__ = []
-
 from pystreamapi.loaders.__csv.__csv_loader import csv
 from pystreamapi.loaders.__json.__json_loader import json
 
-__all__.append('csv')
-__all__.append('json')
+__all__ = ['csv', 'json']
 
 try:
     from pystreamapi.loaders.__xml.__xml_loader import xml
