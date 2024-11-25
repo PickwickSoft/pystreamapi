@@ -9,7 +9,7 @@ from functools import cmp_to_key
 from typing import Iterable, Callable, Any, TypeVar, Iterator, TYPE_CHECKING, Union
 
 from pystreamapi.__optional import Optional
-from pystreamapi._itertools.tools import dropwhile, distinct, limit, any_match
+from pystreamapi._itertools.tools import dropwhile, distinct, limit
 from pystreamapi._lazy.process import Process
 from pystreamapi._lazy.queue import ProcessQueue
 from pystreamapi._streams.error.__error import ErrorHandler
@@ -369,11 +369,12 @@ class BaseStream(Iterable[K], ErrorHandler):
         :param predicate: The callable predicate
         """
         def _one_wrapper(iterable, mapper):
+            """Generator wrapper for any_match."""
             for i in iterable:
                 yield self._one(mapper, item=i)
 
         self._source = _one_wrapper(self._source, predicate)
-        return any_match(self._source)
+        return any(self._source)
 
     @terminal
     def count(self):

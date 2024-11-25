@@ -39,8 +39,7 @@ def reduce(function, sequence, initial=_initial_missing, handler: ErrorHandler =
         try:
             value = next(it)
         except StopIteration:
-            raise TypeError(
-                "reduce() of empty iterable with no initial value") from None
+            raise TypeError("reduce() of empty iterable with no initial value") from None
     else:
         value = initial
 
@@ -56,18 +55,24 @@ def reduce(function, sequence, initial=_initial_missing, handler: ErrorHandler =
 
 
 def peek(iterable: Iterable, mapper):
+    """Generator wrapper that applies a function to every item of the iterable
+    and yields the item unchanged."""
     for item in iterable:
         mapper(item)
         yield item
 
-def distinct(iterable):
+
+def distinct(iterable: Iterable):
+    """Generator wrapper that returns unique elements from the iterable."""
     seen = set()
     for item in iterable:
         if item not in seen:
             seen.add(item)
             yield item
 
+
 def limit(source: Iterable, max_nr: int):
+    """Generator wrapper that returns the first n elements of the iterable."""
     iterator = iter(source)
     for _ in range(max_nr):
         try:
@@ -75,12 +80,8 @@ def limit(source: Iterable, max_nr: int):
         except StopIteration:
             break
 
-def any_match(iterable):
-    for item in iterable:
-        if item:
-            return True
-    return False
 
-def flat_map(iterable):
+def flat_map(iterable: Iterable):
+    """Generator wrapper that flattens the Stream iterable."""
     for stream in iterable:
         yield from stream.to_list()
