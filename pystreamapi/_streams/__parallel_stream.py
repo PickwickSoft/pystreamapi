@@ -38,10 +38,10 @@ class ParallelStream(stream.BaseStream):
             return Optional.of(self._source[0])
         return Optional.empty()
 
-    def _flat_map(self, predicate: Callable[[Any], stream.BaseStream]):
+    def _flat_map(self, mapper: Callable[[Any], stream.BaseStream]):
         new_src = []
         for element in Parallel(n_jobs=-1, prefer="threads", handler=self)(
-                delayed(self.__mapper(predicate))(element) for element in self._source):
+                delayed(self.__mapper(mapper))(element) for element in self._source):
             new_src.extend(element.to_list())
         self._source = new_src
 

@@ -1,3 +1,4 @@
+import itertools
 import unittest
 
 from parameterized import parameterized_class
@@ -10,6 +11,14 @@ from pystreamapi._streams.numeric.__numeric_base_stream import NumericBaseStream
 from pystreamapi._streams.numeric.__parallel_numeric_stream import ParallelNumericStream
 from pystreamapi._streams.numeric.__sequential_numeric_stream import SequentialNumericStream
 
+
+def throwing_generator():
+    i = 0
+    while True:
+        yield i
+        i = i + 1
+        if i > 1000:
+            raise RecursionError("Infinite generator consumed wrong")
 
 @parameterized_class("stream", [
     [SequentialStream],
@@ -68,8 +77,14 @@ class TestStreamImplementation(unittest.TestCase):
         self.assertIsInstance(result, NumericBaseStream)
 
     def test_flat_map(self):
-        result = self.stream([1, 2, 3, 9]).flat_map(lambda x: self.stream([x, x])).to_list()
+        result = (self.stream([1, 2, 3, 9])
+                  .flat_map(lambda x: self.stream([x, x])).to_list())
         self.assertListEqual(result, [1, 1, 2, 2, 3, 3, 9, 9])
+
+    def test_flat_map_infinite_generator(self):
+        result = (self.stream(throwing_generator())
+                  .flat_map(lambda x: self.stream([x, x*2])).limit(6).to_list())
+        self.assertListEqual(result, [0, 0, 1, 2, 2, 4])
 
     def test_filter_not_none(self):
         result = self.stream([1, 2, "3", None]).filter(lambda x: x is not None).to_list()
@@ -120,6 +135,10 @@ class TestStreamImplementation(unittest.TestCase):
     def test_find_any_empty(self):
         result = self.stream([]).find_any()
         self.assertEqual(result, Optional.empty())
+
+    def test_find_any_infinite_generator(self):
+        result = self.stream(itertools.count()).find_any()
+        self.assertEqual(result, Optional.of(0))
 
     def test_limit(self):
         result = self.stream([1, 2, 3, 9]).limit(2).to_list()
@@ -183,6 +202,11 @@ class TestStreamImplementation(unittest.TestCase):
     def test_to_dict_empty(self):
         result = self.stream([]).to_dict(lambda x: x)
         self.assertDictEqual(result, {})
+
+    def test_handling_of_generator(self):
+        result = (self.stream(throwing_generator())
+                  .map(lambda x: x * 2).filter(lambda x: x < 10).limit(5).to_list())
+        self.assertListEqual(result, [0, 2, 4, 6, 8])
 
 
 if __name__ == '__main__':

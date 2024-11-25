@@ -1,5 +1,6 @@
 # pylint: disable=protected-access
 from __future__ import annotations
+
 import functools
 import itertools
 from abc import abstractmethod
@@ -8,7 +9,7 @@ from functools import cmp_to_key
 from typing import Iterable, Callable, Any, TypeVar, Iterator, TYPE_CHECKING, Union
 
 from pystreamapi.__optional import Optional
-from pystreamapi._itertools.tools import dropwhile
+from pystreamapi._itertools.tools import dropwhile, distinct, limit, any_match
 from pystreamapi._lazy.process import Process
 from pystreamapi._lazy.queue import ProcessQueue
 from pystreamapi._streams.error.__error import ErrorHandler
@@ -85,8 +86,7 @@ class BaseStream(Iterable[K], ErrorHandler):
     def __iter__(self) -> Iterator[K]:
         return iter(self._source)
 
-    @classmethod
-    def concat(cls, *streams: "BaseStream[K]"):
+    def concat(self, *streams: "BaseStream[K]") -> BaseStream[K]:
         """
         Creates a lazily concatenated stream whose elements are all the elements of the first stream
         followed by all the elements of the other streams.
@@ -94,7 +94,11 @@ class BaseStream(Iterable[K], ErrorHandler):
         :param streams: The streams to concatenate
         :return: The concatenated stream
         """
-        return cls(itertools.chain(*list(streams)))
+        self._queue.execute_all()
+        for stream in streams:
+            stream._queue.execute_all()
+        self._source = itertools.chain(self._source, *[stream._source for stream in streams])
+        return self
 
     @_operation
     def distinct(self) -> 'BaseStream[K]':
@@ -104,7 +108,7 @@ class BaseStream(Iterable[K], ErrorHandler):
 
     def __distinct(self):
         """Removes duplicate elements from the stream."""
-        self._source = list(set(self._source))
+        self._source = distinct(self._source)
 
     @_operation
     def drop_while(self, predicate: Callable[[K], bool]) -> 'BaseStream[K]':
@@ -119,7 +123,7 @@ class BaseStream(Iterable[K], ErrorHandler):
 
     def __drop_while(self, predicate: Callable[[Any], bool]):
         """Drops elements from the stream while the predicate is true."""
-        self._source = list(dropwhile(predicate, self._source, self))
+        self._source = dropwhile(predicate, self._source, self)
 
     def error_level(self, level: ErrorLevel, *exceptions)\
             -> Union["BaseStream[K]", NumericBaseStream]:
@@ -160,7 +164,7 @@ class BaseStream(Iterable[K], ErrorHandler):
         return self
 
     @abstractmethod
-    def _flat_map(self, predicate: Callable[[K], Iterable[_V]]):
+    def _flat_map(self, mapper: Callable[[K], Iterable[_V]]):
         """Implementation of flat_map. Should be implemented by subclasses."""
 
     @_operation
@@ -196,7 +200,7 @@ class BaseStream(Iterable[K], ErrorHandler):
 
     def __limit(self, max_size: int):
         """Limits the stream to the first n elements."""
-        self._source = itertools.islice(self._source, max_size)
+        self._source = limit(self._source, max_size)
 
     @_operation
     def map(self, mapper: Callable[[K], _V]) -> 'BaseStream[_V]':
@@ -283,6 +287,7 @@ class BaseStream(Iterable[K], ErrorHandler):
         """
         Returns a stream consisting of the elements of this stream, with their order being
         reversed.
+        This does not work on infinite generators.
         """
         self._queue.append(Process(self.__reversed))
         return self
@@ -314,7 +319,7 @@ class BaseStream(Iterable[K], ErrorHandler):
 
     def __skip(self, n: int):
         """Skips the first n elements of the stream."""
-        self._source = self._source[n:]
+        self._source = itertools.islice(self._source, n, None)
 
     @_operation
     def sorted(self, comparator: Callable[[K], int] = None) -> 'BaseStream[K]':
@@ -345,7 +350,7 @@ class BaseStream(Iterable[K], ErrorHandler):
 
     def __take_while(self, predicate: Callable[[Any], bool]):
         """Takes elements from the stream while the predicate is true."""
-        self._source = list(itertools.takewhile(predicate, self._source))
+        self._source = itertools.takewhile(predicate, self._source)
 
     @abstractmethod
     @terminal
@@ -363,7 +368,12 @@ class BaseStream(Iterable[K], ErrorHandler):
 
         :param predicate: The callable predicate
         """
-        return any(self._itr(self._source, predicate))
+        def _one_wrapper(iterable, mapper):
+            for i in iterable:
+                yield self._one(mapper, item=i)
+
+        self._source = _one_wrapper(self._source, predicate)
+        return any_match(self._source)
 
     @terminal
     def count(self):
@@ -413,6 +423,7 @@ class BaseStream(Iterable[K], ErrorHandler):
     @terminal
     def min(self):
         """Returns the minimum element of this stream."""
+        self._source = list(self._source)
         if len(self._source) > 0:
             return Optional.of(min(self._source))
         return Optional.empty()
@@ -420,6 +431,7 @@ class BaseStream(Iterable[K], ErrorHandler):
     @terminal
     def max(self):
         """Returns the maximum element of this stream."""
+        self._source = list(self._source)
         if len(self._source) > 0:
             return Optional.of(max(self._source))
         return Optional.empty()

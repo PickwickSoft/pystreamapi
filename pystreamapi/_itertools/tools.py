@@ -1,8 +1,10 @@
 # pylint: disable=protected-access
+from typing import Iterable
+
 from pystreamapi._streams.error.__error import ErrorHandler, _sentinel
 
 
-def dropwhile(predicate, iterable, handler: ErrorHandler=None):
+def dropwhile(predicate, iterable, handler: ErrorHandler = None):
     """
     Drop items from the iterable while predicate(item) is true.
     Afterward, return every element until the iterable is exhausted.
@@ -22,7 +24,7 @@ def dropwhile(predicate, iterable, handler: ErrorHandler=None):
 _initial_missing = object()
 
 
-def reduce(function, sequence, initial=_initial_missing, handler: ErrorHandler=None):
+def reduce(function, sequence, initial=_initial_missing, handler: ErrorHandler = None):
     """
     Apply a function of two arguments cumulatively to the items of a sequence
     or iterable, from left to right, to reduce the iterable to a single
@@ -51,3 +53,34 @@ def reduce(function, sequence, initial=_initial_missing, handler: ErrorHandler=N
             value = function(value, element)
 
     return value
+
+
+def peek(iterable: Iterable, mapper):
+    for item in iterable:
+        mapper(item)
+        yield item
+
+def distinct(iterable):
+    seen = set()
+    for item in iterable:
+        if item not in seen:
+            seen.add(item)
+            yield item
+
+def limit(source: Iterable, max_nr: int):
+    iterator = iter(source)
+    for _ in range(max_nr):
+        try:
+            yield next(iterator)
+        except StopIteration:
+            break
+
+def any_match(iterable):
+    for item in iterable:
+        if item:
+            return True
+    return False
+
+def flat_map(iterable):
+    for stream in iterable:
+        yield from stream.to_list()

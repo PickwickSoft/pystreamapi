@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Iterable
 
 from pystreamapi._streams.error.__levels import ErrorLevel
 from pystreamapi._streams.error.__sentinel import Sentinel
@@ -37,20 +38,18 @@ class ErrorHandler:
         """Get the error level"""
         return self.__error_level
 
-    def _itr(self, src, mapper=nothing, condition=true_condition) -> list:
+    def _itr(self, src, mapper=nothing, condition=true_condition) -> Iterable:
         """Iterate over the source and apply the mapper and condition"""
-        new_src = []
         for i in src:
             try:
                 if condition(i):
-                    new_src.append(mapper(i))
+                    yield mapper(i)
             except self.__exceptions_to_ignore as e:
                 if self.__error_level == ErrorLevel.RAISE:
                     raise e
                 if self.__error_level == ErrorLevel.IGNORE:
                     continue
                 self.__log(e)
-        return new_src
 
     def _one(self, mapper=nothing, condition=true_condition, item=None):
         """
