@@ -55,8 +55,10 @@ def reduce(function, sequence, initial=_initial_missing, handler: ErrorHandler =
 
 
 def peek(iterable: Iterable, mapper):
-    """Generator wrapper that applies a function to every item of the iterable
-    and yields the item unchanged."""
+    """
+    Generator wrapper that applies a function to every item of the iterable
+    and yields the item unchanged.
+    """
     for item in iterable:
         mapper(item)
         yield item
