@@ -87,7 +87,7 @@ class Stream:
         :param streams: The streams to concatenate
         :return: The concatenated stream
         """
-        return streams[0].__class__(itertools.chain(*list(streams)))
+        return streams[0].__class__(itertools.chain(*iter(streams)))
 
     @staticmethod
     def iterate(seed: _K, func: Callable[[_K], _K]) -> BaseStream[_K]:

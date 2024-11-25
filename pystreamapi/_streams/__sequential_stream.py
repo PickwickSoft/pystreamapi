@@ -3,8 +3,8 @@ from typing import Callable, Any
 
 import pystreamapi._streams.__base_stream as stream
 from pystreamapi.__optional import Optional
+from pystreamapi._itertools.tools import reduce, flat_map, peek
 from pystreamapi._streams.error.__error import _sentinel
-from pystreamapi._itertools.tools import reduce
 
 _identity_missing = object()
 
@@ -21,15 +21,13 @@ class SequentialStream(stream.BaseStream):
 
     @stream.terminal
     def find_any(self):
-        if len(self._source) > 0:
-            return Optional.of(self._source[0])
-        return Optional.empty()
+        try:
+            return Optional.of(next(iter(self._source)))
+        except StopIteration:
+            return Optional.empty()
 
-    def _flat_map(self, predicate: Callable[[Any], stream.BaseStream]):
-        new_src = []
-        for element in self._itr(self._source, mapper=predicate):
-            new_src.extend(element.to_list())
-        self._source = new_src
+    def _flat_map(self, mapper: Callable[[Any], stream.BaseStream]):
+        self._source = flat_map(self._itr(self._source, mapper=mapper))
 
     def _group_to_dict(self, key_mapper: Callable[[Any], Any]):
         groups = defaultdict(list)
@@ -43,13 +41,14 @@ class SequentialStream(stream.BaseStream):
 
     @stream.terminal
     def for_each(self, action: Callable):
-        self._peek(action)
+        for item in self._source:
+            self._one(mapper=action, item=item)
 
     def _map(self, mapper: Callable[[Any], Any]):
         self._source = self._itr(self._source, mapper=mapper)
 
     def _peek(self, action: Callable):
-        self._itr(self._source, mapper=action)
+        self._source = peek(self._source, lambda x: self._one(mapper=action, item=x))
 
     @stream.terminal
     def reduce(self, predicate: Callable, identity=_identity_missing, depends_on_state=False):

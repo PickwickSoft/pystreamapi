@@ -16,42 +16,42 @@ class TestErrorLevelMeta(TestCase):
 
     def test_iterate_raise(self):
         self.handler._error_level(ErrorLevel.RAISE)
-        self.assertRaises(ValueError, lambda: self.handler._itr([1, 2, 3, 4, 5, "a"], int))
+        self.assertRaises(ValueError, lambda: list(self.handler._itr([1, 2, 3, 4, 5, "a"], int)))
 
     def test_iterate_raise_with_condition(self):
         self.handler._error_level(ErrorLevel.RAISE)
-        self.assertRaises(ValueError, lambda: self.handler._itr(
-            [1, 2, 3, 4, 5, "a"], int, lambda x: x != ""))
+        self.assertRaises(ValueError, lambda: list(self.handler._itr(
+            [1, 2, 3, 4, 5, "a"], int, lambda x: x != "")))
 
     def test_iterate_ignore(self):
         self.handler._error_level(ErrorLevel.IGNORE)
-        self.assertEqual(self.handler._itr([1, 2, 3, 4, 5, "a"], int), [1, 2, 3, 4, 5])
+        self.assertEqual(list(self.handler._itr([1, 2, 3, 4, 5, "a"], int)), [1, 2, 3, 4, 5])
 
     def test_iterate_ignore_with_condition(self):
         self.handler._error_level(ErrorLevel.IGNORE)
-        self.assertEqual(self.handler._itr(
-            [1, 2, 3, 4, 5, "a"], int, lambda x: x != ""), [1, 2, 3, 4, 5])
+        self.assertEqual(list(self.handler._itr(
+            [1, 2, 3, 4, 5, "a"], int, lambda x: x != "")), [1, 2, 3, 4, 5])
 
 
     def test_iterate_ignore_specific_exceptions(self):
         self.handler._error_level(ErrorLevel.IGNORE, ValueError, AttributeError)
-        self.assertEqual(self.handler._itr(
-            ["b", 2, 3, 4, 5, "a"], mapper=lambda x: x.split()), [["b"], ["a"]])
+        self.assertEqual(list(self.handler._itr(
+            ["b", 2, 3, 4, 5, "a"], mapper=lambda x: x.split())), [["b"], ["a"]])
 
 
     def test_iterate_ignore_specific_exception_raise_another(self):
         self.handler._error_level(ErrorLevel.IGNORE, ValueError)
-        self.assertRaises(AttributeError, lambda: self.handler._itr(
-            ["b", 2, 3, 4, 5, "a"], mapper=lambda x: x.split()))
+        self.assertRaises(AttributeError, lambda: list(self.handler._itr(
+            ["b", 2, 3, 4, 5, "a"], mapper=lambda x: x.split())))
 
     def test_iterate_warn(self):
         self.handler._error_level(ErrorLevel.WARN)
-        self.assertEqual(self.handler._itr([1, 2, 3, 4, 5, "a"], int), [1, 2, 3, 4, 5])
+        self.assertEqual(list(self.handler._itr([1, 2, 3, 4, 5, "a"], int)), [1, 2, 3, 4, 5])
 
     def test_iterate_warn_with_condition(self):
         self.handler._error_level(ErrorLevel.WARN)
-        self.assertEqual(self.handler._itr(
-            [1, 2, 3, 4, 5, "a"], int, lambda x: x != ""), [1, 2, 3, 4, 5])
+        self.assertEqual(list(self.handler._itr(
+            [1, 2, 3, 4, 5, "a"], int, lambda x: x != "")), [1, 2, 3, 4, 5])
 
     def test_one_raise(self):
         self.handler._error_level(ErrorLevel.RAISE)

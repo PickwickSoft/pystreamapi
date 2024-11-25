@@ -1,3 +1,4 @@
+import itertools
 import unittest
 
 from pystreamapi.__optional import Optional
@@ -25,6 +26,66 @@ class TestBaseStream(unittest.TestCase):
     def test_concat_unsorted(self):
         result = Stream.concat(Stream.of([9, 6, 1]), Stream.of([3, 5, 99]))
         self.assertListEqual(result.to_list(), [9, 6, 1, 3, 5, 99])
+
+    def test_concat_generator(self):
+        def finite_generator():
+            index = 1
+            while index < 5:
+                yield index
+                index += 1
+
+        result = Stream.concat(Stream.of([1, 2, 3]),
+                               Stream.of(finite_generator())).to_list()
+        self.assertListEqual(result, [1, 2, 3, 1, 2, 3, 4])
+
+    def test_concat_infinite_generator(self):
+        result = Stream.concat(Stream.of([1, 2, 3]),
+                               Stream.of(itertools.count()).limit(2)).limit(5).to_list()
+        self.assertListEqual(result, [1, 2, 3, 0, 1])
+
+    def test_concat_two_generators_limited(self):
+        result = Stream.concat(Stream.of(itertools.count()).limit(2),
+                               Stream.of(itertools.count()).limit(2)).to_list()
+        self.assertListEqual(result, [0, 1, 0, 1])
+
+    def test_concat_two_generators(self):
+        result = Stream.concat(Stream.of(itertools.count()),
+                               Stream.of(itertools.count())).limit(4).to_list()
+        self.assertListEqual(result, [0, 1, 2, 3])
+
+    def test_concat_ten_lists(self):
+        result = Stream.concat(
+            Stream.of([1, 2, 3]),
+            Stream.of([4, 5, 6]),
+            Stream.of([7, 8, 9]),
+            Stream.of([10, 11, 12]),
+            Stream.of([13, 14, 15]),
+            Stream.of([16, 17, 18]),
+            Stream.of([19, 20, 21]),
+            Stream.of([22, 23, 24]),
+            Stream.of([25, 26, 27]),
+            Stream.of([28, 29, 30])
+        ).to_list()
+        self.assertListEqual(result, list(range(1, 31)))
+
+    def test_concat_after_initialization(self):
+        stream1 = Stream.of([1, 2, 3])
+        stream2 = Stream.of([4, 5, 6])
+        stream3 = Stream.of([7, 8, 9])
+        result = stream1.concat(stream2, stream3).to_list()
+        self.assertListEqual(result, [1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+    def test_concat_after_initialization_generators(self):
+        stream1 = Stream.of([1, 2, 3])
+        stream2 = Stream.of(itertools.count()).limit(2)
+        result = stream1.concat(stream2).to_list()
+        self.assertListEqual(result, [1, 2, 3, 0, 1])
+
+    def test_concat_after_initialization_infinite_generators(self):
+        stream1 = Stream.of(itertools.count())
+        stream2 = Stream.of(itertools.count())
+        result = stream1.concat(stream2).limit(4).to_list()
+        self.assertListEqual(result, [0, 1, 2, 3])
 
     def test_iterate(self):
         result = Stream.iterate(1, lambda x: x + 1).limit(3).to_list()
@@ -57,13 +118,6 @@ class TestBaseStream(unittest.TestCase):
     def test_of_noneable_valid(self):
         result = Stream.of_noneable([1, 2, 3]).to_list()
         self.assertListEqual(result, [1, 2, 3])
-
-    def test_concat_after_initialization(self):
-        stream1 = Stream.of([1, 2, 3])
-        stream2 = Stream.of([4, 5, 6])
-        stream3 = Stream.of([7, 8, 9])
-        result = stream1.concat(stream2, stream3).to_list()
-        self.assertListEqual(result, [4, 5, 6, 7, 8, 9])
 
     def test_sort_unsorted(self):
         result = Stream.of([3, 2, 9, 1]).sorted().to_list()
@@ -123,6 +177,10 @@ class TestBaseStream(unittest.TestCase):
         result = Stream.of([]).skip(2).to_list()
         self.assertListEqual(result, [])
 
+    def test_skip_infinite_generator(self):
+        result = Stream.of(itertools.count()).skip(2).limit(3).to_list()
+        self.assertListEqual(result, [2, 3, 4])
+
     def test_distinct(self):
         result = Stream.of([1, 2, 3, 9, 1, 2, 3, 9]).distinct().to_list()
         self.assertListEqual(result, [1, 2, 3, 9])
@@ -130,6 +188,14 @@ class TestBaseStream(unittest.TestCase):
     def test_distinct_empty(self):
         result = Stream.of([]).distinct().to_list()
         self.assertListEqual(result, [])
+
+    def test_distinct_infinite_generator_unique(self):
+        result = Stream.of(itertools.count()).distinct().limit(5).to_list()
+        self.assertListEqual(result, [0, 1, 2, 3, 4])
+
+    def test_distinct_infinite_generator_not_unique(self):
+        result = Stream.of(itertools.cycle([1, 2, 2, 3])).distinct().limit(3).to_list()
+        self.assertListEqual(result, [1, 2, 3])
 
     def test_drop_while(self):
         result = Stream.of([1, 2, 3, 9]).drop_while(lambda x: x < 3).to_list()
@@ -147,6 +213,10 @@ class TestBaseStream(unittest.TestCase):
         result = Stream.of([]).take_while(lambda x: x < 3).to_list()
         self.assertListEqual(result, [])
 
+    def test_take_while_infinite_generator(self):
+        result = Stream.of(itertools.count()).take_while(lambda x: x < 4).limit(4).to_list()
+        self.assertListEqual(result, [0, 1, 2, 3])
+
     def test_count(self):
         result = Stream.of([1, 2, "3", None]).count()
         self.assertEqual(result, 4)
@@ -158,6 +228,10 @@ class TestBaseStream(unittest.TestCase):
     def test_any_match_empty(self):
         result = Stream.of([]).any_match(lambda x: x > 3)
         self.assertFalse(result)
+
+    def test_any_match_infinite_generator(self):
+        result = Stream.of(itertools.count()).any_match(lambda x: x > 3)
+        self.assertTrue(result)
 
     def test_none_match(self):
         result = Stream.of([1, 2, 3, 9]).none_match(lambda x: x > 3)

@@ -1,8 +1,10 @@
 # pylint: disable=protected-access
+from typing import Iterable
+
 from pystreamapi._streams.error.__error import ErrorHandler, _sentinel
 
 
-def dropwhile(predicate, iterable, handler: ErrorHandler=None):
+def dropwhile(predicate, iterable, handler: ErrorHandler = None):
     """
     Drop items from the iterable while predicate(item) is true.
     Afterward, return every element until the iterable is exhausted.
@@ -22,7 +24,7 @@ def dropwhile(predicate, iterable, handler: ErrorHandler=None):
 _initial_missing = object()
 
 
-def reduce(function, sequence, initial=_initial_missing, handler: ErrorHandler=None):
+def reduce(function, sequence, initial=_initial_missing, handler: ErrorHandler = None):
     """
     Apply a function of two arguments cumulatively to the items of a sequence
     or iterable, from left to right, to reduce the iterable to a single
@@ -37,8 +39,7 @@ def reduce(function, sequence, initial=_initial_missing, handler: ErrorHandler=N
         try:
             value = next(it)
         except StopIteration:
-            raise TypeError(
-                "reduce() of empty iterable with no initial value") from None
+            raise TypeError("reduce() of empty iterable with no initial value") from None
     else:
         value = initial
 
@@ -51,3 +52,38 @@ def reduce(function, sequence, initial=_initial_missing, handler: ErrorHandler=N
             value = function(value, element)
 
     return value
+
+
+def peek(iterable: Iterable, mapper):
+    """
+    Generator wrapper that applies a function to every item of the iterable
+    and yields the item unchanged.
+    """
+    for item in iterable:
+        mapper(item)
+        yield item
+
+
+def distinct(iterable: Iterable):
+    """Generator wrapper that returns unique elements from the iterable."""
+    seen = set()
+    for item in iterable:
+        if item not in seen:
+            seen.add(item)
+            yield item
+
+
+def limit(source: Iterable, max_nr: int):
+    """Generator wrapper that returns the first n elements of the iterable."""
+    iterator = iter(source)
+    for _ in range(max_nr):
+        try:
+            yield next(iterator)
+        except StopIteration:
+            break
+
+
+def flat_map(iterable: Iterable):
+    """Generator wrapper that flattens the Stream iterable."""
+    for stream in iterable:
+        yield from stream.to_list()
