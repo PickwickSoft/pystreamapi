@@ -34,9 +34,10 @@ class ParallelStream(stream.BaseStream):
 
     @terminal
     def find_any(self):
-        if len(self._source) > 0:
-            return Optional.of(self._source[0])
-        return Optional.empty()
+        try:
+            return Optional.of(next(iter(self._source)))
+        except StopIteration:
+            return Optional.empty()
 
     def _flat_map(self, mapper: Callable[[Any], stream.BaseStream]):
         new_src = []
